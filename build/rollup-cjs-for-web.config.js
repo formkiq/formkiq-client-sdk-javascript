@@ -4,7 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 export default {
 	input: 'src/index.js',
 	output: {
-		file: 'dist/web-cjs/bundle.js',
+		file: 'dist/web-cjs/formkiq-client-sdk-cjs.js',
 		format: 'cjs',
 		name: 'platformClient',
 		interop: 'auto',

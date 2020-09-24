@@ -1,0 +1,27 @@
+{
+  "name": "formkiq-client-sdk-javascript",
+  "description": "FormKiQ Client SDK for JavaScript",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "FormKiQ Inc.",
+    "email": "info@formkiq.com",
+    "url": "https://formkiq.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/formkiq/"
+  },
+  "bugs": {
+    "url": "https://github.com/formkiq/"
+  },
+  "scripts": {
+    "build:cjs": "rollup --config rollup-cjs-for-web.config.js",
+    "build:cjs:jobform": "rollup --config rollup-cjs-for-web.config.js && cp ./dist/web-cjs/bundle.js ../../jobform-html/formkiq-client-sdk-cjs.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0"
+  }
+}

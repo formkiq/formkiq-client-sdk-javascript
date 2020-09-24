@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/formkiq/"
+    "url": "git://formkiq/formkiq-client-sdk-javascript/"
   },
   "bugs": {
-    "url": "https://github.com/formkiq/"
+    "url": "https://github.com/formkiq/formkiq-client-sdk-javascript/issues"
   },
   "scripts": {
     "build:cjs": "rollup --config rollup-cjs-for-web.config.js",

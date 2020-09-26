@@ -8376,6 +8376,20 @@ class SitesApi {
 
 }
 
+class VersionApi {
+
+  constructor(apiClient) {
+		this.apiClient = apiClient || ApiClient.instance;
+  }
+    
+  async getVersion() {
+    const url = `https://${this.apiClient.host}/version`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -8384,6 +8398,7 @@ class FormkiqClient {
     this.PresetsApi = new PresetsApi();
     this.SearchApi = new SearchApi();
     this.SitesApi = new SitesApi();
+    this.VersionApi = new VersionApi();
   }
 
   login(email, password) {

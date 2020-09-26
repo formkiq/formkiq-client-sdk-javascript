@@ -44,14 +44,14 @@ export class ApiClient {
     return '';
   }
 
-  buildOptions(method, body, headers) {
+  buildOptions(method, body, headers, stripAuthentication) {
     const options = {
       method
     };
     if (!headers) {
       headers = {};
     }
-    if (this.CognitoClient && this.CognitoClient.idToken) {
+    if (!stripAuthentication && this.CognitoClient && this.CognitoClient.idToken) {
       headers['Authorization'] = this.CognitoClient.idToken;
     }
     if (body) {
@@ -73,6 +73,29 @@ export class ApiClient {
         response = data;
         resolve();
       });
+    }));
+    return response;
+  }
+
+  async uploadFile(url, file) {
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", url, true);
+      xhttp.setRequestHeader('Content-Type', 'multipart/form-data');
+      xhttp.onreadystatechange = function() {
+        if (this.status == 200) {          
+          response = {
+            message: 'File uploaded successfully'
+          };
+        } else {
+          response = {
+            message: 'An unexpected error has occurred'
+          };
+        }
+        resolve();      
+      };
+      xhttp.send(file);
     }));
     return response;
   }

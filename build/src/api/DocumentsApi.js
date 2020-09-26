@@ -62,6 +62,22 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  /**
+	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
+   * Expected use is for submitting web forms
+	 */
+  async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async updateDocument(documentId, addOrUpdateDocumentParameters, siteId) {
     if (!documentId) {
       return JSON.stringify({
@@ -228,6 +244,8 @@ export class DocumentsApi {
 
 export class AddOrUpdateDocumentParameters {
 
+  documents = [];
+
   constructor(content, contentType, path, tags) {
     if (content) {
       this.content = btoa(content);
@@ -241,6 +259,16 @@ export class AddOrUpdateDocumentParameters {
     if (tags) {
       this.tags = tags;
     }
+  }
+
+  addChildDocument(content, contentType, path, tags) {
+    const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags);
+    this.documents.push(document);
+  }
+
+  addAttachment(tags) {
+    const document = new AddOrUpdateDocumentParameters(null, null, null, tags);
+    this.documents.push(document);
   }
 
 }

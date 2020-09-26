@@ -13,7 +13,11 @@ FormKiQ Client SDK - JavaScript
   window.onload = () => {
     
     // specify Host, and use Cognito User Pool and Client Id to create Cognito Client for API Authentication
-    formkiqClient = new FormkiqClient('api-demo.tryformkiq.com', 'us-east-1_1nXLy3soH', '4b9bl9mkvbhpn0g0mjpj0hnhb7');
+    formkiqClient = new FormkiqClient(
+      'api-demo.tryformkiq.com',
+      'us-east-1_1nXLy3soH',
+      '4b9bl9mkvbhpn0g0mjpj0hnhb7'
+    );
     
     // obviously this would not be hard-coded for non-public creds
     // NOTE: these public credentials for demo@formkiq.com are for read-only access

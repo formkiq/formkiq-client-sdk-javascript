@@ -3,6 +3,7 @@ import { DocumentsApi } from './api/DocumentsApi.js';
 import { PresetsApi } from './api/PresetsApi.js';
 import { SearchApi } from './api/SearchApi.js';
 import { SitesApi } from './api/SitesApi.js';
+import { VersionApi } from './api/VersionApi.js';
 
 export class FormkiqClient {
     
@@ -12,6 +13,7 @@ export class FormkiqClient {
     this.PresetsApi = new PresetsApi();
     this.SearchApi = new SearchApi();
     this.SitesApi = new SitesApi();
+    this.VersionApi = new VersionApi();
   }
 
   login(email, password) {

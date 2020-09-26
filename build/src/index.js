@@ -1,11 +1,13 @@
 import { ApiClient } from './ApiClient.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
+import { SitesApi } from './api/SitesApi.js';
 
 export class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
     this.ApiClient = new ApiClient(host, userPoolId, clientId);
     this.DocumentsApi = new DocumentsApi();
+    this.SitesApi = new SitesApi();
   }
 
   login(email, password) {

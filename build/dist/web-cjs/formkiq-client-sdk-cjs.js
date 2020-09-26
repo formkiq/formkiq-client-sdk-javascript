@@ -8174,11 +8174,32 @@ class AddDocumentTagParameters {
 
 }
 
+class SitesApi {
+
+  constructor(apiClient) {
+		this.apiClient = apiClient || ApiClient.instance;
+  }
+    
+  async getSites(siteId) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
     this.ApiClient = new ApiClient(host, userPoolId, clientId);
     this.DocumentsApi = new DocumentsApi();
+    this.SitesApi = new SitesApi();
   }
 
   login(email, password) {

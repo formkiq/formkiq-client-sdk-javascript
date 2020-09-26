@@ -62,14 +62,6 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
-    return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
-  }
-
-  buildDocumentTagParametersForAdd(key, value) {
-    return new AddDocumentTagParameters(key, value);
-  }
-
   async updateDocument(documentId, addOrUpdateDocumentParameters, siteId) {
     if (!documentId) {
       return JSON.stringify({
@@ -222,6 +214,14 @@ export class DocumentsApi {
     const url = `https://${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
+    return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
+  }
+
+  buildDocumentTagParametersForAdd(key, value) {
+    return new AddDocumentTagParameters(key, value);
   }
 
 }

@@ -7881,14 +7881,14 @@ class ApiClient {
     return '';
   }
 
-  buildOptions(method, body, headers) {
+  buildOptions(method, body, headers, stripAuthentication) {
     const options = {
       method
     };
     if (!headers) {
       headers = {};
     }
-    if (this.CognitoClient && this.CognitoClient.idToken) {
+    if (!stripAuthentication && this.CognitoClient && this.CognitoClient.idToken) {
       headers['Authorization'] = this.CognitoClient.idToken;
     }
     if (body) {
@@ -7910,6 +7910,29 @@ class ApiClient {
         response = data;
         resolve();
       });
+    }));
+    return response;
+  }
+
+  async uploadFile(url, file) {
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", url, true);
+      xhttp.setRequestHeader('Content-Type', 'multipart/form-data');
+      xhttp.onreadystatechange = function() {
+        if (this.status == 200) {          
+          response = {
+            message: 'File uploaded successfully'
+          };
+        } else {
+          response = {
+            message: 'An unexpected error has occurred'
+          };
+        }
+        resolve();      
+      };
+      xhttp.send(file);
     }));
     return response;
   }
@@ -7974,6 +7997,22 @@ class DocumentsApi {
     }
     params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  /**
+	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
+   * Expected use is for submitting web forms
+	 */
+  async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8144,6 +8183,8 @@ class DocumentsApi {
 
 class AddOrUpdateDocumentParameters {
 
+  documents = [];
+
   constructor(content, contentType, path, tags) {
     if (content) {
       this.content = btoa(content);
@@ -8157,6 +8198,16 @@ class AddOrUpdateDocumentParameters {
     if (tags) {
       this.tags = tags;
     }
+  }
+
+  addChildDocument(content, contentType, path, tags) {
+    const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags);
+    this.documents.push(document);
+  }
+
+  addAttachment(tags) {
+    const document = new AddOrUpdateDocumentParameters(null, null, null, tags);
+    this.documents.push(document);
   }
 
 }

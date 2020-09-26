@@ -1,7 +1,8 @@
+import { CognitoClient } from './CognitoClient.js';
+
 export class ApiClient {
     
   host = 'api-demo.tryformkiq.com';
-  authorizationHeader = [];
   validDateRegExp = /^d{4}-d{2}-d{2}$/;
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
 
@@ -13,20 +14,24 @@ export class ApiClient {
 		ApiClient.instance = value;
 	}
 
-  constructor(host) {
+  constructor(host, userPoolId, clientId) {
     if (host) {
       this.host = host;   
+    }
+    if (userPoolId && clientId) {
+      this.buildCognitoClient(userPoolId, clientId);
     }
     if (!ApiClient.instance) { 
       ApiClient.instance = this;
 		}
   }
 
-  buildAuthorization(token) {
-    this.authorizationHeader = [
-      'Authorization:',
-      token
-    ];
+  logout() {
+    this.CognitoClient = null;
+  }
+
+  buildCognitoClient(userPoolId, clientId) {
+    this.CognitoClient = new CognitoClient(userPoolId, clientId);
   }
 
   buildQueryString(params) {
@@ -46,8 +51,8 @@ export class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (this.authorizationHeader && this.authorizationHeader.length) {
-      headers['Authorization'] = this.authorizationHeader[1];
+    if (this.CognitoClient && this.CognitoClient.idToken) {
+      headers['Authorization'] = this.CognitoClient.idToken;
     }
     if (body) {
       if (typeof body === 'string') {

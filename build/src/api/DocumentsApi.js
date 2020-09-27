@@ -3,8 +3,19 @@ import { ApiClient } from '../ApiClient.js';
 export class DocumentsApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!DocumentsApi.instance) { 
+      DocumentsApi.instance = this;
+		}
   }
+
+  get instance() {
+		return DocumentsApi.instance;
+  }
+  
+  set instance(value) {
+		DocumentsApi.instance = value;
+	}
     
   async getDocuments(siteId, date, tz, previous, next, limit) {
     const params = {

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build:cjs": "rollup --config rollup-cjs-for-web.config.js",
-    "build:cjs:jobform": "rollup --config rollup-cjs-for-web.config.js && cp ./dist/web-cjs/formkiq-client-sdk-cjs.js ../../jobform-html/formkiq-client-sdk-cjs.js"
+    "build:cjs:jobform": "rollup --config rollup-cjs-for-web.config.js && cp ./dist/web-cjs/formkiq-client-sdk-cjs.js ../examples/jobform/formkiq-client-sdk-cjs.js"
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^4.4.0",

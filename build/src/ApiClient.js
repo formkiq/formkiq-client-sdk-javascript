@@ -23,7 +23,7 @@ export class ApiClient {
     }
     if (!ApiClient.instance) { 
       ApiClient.instance = this;
-		}
+    }
   }
 
   logout() {

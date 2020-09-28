@@ -1,8 +1,10 @@
+import { ApiClient } from './ApiClient.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
 
 export class WebFormsHandler {
   
-  constructor(documentsApi) {
+  constructor(apiClient, documentsApi) {
+    this.apiClient = apiClient || ApiClient.instance;
 		this.documentsApi = documentsApi || DocumentsApi.instance;
   }
 
@@ -17,7 +19,7 @@ export class WebFormsHandler {
     });
   }
 
-  submitFormkiqForm(fkqFormElement) {
+  async submitFormkiqForm(fkqFormElement) {
     const data = {};
     data.attachmentFields = [];
     data.formFields = [];
@@ -128,24 +130,46 @@ export class WebFormsHandler {
         addOrUpdateDocumentParameters.addAttachment([this.documentsApi.buildDocumentTagParametersForAdd('fieldName', fileInputElement.getAttribute('name'))]);    
       }
     });
-    console.log('gg');
-    // TODO: (NEXT) Submit form
-    /*
-    formkiqClient.DocumentsApi.addDocumentUsingPublicPath(addOrUpdateDocumentParameters).then((response) => {
-      console.log(response);
-      if (response.documents) {
-        response.documents.filter((document) => document.uploadUrl).forEach((document, index) => {
-          const fileInputElement = fileInputElements[index];
-          if (fileInputElement && fileInputElement.value) {
-            const file = fileInputElement.files[0];
-            formkiqClient.ApiClient.uploadFile(document.uploadUrl, file).then((uploadResponse) => {
-              console.log(uploadResponse);
+    const response = await this.sendFormRequests(addOrUpdateDocumentParameters, fileInputElements);
+    console.log(response);
+  }
+
+  async sendFormRequests(addOrUpdateDocumentParameters, fileInputElements) {
+    const response = {};
+    await Promise.resolve(new Promise((resolve) => {
+      this.documentsApi.addDocumentUsingPublicPath(addOrUpdateDocumentParameters).then((addResponse) => {
+        if (addResponse.documents) {
+          const attachmentPromises = [];
+          addResponse.documents.filter((document) => document.uploadUrl).forEach((document, index) => {
+            const fileInputElement = fileInputElements[index];
+            if (fileInputElement && fileInputElement.value) {
+              const file = fileInputElement.files[0];
+              attachmentPromises.push(new Promise((uploadResolve) => {
+                this.apiClient.uploadFile(document.uploadUrl, file).then((uploadResponse) => {
+                  uploadResolve();
+                });
+              }));
+            }
+          });
+          if (attachmentPromises.length) {
+            Promise.all(attachmentPromises).then(() => {
+              response.success = true;
+              response.message = `Form has been submitted and received, along with ${attachmentPromises.length} attachments.`;
+              resolve();
             });
+          } else {
+            response.success = true;
+            response.message = `Form has been submitted and received.`;
+            resolve();
           }
-        });
-      }
-    });
-    */
+        } else {
+          response.success = false;
+          response.message = `Form failed to be processed successfully. Please try again later.`;
+          resolve();
+        }
+      });
+    }));
+    return response;
   }
 
 }

@@ -345,37 +345,6 @@
         displaySelectedFile(fileInput, idPrefix);
       }
 
-      function submitForm(submitButton) {
-        const form = submitButton.closest('form');
-        if (!form) {
-          return false;
-        }
-        const content = {
-          test: 'test'
-        };
-        const addOrUpdateDocumentParameters = formkiqClient.DocumentsApi.buildDocumentParametersForAddOrUpdate(content);
-        const fileInputElements = Array.from(document.getElementsByTagName('INPUT')).filter((input) => input.type === 'file');
-        fileInputElements.forEach((fileInputElement) => {
-          if (fileInputElement.value) {
-            addOrUpdateDocumentParameters.addAttachment([formkiqClient.DocumentsApi.buildDocumentTagParametersForAdd('fieldName', fileInputElement.getAttribute('name'))]);    
-          }
-        });
-        formkiqClient.DocumentsApi.addDocumentUsingPublicPath(addOrUpdateDocumentParameters).then((response) => {
-          console.log(response);
-          if (response.documents) {
-            response.documents.filter((document) => document.uploadUrl).forEach((document, index) => {
-              const fileInputElement = fileInputElements[index];
-              if (fileInputElement && fileInputElement.value) {
-                const file = fileInputElement.files[0];
-                formkiqClient.ApiClient.uploadFile(document.uploadUrl, file).then((uploadResponse) => {
-                  console.log(uploadResponse);
-                });
-              }
-            });
-          }
-        });
-      }
-
     </script>
   </body>
 </html>

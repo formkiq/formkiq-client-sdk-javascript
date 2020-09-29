@@ -1,4 +1,5 @@
 import { ApiClient } from './ApiClient.js';
+import { WebFormsHandler } from './WebFormsHandler.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
 import { PresetsApi } from './api/PresetsApi.js';
 import { SearchApi } from './api/SearchApi.js';
@@ -14,6 +15,8 @@ export class FormkiqClient {
     this.SearchApi = new SearchApi();
     this.SitesApi = new SitesApi();
     this.VersionApi = new VersionApi();
+    this.WebFormsHandler = new WebFormsHandler();
+    this.WebFormsHandler.checkWebFormsInDocument();
   }
 
   login(email, password) {

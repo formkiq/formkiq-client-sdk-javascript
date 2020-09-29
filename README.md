@@ -1,7 +1,7 @@
 # formkiq-client-sdk-javascript
 FormKiQ Client SDK - JavaScript
 
-**Note: Initial Version uses CommonJS**
+**Note: This Initial Version uses CommonJS**
 
 ## Instructions for Use (Web)
 
@@ -32,6 +32,33 @@ FormKiQ Client SDK - JavaScript
 
 </script>
 ```
+
+## Automatic Handling of Web Forms
+
+**See /examples/jobform for full example.**
+
+To add processing to any web form using FormKiQ, add the class "fkq-form" to your HTML FORM tag:
+
+```html
+<form class="fkq-form">
+```
+
+No action or onsubmit is required or desired, as FormKiQ Web Form Handler will automatically create the submission action. A submit button is expected, to trigger the onsubmit event that the Web Form Handler uses to submit the form:
+
+```html
+<input
+  type="submit"
+  value="Submit Your Fake Application"
+  />
+```
+
+NOTE: You can use any input type, including **text inputs**, **passwords**, **checkboxes**, **radio buttons**, or **file uploads**. **Selects** (dropdowns, whether single value or multiple) and **textareas** are also available for use by the Web Form Handler. 
+
+There are two callbacks included in the Web Form Handler:
+- **onFormSubmitted**(formName)
+- **onFormCompleted**(formName, response)
+
+Validation has not yet been implemented; a simple implementation is next on our roadmap.
 
 
 

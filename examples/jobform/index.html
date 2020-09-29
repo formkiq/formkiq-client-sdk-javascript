@@ -1,0 +1,359 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss/dist/base.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss/dist/components.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/@tailwindcss/custom-forms/dist/custom-forms.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss/dist/utilities.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="max-h-screen h-screen mx-4 my-4">
+      <section>
+        <div class="md:flex md:items-center mx-4 mb-4 relative">
+          <div class="md:w-1/3 lg:w-1/4">
+          </div>
+          <div class="md:w-2/3 lg:w-1/2">
+            <h1 class="text-2xl tracking-tight leading-10 font-extrabold text-gray-900 sm:leading-none md:text-3xl mb-4">
+              Apply for This Fake Position
+            </h1>
+            <h2 class="text-xl tracking-tight leading-10 font-extrabold text-gray-900 sm:leading-none md:text-2xl mb-8">
+              (FormKiQ Client SDK Example)
+            </h2>
+          </div>
+        </div>
+        <form name="Job Form" class="fkq-form">
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="firstName">
+                First Name
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <input
+                  aria-label="First Name"
+                  name="firstName"
+                  type="text"
+                  class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-600
+                    placeholder-gray-500 text-gray-900 rounded-t-md
+                    focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-xl sm:leading-5"
+                  placeholder="Jan"
+                />
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="lastName">
+                Last Name
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <input
+                  aria-label="Last Name"
+                  name="lastName"
+                  type="text"
+                  class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-600
+                    placeholder-gray-500 text-gray-900 rounded-t-md
+                    focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-xl sm:leading-5"
+                  placeholder="Doe"
+                />
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email">
+                Email Address
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <input
+                  aria-label="Email Address"
+                  name="email"
+                  type="email"
+                  class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-600
+                    placeholder-gray-500 text-gray-900 rounded-t-md
+                    focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-xl sm:leading-5"
+                  placeholder="me@mycompany.com"
+                />
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="country">
+                Country
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <select
+                aria-label="Country"
+                name="country"
+                class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-600
+                  placeholder-gray-500 text-gray-900 rounded-t-md
+                  focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-xl sm:leading-5"
+              >
+                <option value="bi">
+                  Burundi
+                </option>
+                <option value="it">
+                  Italy
+                </option>
+                <option value="uy">
+                  Uruguay
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="positionType">
+                Type of Position Desired
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <div class="block md:inline">
+                <input
+                  type="checkbox"
+                  id="positionType-fullTime"
+                  aria-label="Type of Position Desired: Full Time"
+                  name="positionType"
+                  value="Full Time"
+                  class="form-checkbox h-5 w-5 text-blue-500"
+                  />
+                <label class="ml-2 cursor-pointer text-gray-700 font-bold" for="positionType-fullTime">Full Time</span>
+              </div>
+              <div class="block md:inline">
+                <input
+                  type="checkbox"
+                  id="positionType-partTime"
+                  aria-label="Type of Position Desired: Part Time"
+                  name="positionType"
+                  value="Part Time"
+                  class="md:ml-6 form-checkbox h-5 w-5 text-blue-500"
+                  />
+                <label class="ml-2 cursor-pointer text-gray-700 font-bold" for="positionType-partTime">Part Time</span>
+              </div>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="willingToRelocate">
+                Are You Willing to Relocate to New York City?
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <div class="block md:inline">
+                <input
+                  type="radio"
+                  id="willingToRelocate-yes"
+                  aria-label="Willing to Relocate: Yes"
+                  name="willingToRelocate"
+                  value="Yes"
+                  class="form-radio h-5 w-5 text-blue-500"
+                  />
+                <label class="ml-2 cursor-pointer text-gray-700 font-bold" for="willingToRelocate-yes">Yes</span>
+              </div>
+              <div class="block md:inline">
+                <input
+                  type="radio"
+                  id="willingToRelocate-no"
+                  aria-label="Willing to Relocate: No"
+                  name="willingToRelocate"
+                  value="No"
+                  class="md:ml-6 form-radio h-5 w-5 text-blue-500"
+                  />
+                <label class="ml-2 cursor-pointer text-gray-700 font-bold" for="willingToRelocate-no">No</span>
+              </div>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mt-8 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="resume">
+                Your Resume
+                <span class="block text-sm">(Word, PDF, Plain Text)</span>
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <div class="mt-4 mb-4">
+                <div class="md:flex md:flex-columns">
+                  <div
+                    onclick="openFileInput('resumeFileInput')"
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 md:w-1/2 inline-flex items-center"
+                    >
+                    <svg fill="#FFF" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    <span id="resumeFileInputText" class="ml-2">Upload Resume</span>
+                  </div>
+                  <div class="md:w-1/2 pl-2 mt-2 md:mt-0">
+                    <div
+                      id="resumeSelectedFileText"
+                      class="py-2 relative pl-1 pr-6"
+                      >
+                      <input
+                        aria-label="Your Resume"
+                        id="resumeFileInput"
+                        name="resume"
+                        type="file"
+                        class="cursor-pointer absolute w-1 h-1 block opacity-0 pin-r pin-t"
+                        onchange="displaySelectedFile(this, 'resume')"
+                      />
+                      <span>
+                        (no file selected)
+                      </span>
+                      <div
+                        id="resumeRemoveFileButton"
+                        class="hidden cursor-pointer absolute top-0 mt-2 right-0 w-6 h-6 bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-3 inline-flex justify-center items-center"
+                        onclick="removeSelectedFile('resumeFileInput', 'resume')"
+                        >
+                        X
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="coverLetter">
+                Your Cover Letter
+                <span class="block text-sm">(optional)</span>
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <div class="mt-4 mb-4">
+                <div class="md:flex md:flex-columns">
+                  <div
+                    onclick="openFileInput('coverLetterFileInput')"
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 md:w-1/2 inline-flex items-center"
+                    >
+                    <svg fill="#FFF" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    <span id="coverLetterFileInputText" class="ml-2">Upload Cover Letter</span>
+                  </div>
+                  <div class="md:w-1/2 pl-2 mt-2 md:mt-0">
+                    <div
+                      id="coverLetterSelectedFileText"
+                      class="py-2 relative pl-1 pr-6"
+                      >
+                      <input
+                        aria-label="Your Cover Letter"
+                        id="coverLetterFileInput"
+                        name="coverLetter"
+                        type="file"
+                        class="cursor-pointer absolute w-1 h-1 block opacity-0 pin-r pin-t"
+                        onchange="displaySelectedFile(this, 'coverLetter')"
+                      />
+                      <span>
+                        (no file selected)
+                      </span>
+                      <div
+                        id="coverLetterRemoveFileButton"
+                        class="hidden cursor-pointer absolute top-0 mt-2 right-0 w-6 h-6 bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-3 inline-flex justify-center items-center"
+                        onclick="removeSelectedFile('coverLetterFileInput', 'coverLetter')"
+                        >
+                        X
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+              <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="interestingFact">
+                Tell us something interesting or unusual about yourself
+              </label>
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <textarea
+                aria-label="An Interesting Fact about Yourself"
+                name="interestingFact"
+                class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-600
+                  placeholder-gray-500 text-gray-900 rounded-t-md
+                  focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-xl sm:leading-5"
+              ></textarea>
+            </div>
+          </div>
+          <div class="md:flex md:items-center mx-4 mt-8 mb-4 relative">
+            <div class="md:w-1/3 lg:w-1/4">
+            </div>
+            <div class="md:w-2/3 lg:w-1/2">
+              <input
+                type="submit"
+                class="w-full cursor-pointer bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-3 inline-flex justify-center items-center"
+                value="Submit Your Fake Application"
+                />
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script type="text/javascript" src="formkiq-client-sdk-cjs.js"></script>
+    <script type="text/javascript">
+
+      let formkiqClient;
+
+      window.onload = () => {
+        formkiqClient = new FormkiqClient('api-demo.tryformkiq.com');
+      }
+
+      function openFileInput(fileInputId) {
+        var fileInput = document.getElementById(fileInputId);
+        if (fileInput) {
+          fileInput.click();
+        }
+      }
+
+      function displaySelectedFile(fileInput, idPrefix) {
+        var fileName = fileInput.value;
+        if (fileName.indexOf('\\')) {
+          fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
+        }
+        var selectedFileNameDisplayContainer = document.getElementById(idPrefix + 'SelectedFileText');
+        if (selectedFileNameDisplayContainer) {
+          var selectedFileNameDisplaySpan = Array.from(
+            selectedFileNameDisplayContainer.getElementsByTagName('SPAN')
+          ).shift();
+          selectedFileNameDisplaySpan.innerText = fileName;
+        }
+        var removeButton = document.getElementById(idPrefix + 'RemoveFileButton');
+        var fileInputButtonText = document.getElementById(idPrefix + 'FileInputText');
+        if (removeButton) {
+          if (fileName.length) {
+            removeButton.classList.remove('hidden');
+            if (fileInputButtonText) {
+              fileInputButtonText.innerText = fileInputButtonText.innerText.replace('Upload', 'Replace');
+            }
+          } else {
+            removeButton.classList.add('hidden');
+            if (fileInputButtonText) {
+              fileInputButtonText.innerText = fileInputButtonText.innerText.replace('Replace', 'Upload');
+            }
+          }
+        }
+      }
+
+      function removeSelectedFile(fileInputId, idPrefix) {
+        var fileInput = document.getElementById(fileInputId);
+        if (fileInput) {
+          fileInput.value = '';
+        }
+        displaySelectedFile(fileInput, idPrefix);
+      }
+
+      function onFormSubmitted(formName) {
+        console.log(`${formName} has been submitted for processing.`);
+      }
+
+      function onFormCompleted(formName, response) {
+        console.log(`${formName} has been received and processed. Response below:`);
+        console.log(response);
+      }
+
+    </script>
+  </body>
+</html>

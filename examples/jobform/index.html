@@ -21,7 +21,7 @@
             </h2>
           </div>
         </div>
-        <form class="fkq-form">
+        <form name="Job Form" class="fkq-form">
           <div class="md:flex md:items-center mx-4 mb-4 relative">
             <div class="md:w-1/3 lg:w-1/4">
               <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="firstName">
@@ -343,6 +343,15 @@
           fileInput.value = '';
         }
         displaySelectedFile(fileInput, idPrefix);
+      }
+
+      function onFormSubmitted(formName) {
+        console.log(`${formName} has been submitted for processing.`);
+      }
+
+      function onFormCompleted(formName, response) {
+        console.log(`${formName} has been received and processed. Response below:`);
+        console.log(response);
       }
 
     </script>

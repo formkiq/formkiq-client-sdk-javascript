@@ -26,6 +26,10 @@ export class WebFormsHandler {
     if (fkqFormElement.getAttribute('name')) {
       data.formName = fkqFormElement.getAttribute('name');
     }
+    const formNameForCallbacks = data.formName ? data.formName : 'Unknown Form';
+    if (onFormSubmitted) {
+      onFormSubmitted(formNameForCallbacks);
+    }
     const formFieldElements = fkqFormElement.querySelectorAll('input, select, textarea');
     formFieldElements.forEach((formFieldElement) => {
       let formField;
@@ -33,8 +37,7 @@ export class WebFormsHandler {
         case 'INPUT':
           switch (formFieldElement.type) {
             case 'button':
-              // ignore element
-              break;
+            case 'reset':
             case 'submit':
               // ignore element
               break;
@@ -131,32 +134,43 @@ export class WebFormsHandler {
       }
     });
     const response = await this.sendFormRequests(addOrUpdateDocumentParameters, fileInputElements);
-    console.log(response);
+    if (onFormCompleted) {
+      onFormCompleted(formNameForCallbacks, response);
+    } else {
+      console.log('no onFormCompleted function found for ${formNameForCallbacks}. Response below:')
+      console.log(response);
+    }
   }
 
   async sendFormRequests(addOrUpdateDocumentParameters, fileInputElements) {
     const response = {};
     await Promise.resolve(new Promise((resolve) => {
       this.documentsApi.addDocumentUsingPublicPath(addOrUpdateDocumentParameters).then((addResponse) => {
-        if (addResponse.documents) {
-          const attachmentPromises = [];
-          addResponse.documents.filter((document) => document.uploadUrl).forEach((document, index) => {
-            const fileInputElement = fileInputElements[index];
-            if (fileInputElement && fileInputElement.value) {
-              const file = fileInputElement.files[0];
-              attachmentPromises.push(new Promise((uploadResolve) => {
-                this.apiClient.uploadFile(document.uploadUrl, file).then((uploadResponse) => {
-                  uploadResolve();
-                });
-              }));
-            }
-          });
-          if (attachmentPromises.length) {
-            Promise.all(attachmentPromises).then(() => {
-              response.success = true;
-              response.message = `Form has been submitted and received, along with ${attachmentPromises.length} attachments.`;
-              resolve();
+        if (addResponse.documentId) {
+          if (addResponse.documents) {
+            const attachmentPromises = [];
+            addResponse.documents.filter((document) => document.uploadUrl).forEach((document, index) => {
+              const fileInputElement = fileInputElements[index];
+              if (fileInputElement && fileInputElement.value) {
+                const file = fileInputElement.files[0];
+                attachmentPromises.push(new Promise((uploadResolve) => {
+                  this.apiClient.uploadFile(document.uploadUrl, file).then((uploadResponse) => {
+                    uploadResolve();
+                  });
+                }));
+              }
             });
+            if (attachmentPromises.length) {
+              Promise.all(attachmentPromises).then(() => {
+                response.success = true;
+                response.message = `Form has been submitted and received, along with ${attachmentPromises.length} attachments.`;
+                resolve();
+              });
+            } else {
+              response.success = true;
+              response.message = `Form has been submitted and received, but not all attachments were received successfully.`;
+              resolve();
+            }
           } else {
             response.success = true;
             response.message = `Form has been submitted and received.`;
@@ -167,6 +181,7 @@ export class WebFormsHandler {
           response.message = `Form failed to be processed successfully. Please try again later.`;
           resolve();
         }
+        
       });
     }));
     return response;

@@ -7919,7 +7919,7 @@ class ApiClient {
     await Promise.resolve(new Promise((resolve) => {
       var xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
-      xhttp.setRequestHeader('Content-Type', 'multipart/form-data');
+      xhttp.setRequestHeader('Content-Type', file.type);
       xhttp.onreadystatechange = function() {
         if (this.status == 200) {          
           response = {
@@ -8260,7 +8260,6 @@ class WebFormsHandler {
     data.formFields = [];
     if (fkqFormElement.getAttribute('name')) {
       data.formName = fkqFormElement.getAttribute('name');
-      console.log(data.formName);
     }
     const formNameForCallbacks = data.formName ? data.formName : 'Unknown Form';
     if (onFormSubmitted) {

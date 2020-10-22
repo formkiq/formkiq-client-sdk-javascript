@@ -27,11 +27,11 @@ export class ApiClient {
   }
 
   logout() {
-    this.CognitoClient = null;
+    this.cognitoClient = null;
   }
 
   buildCognitoClient(userPoolId, clientId) {
-    this.CognitoClient = new CognitoClient(userPoolId, clientId);
+    this.cognitoClient = new CognitoClient(userPoolId, clientId);
   }
 
   buildQueryString(params) {
@@ -51,8 +51,8 @@ export class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (!stripAuthentication && this.CognitoClient && this.CognitoClient.idToken) {
-      headers['Authorization'] = this.CognitoClient.idToken;
+    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
+      headers['Authorization'] = this.cognitoClient.idToken;
     }
     if (body) {
       if (typeof body === 'string') {

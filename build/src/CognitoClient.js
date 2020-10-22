@@ -14,6 +14,13 @@ export class CognitoClient {
   idToken = '';
   refreshToken = '';
 
+  get cognitoUser() {
+    if (!this.username) {
+      return null;
+    }
+    return this.getCognitoUser(this.username);
+  }
+
   constructor(userPoolId, clientId) {
     this.buildUserPool(userPoolId, clientId);
   }

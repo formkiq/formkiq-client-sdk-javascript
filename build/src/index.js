@@ -9,19 +9,19 @@ import { VersionApi } from './api/VersionApi.js';
 export class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
-    this.ApiClient = new ApiClient(host, userPoolId, clientId);
-    this.DocumentsApi = new DocumentsApi();
-    this.PresetsApi = new PresetsApi();
-    this.SearchApi = new SearchApi();
-    this.SitesApi = new SitesApi();
-    this.VersionApi = new VersionApi();
-    this.WebFormsHandler = new WebFormsHandler();
-    this.WebFormsHandler.checkWebFormsInDocument();
+    this.apiClient = new ApiClient(host, userPoolId, clientId);
+    this.documentsApi = new DocumentsApi();
+    this.presetsApi = new PresetsApi();
+    this.searchApi = new SearchApi();
+    this.sitesApi = new SitesApi();
+    this.versionApi = new VersionApi();
+    this.webFormsHandler = new WebFormsHandler();
+    this.webFormsHandler.checkWebFormsInDocument();
   }
 
   login(email, password) {
-    if (this.ApiClient.CognitoClient) {
-      return this.ApiClient.CognitoClient.login(email, password);
+    if (this.apiClient.cognitoClient) {
+      return this.apiClient.cognitoClient.login(email, password);
     } else {
       return {
         message: 'No authentication client (e.g., Cognito) has been initialized.'
@@ -30,7 +30,7 @@ export class FormkiqClient {
   }
 
   logout() {
-    return this.ApiClient.logout();
+    return this.apiClient.logout();
   }
 
 }

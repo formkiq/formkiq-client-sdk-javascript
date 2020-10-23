@@ -8,11 +8,23 @@ import {
 
 export class CognitoClient {
 
+  storageClient = null;
   cognitoUserPool = null;
   username = '';
   accessToken = '';
   idToken = '';
   refreshToken = '';
+  
+  get username() {
+    if (this.username) {
+      return this.username;
+    } else {
+      if (this.storageClient) {
+        
+      }
+    }
+    return null;
+  }
 
   get cognitoUser() {
     if (!this.username) {
@@ -21,7 +33,8 @@ export class CognitoClient {
     return this.getCognitoUser(this.username);
   }
 
-  constructor(userPoolId, clientId) {
+  constructor(userPoolId, clientId, storageClient) {
+    this.storageClient = storageClient;
     this.buildUserPool(userPoolId, clientId);
   }
 
@@ -74,55 +87,59 @@ export class CognitoClient {
     });
   }
 
-  login(email, password) {
-    if (!this.cognitoUserPool) {
-      return {
-        message: 'No user pool assigned'
-      };
-    }
-    const authenticationDetails = new AuthenticationDetails({
-      Username: email,
-      Password: password
-    });
-    const cognitoUser = this.getCognitoUser(email);
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        this.username = email;
-        this.idToken = result.getIdToken().getJwtToken();
-        this.accessToken = result.getAccessToken().getJwtToken();
-        this.refreshToken = result.getRefreshToken().getToken();
-        return {
-          message: 'Cognito User has been logged in.'
-        };
-      },
-      onFailure: (err) => {
-        if (err.code === 'PasswordResetRequiredException') {          
-          cognitoUser.forgotPassword({
-            onSuccess: () => {
-              return {
-                message: 'Cognito User has been sent an email with password reset instructions.'
-              };
-            },
-            onFailure: (forgotErr) => {
-              return {
-                cognitoErrorCode: forgotErr.code,
-                message: forgotErr.message
-              };
-            },
+  async login(email, password) {
+    return Promise.resolve(new Promise((resolve, reject) => {
+      if (!this.cognitoUserPool) {
+        reject({
+          message: 'No user pool assigned'
+        });
+      }
+      const authenticationDetails = new AuthenticationDetails({
+        Username: email,
+        Password: password
+      });
+      const cognitoUser = this.getCognitoUser(email);
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          this.username = email;
+          this.idToken = result.getIdToken().getJwtToken();
+          this.accessToken = result.getAccessToken().getJwtToken();
+          this.refreshToken = result.getRefreshToken().getToken();
+
+          resolve({
+            message: 'Cognito User has been logged in.'
           });
-        } else {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
+        },
+        onFailure: (err) => {
+          if (err.code === 'PasswordResetRequiredException') {          
+            cognitoUser.forgotPassword({
+              onSuccess: () => {
+                resolve({
+                  message: 'Cognito User has been sent an email with password reset instructions.'
+                });
+              },
+              onFailure: (forgotErr) => {
+                reject({
+                  cognitoErrorCode: forgotErr.code,
+                  message: forgotErr.message
+                });
+              },
+            });
+          } else {
+            reject({
+              cognitoErrorCode: err.code,
+              message: err.message
+            });
           }
-        }
-      },
-      newPasswordRequired: () => {
-        return {
-          message: 'Cognito User must change password.'
-        };
-      },
-    });
+        },
+        newPasswordRequired: () => {
+          reject({
+            cognitoActionRequired: 'newPasswordRequired',
+            message: 'Cognito User must change password.'
+          });
+        },
+      });
+    }));
   }
 
   register(email, password) {

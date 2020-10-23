@@ -1,4 +1,5 @@
 import { ApiClient } from './ApiClient.js';
+import { StorageClient } from './StorageClient.js';
 import { WebFormsHandler } from './WebFormsHandler.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
 import { PresetsApi } from './api/PresetsApi.js';
@@ -8,15 +9,22 @@ import { VersionApi } from './api/VersionApi.js';
 
 export class FormkiqClient {
     
-  constructor(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+  constructor(host, userPoolId, clientId, options) {
+    this.storageClient = new StorageClient();
+    const apiClientOptions = {};
+    if (options && options.useStorageForCognito) {
+      apiClientOptions.storageClient = this.storageClient;
+    }
+    this.apiClient = new ApiClient(host, userPoolId, clientId, apiClientOptions);
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
-    this.webFormsHandler = new WebFormsHandler();
-    this.webFormsHandler.checkWebFormsInDocument();
+    if (typeof document !== "undefined" && document !== null) {
+      this.webFormsHandler = new WebFormsHandler();
+      this.webFormsHandler.checkWebFormsInDocument();
+    }
   }
 
   login(email, password) {

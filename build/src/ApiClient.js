@@ -3,6 +3,7 @@ import { CognitoClient } from './CognitoClient.js';
 export class ApiClient {
     
   host = 'api-demo.tryformkiq.com';
+  storageClient = null;
   validDateRegExp = /^d{4}-d{2}-d{2}$/;
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
 
@@ -14,9 +15,12 @@ export class ApiClient {
 		ApiClient.instance = value;
 	}
 
-  constructor(host, userPoolId, clientId) {
+  constructor(host, userPoolId, clientId, options) {
     if (host) {
       this.host = host;   
+    }
+    if (options && options.storageClient) {
+      this.storageClient = options.storageClient;
     }
     if (userPoolId && clientId) {
       this.buildCognitoClient(userPoolId, clientId);
@@ -31,7 +35,7 @@ export class ApiClient {
   }
 
   buildCognitoClient(userPoolId, clientId) {
-    this.cognitoClient = new CognitoClient(userPoolId, clientId);
+    this.cognitoClient = new CognitoClient(userPoolId, clientId, this.storageClient);
   }
 
   buildQueryString(params) {

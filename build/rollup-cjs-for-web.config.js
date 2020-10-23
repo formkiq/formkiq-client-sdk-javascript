@@ -7,12 +7,12 @@ export default {
 	output: {
 		file: 'dist/web-cjs/formkiq-client-sdk-cjs.js',
 		format: 'cjs',
-		name: 'platformClient',
+		name: 'formkiqClient',
 		interop: 'auto',
 		intro: 'var exports = {"__esModule": true};'
 	},
 	plugins: [ 
-    nodePolyfills(),
+    	nodePolyfills(),
 		resolve(
 			{
 				browser: true,

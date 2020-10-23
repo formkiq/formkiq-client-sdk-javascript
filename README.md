@@ -60,5 +60,8 @@ There are two callbacks included in the Web Form Handler:
 
 Validation has not yet been implemented; a simple implementation is next on our roadmap.
 
+You can run our **jobform example** by running the following in the **./jobform** folder:
+**npx http-server -c-1**
+
 
 

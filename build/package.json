@@ -2,7 +2,8 @@
   "name": "formkiq-client-sdk-javascript",
   "description": "FormKiQ Client SDK for JavaScript",
   "version": "1.0.0",
-  "license": "Apache-2.0",
+  "license": "MIT",
+  "main": "./dist/web-cjs/formkiq-client-sdk-cjs.js",
   "author": {
     "name": "FormKiQ Inc.",
     "email": "info@formkiq.com",
@@ -18,8 +19,7 @@
   "scripts": {
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
     "build:es6": "webpack",
-    "build:cjs": "rollup --config rollup-cjs-for-web.config.js",
-    "build:cjs:jobform": "rollup --config rollup-cjs-for-web.config.js && cp ./dist/web-cjs/formkiq-client-sdk-cjs.js ../examples/jobform/formkiq-client-sdk-cjs.js"
+    "build:cjs": "rollup --config rollup-cjs-for-web.config.js"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.12.1",

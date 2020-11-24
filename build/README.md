@@ -3,10 +3,19 @@ FormKiQ Client SDK - JavaScript
 
 **Note: This Initial Version comes with CommonJS and ES6 versions**
 
+## Installation
+```sh
+npm i formkiq-client-sdk-javascript
+```
+
+FormKiQ Client SDK should now be available as part of your *node_modules*.
+
 ## Instructions for Use (Web/CommonJS)
+Note: while these instructions are for including this SDK in a script tag, you can also use the ES6 version for frameworks such as Angular and React JS: ./node_modules/formkiq-client-sdk-javascript/dist/formkiq-client-sdk-es6.js
+
 
 ```html
-<script type="text/javascript" src="./node_modules/formkiq-client-sdk-javascript/dist/cjs/formkiq-client-sdk-cjs.js"></script>
+<script type="text/javascript" src="./node_modules/formkiq-client-sdk-javascript/dist/web-cjs/formkiq-client-sdk-cjs.js"></script>
 <script type="text/javascript">
       
   let formkiqClient;

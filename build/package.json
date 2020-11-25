@@ -1,7 +1,7 @@
 {
   "name": "formkiq-client-sdk-javascript",
   "description": "FormKiQ Client SDK for JavaScript",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "main": "./dist/web-cjs/formkiq-client-sdk-cjs.js",
   "author": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://formkiq/formkiq-client-sdk-javascript/"
+    "url": "https://github.com/formkiq/formkiq-client-sdk-javascript/"
   },
   "bugs": {
     "url": "https://github.com/formkiq/formkiq-client-sdk-javascript/issues"

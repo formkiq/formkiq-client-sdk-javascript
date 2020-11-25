@@ -33,9 +33,11 @@ FormKiQ Client SDK - JavaScript
 </script>
 ```
 
-## Automatic Handling of Web Forms
+## Automatic Handling of Web Forms ("Auto-Wiring")
 
-**See /examples/jobform for full example.**
+**Example: [Contact Form](https://github.com/formkiq/formkiq-webform-examples-contact)**
+
+**Example (with attachments): [Job Application Form](https://github.com/formkiq/formkiq-webform-examples-jobapplication)**
 
 To add processing to any web form using FormKiQ, add the class "fkq-form" to your HTML FORM tag:
 
@@ -60,5 +62,6 @@ There are two callbacks included in the Web Form Handler:
 
 Validation has not yet been implemented; a simple implementation is next on our roadmap.
 
+## Submitting a Form Manually
 
-
+You can also submit the form manually using **formkiqClient.webFormsHandler.submitFormkiqForm(thisForm);**

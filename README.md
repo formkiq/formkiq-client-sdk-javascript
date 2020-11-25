@@ -14,14 +14,14 @@ FormKiQ Client SDK - JavaScript
     
     // specify Host, Cognito User Pool Id, and Cognito Client Id
     formkiqClient = new FormkiqClient(
-      'api-demo.tryformkiq.com',
-      'us-east-1_1nXLy3soH',
-      '4b9bl9mkvbhpn0g0mjpj0hnhb7'
+      '{FormKiQHttpApiUrl',
+      '{userPoolId}',
+      '{clientId}'
     );
     
     // obviously this would not be hard-coded for non-public creds
     // NOTE: these public credentials for demo@formkiq.com are for read-only access
-    formkiqClient.login('demo@formkiq.com', 'Tryformkiq1!');
+    formkiqClient.login('{email}', '{password}');
 
     // get current version of FormKiQ
     formkiqClient.VersionApi.getVersion().then((response) => {

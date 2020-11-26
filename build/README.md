@@ -54,7 +54,9 @@ To add processing to any web form using FormKiQ, add the class "fkq-form" to you
 <form class="fkq-form">
 ```
 
-No action or onsubmit is required or desired, as FormKiQ Web Form Handler will automatically create the submission action. A submit button is expected, to trigger the onsubmit event that the Web Form Handler uses to submit the form:
+No action or onsubmit is required or desired, as FormKiQ Web Form Handler will automatically create the submission action.
+
+A submit button is expected, to trigger the onsubmit event that the Web Form Handler uses to submit the form:
 
 ```html
 <input
@@ -67,13 +69,13 @@ NOTE: You can use any input type, including **text inputs**, **passwords**, **ch
 
 There are two callbacks included in the Web Form Handler:
 - **onFormSubmitted**(formName)
-- **onFormCompleted**(formName, response)
+- **onFormCompleted**(formName, response: {})
 
-Validation has not yet been implemented; a simple implementation is next on our roadmap.
+Any input fields that should be required should include a "required" HTML Attribute, and those will prevent the form from submitting. To create custom validation rules, you should submit the form manually using **onsubmit**, and add extra validation in the triggered submit function.
 
 ## Submitting a Form Manually
 
-You can also submit the form manually using **formkiqClient.webFormsHandler.submitFormkiqForm(thisForm);**
+You can submit the form manually using **formkiqClient.webFormsHandler.submitFormkiqForm(thisForm);**
 
 
 

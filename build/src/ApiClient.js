@@ -16,7 +16,8 @@ export class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      this.host = host;   
+      host = host.replace('https://', '').replace(/\/+$/, '');
+      this.host = host;
     }
     if (userPoolId && clientId) {
       this.buildCognitoClient(userPoolId, clientId);

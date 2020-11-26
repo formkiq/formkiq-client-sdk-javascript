@@ -24,7 +24,8 @@
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.12.1",
     "amazon-cognito-identity-js": "^4.4.0",
-    "buffer": "^5.6.0"
+    "buffer": "^5.6.0",
+    "rollup": "^2.33.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

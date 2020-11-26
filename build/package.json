@@ -1,7 +1,7 @@
 {
   "name": "formkiq-client-sdk-javascript",
   "description": "FormKiQ Client SDK for JavaScript",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "main": "./dist/web-cjs/formkiq-client-sdk-cjs.js",
   "author": {

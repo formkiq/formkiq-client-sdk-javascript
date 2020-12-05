@@ -8206,7 +8206,8 @@ class AddOrUpdateDocumentParameters {
 
   constructor(content, contentType, path, tags) {
     if (content) {
-      this.content = btoa(content);
+      // this.content = btoa(content);
+      this.content = content;
     }
     if (contentType) {
       this.contentType = contentType;
@@ -8224,8 +8225,8 @@ class AddOrUpdateDocumentParameters {
     this.documents.push(document);
   }
 
-  addAttachment(tags) {
-    const document = new AddOrUpdateDocumentParameters(null, null, null, tags);
+  addAttachment(path, tags) {
+    const document = new AddOrUpdateDocumentParameters(null, null, path, tags);
     this.documents.push(document);
   }
 
@@ -8369,11 +8370,25 @@ class WebFormsHandler {
       }
     });
     const content = JSON.stringify(data);
-    const addOrUpdateDocumentParameters = this.documentsApi.buildDocumentParametersForAddOrUpdate(content);
+    const tags = [];
+    if (data.formName) {
+      tags.push(
+        {
+          key: 'webformName',
+          value: JSON.stringify(data.formName).replace(/\"/g, '')
+        }
+      );
+    }
+    let path = null;
+    if (window.location.href) {
+      path = window.location.href;
+    }
+    const addOrUpdateDocumentParameters = this.documentsApi.buildDocumentParametersForAddOrUpdate(content, 'application/json', path, tags);
     const fileInputElements = Array.from(fkqFormElement.getElementsByTagName('INPUT')).filter((input) => input.type === 'file');
     fileInputElements.forEach((fileInputElement) => {
       if (fileInputElement.value) {
-        addOrUpdateDocumentParameters.addAttachment([this.documentsApi.buildDocumentTagParametersForAdd('fieldName', fileInputElement.getAttribute('name'))]);    
+        const path = fileInputElement.value.replace('C:\\fakepath\\', '');
+        addOrUpdateDocumentParameters.addAttachment(path, [this.documentsApi.buildDocumentTagParametersForAdd('fieldName', fileInputElement.getAttribute('name'))]);    
       }
     });
     const response = await this.sendFormRequests(addOrUpdateDocumentParameters, fileInputElements);

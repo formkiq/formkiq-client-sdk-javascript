@@ -259,7 +259,7 @@ export class AddOrUpdateDocumentParameters {
 
   constructor(content, contentType, path, tags) {
     if (content) {
-      this.content = btoa(content);
+      this.content = content;
     }
     if (contentType) {
       this.contentType = contentType;
@@ -277,8 +277,8 @@ export class AddOrUpdateDocumentParameters {
     this.documents.push(document);
   }
 
-  addAttachment(tags) {
-    const document = new AddOrUpdateDocumentParameters(null, null, null, tags);
+  addAttachment(path, tags) {
+    const document = new AddOrUpdateDocumentParameters(null, null, path, tags);
     this.documents.push(document);
   }
 

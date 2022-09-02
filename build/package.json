@@ -19,7 +19,8 @@
   "scripts": {
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
     "build:es6": "webpack",
-    "build:cjs": "rollup --config rollup-cjs-for-web.config.js"
+    "build:cjs": "rollup --config rollup-cjs-for-web.config.js",
+    "postinstall": "npm run build:es6 && npm run build:cjs"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.12.1",

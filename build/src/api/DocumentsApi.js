@@ -24,9 +24,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    if (date && date.match(this.apiClient.validDateRegExp)) {
+    if (date && date.match(ApiClient.instance.validDateRegExp)) {
       params.date = date;
-      if (tz && tz.match(this.apiClient.validTZRegExp)) {
+      if (tz && tz.match(ApiClient.instance.validTZRegExp)) {
         params.tz = tz;
       }
     }
@@ -39,9 +39,9 @@ export class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocument(documentId, siteId) {
@@ -56,9 +56,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addDocument(addOrUpdateDocumentParameters, siteId) {
@@ -68,9 +68,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   /**
@@ -84,9 +84,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/public/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async updateDocument(documentId, addOrUpdateDocumentParameters, siteId) {
@@ -101,9 +101,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('PATCH', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('PATCH', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deleteDocument(documentId, siteId) {
@@ -118,9 +118,9 @@ export class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentTags(documentId) {
@@ -129,9 +129,9 @@ export class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentTag(documentId, tagKey) {
@@ -145,9 +145,9 @@ export class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addDocumentTag(documentId, addDocumentTagParameters) {
@@ -156,9 +156,9 @@ export class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
-    const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags`;
+    const options = ApiClient.instance.buildOptions('POST', addDocumentTagParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deleteDocumentTag(documentId, tagKey) {
@@ -172,9 +172,9 @@ export class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentUrl(documentId) {
@@ -183,9 +183,9 @@ export class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/url`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/url`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async convertDocumentToFormat(documentId, mime, versionId) {
@@ -200,9 +200,9 @@ export class DocumentsApi {
     if (versionId) {
       body.versionId = versionId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/formats`;
-    const options = this.apiClient.buildOptions('POST', body);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/formats`;
+    const options = ApiClient.instance.buildOptions('POST', body);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentVersions(documentId) {
@@ -211,9 +211,9 @@ export class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/versions`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getSignedUrlForNewDocumentUpload(path) {
@@ -222,9 +222,9 @@ export class DocumentsApi {
     if (path) {
       params.path = path;
     }
-    const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/upload${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getSignedUrlForDocumentReplacementUpload(documentId, path) {
@@ -238,9 +238,9 @@ export class DocumentsApi {
     if (path) {
       params.path = path;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/upload${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {

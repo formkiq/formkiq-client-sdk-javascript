@@ -3,7 +3,7 @@ import { ApiClient } from '../ApiClient.js';
 export class SitesApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async getSites(siteId) {
@@ -13,9 +13,9 @@ export class SitesApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/sites${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
 }

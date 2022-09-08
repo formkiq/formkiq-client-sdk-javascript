@@ -3,7 +3,7 @@ import { ApiClient } from '../ApiClient.js';
 export class PresetsApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async getPresets(siteId, previous, next, limit) {
@@ -22,9 +22,9 @@ export class PresetsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addPreset(addPresetParameters, siteId) {
@@ -34,9 +34,9 @@ export class PresetsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addPresetParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addPresetParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deletePreset(presetId, siteId) {
@@ -51,9 +51,9 @@ export class PresetsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getPresetTags(presetId) {
@@ -62,9 +62,9 @@ export class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addPresetTag(presetId, addPresetTagParameters) {
@@ -73,9 +73,9 @@ export class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
-    const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags`;
+    const options = ApiClient.instance.buildOptions('POST', addPresetTagParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deletePresetTag(presetId, tagKey) {
@@ -89,9 +89,9 @@ export class PresetsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   buildPresetParametersForAdd(name, tags) {

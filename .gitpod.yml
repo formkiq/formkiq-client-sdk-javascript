@@ -1,0 +1,10 @@
+ports:
+  - port: 8080
+    onOpen: open-browser
+
+tasks:
+  - init: >
+      #
+    command: >
+      python3 -m http.server --directory ./build/dist
+      gp await-port 8080 && gp preview $(gp url 8080)

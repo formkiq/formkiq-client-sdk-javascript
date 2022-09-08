@@ -9,7 +9,7 @@ import { VersionApi } from './api/VersionApi.js';
 export class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+    ApiClient.instance = new ApiClient(host, userPoolId, clientId);
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
     this.searchApi = new SearchApi();
@@ -20,8 +20,8 @@ export class FormkiqClient {
   }
 
   login(email, password) {
-    if (this.apiClient.cognitoClient) {
-      return this.apiClient.cognitoClient.login(email, password);
+    if (ApiClient.instance.cognitoClient) {
+      return ApiClient.instance.cognitoClient.login(email, password);
     } else {
       return {
         message: 'No authentication client (e.g., Cognito) has been initialized.'
@@ -30,7 +30,7 @@ export class FormkiqClient {
   }
 
   logout() {
-    return this.apiClient.logout();
+    return ApiClient.instance.logout();
   }
 
 }

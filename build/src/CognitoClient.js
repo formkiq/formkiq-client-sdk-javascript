@@ -94,7 +94,11 @@ export class CognitoClient {
           this.accessToken = result.getAccessToken().getJwtToken();
           this.refreshToken = result.getRefreshToken().getToken();
           cognitoResponse = {
-            message: 'Cognito User has been logged in.'
+            message: 'Cognito User has been logged in.',
+            username: this.username,
+            idToken: this.idToken,
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken
           };
           resolve();
         },

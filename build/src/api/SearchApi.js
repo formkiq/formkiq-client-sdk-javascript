@@ -3,8 +3,19 @@ import { ApiClient } from '../ApiClient.js';
 export class SearchApi {
 
   constructor(apiClient) {
-		ApiClient.instance = apiClient || ApiClient.instance;
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!SearchApi.instance) { 
+      SearchApi.instance = this;
+		}
   }
+
+  get instance() {
+		return SearchApi.instance;
+  }
+  
+  set instance(value) {
+		SearchApi.instance = value;
+	}
     
   async search(searchParameters, siteId, previous, next, limit) {
     const params = {
@@ -22,9 +33,9 @@ export class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${ApiClient.instance.host}/search${ApiClient.instance.buildQueryString(params)}`;
-    const options = ApiClient.instance.buildOptions('POST', searchParameters);
-    return await ApiClient.instance.fetchAndRespond(url, options);
+    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', searchParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
   }
 
   buildTagSearchParameters(key, beginsWith, eq) {

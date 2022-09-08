@@ -9,7 +9,7 @@ import { VersionApi } from './api/VersionApi.js';
 export class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
-    ApiClient.instance = new ApiClient(host, userPoolId, clientId);
+    this.apiClient = new ApiClient(host, userPoolId, clientId);
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
     this.searchApi = new SearchApi();
@@ -19,9 +19,18 @@ export class FormkiqClient {
     this.webFormsHandler.checkWebFormsInDocument();
   }
 
-  login(email, password) {
-    if (ApiClient.instance.cognitoClient) {
-      return ApiClient.instance.cognitoClient.login(email, password);
+  async login(email, password) {
+    if (this.apiClient.cognitoClient) {
+      const response = await this.apiClient.cognitoClient.login(email, password);
+
+      // TODO: determine better way of ensuring cognito client is updated across API instances
+      this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+
+      return response;
     } else {
       return {
         message: 'No authentication client (e.g., Cognito) has been initialized.'
@@ -30,7 +39,16 @@ export class FormkiqClient {
   }
 
   logout() {
-    return ApiClient.instance.logout();
+    const response = this.apiClient.logout();
+    
+    // TODO: determine better way of ensuring cognito client is updated across API instances
+    this.documentsApi.apiClient.cognitoClient = null;
+    this.presetsApi.apiClient.cognitoClient = null;
+    this.searchApi.apiClient.cognitoClient = null;
+    this.sitesApi.apiClient.cognitoClient = null;
+    this.versionApi.apiClient.cognitoClient = null;
+
+    return response;
   }
 
 }

@@ -7658,7 +7658,11 @@ class CognitoClient {
           this.accessToken = result.getAccessToken().getJwtToken();
           this.refreshToken = result.getRefreshToken().getToken();
           cognitoResponse = {
-            message: 'Cognito User has been logged in.'
+            message: 'Cognito User has been logged in.',
+            username: this.username,
+            idToken: this.idToken,
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken
           };
           resolve();
         },
@@ -7905,7 +7909,7 @@ class ApiClient {
     if (!headers) {
       headers = {};
     }
-    console.log(this.cognitoClient);
+    // console.log(this.cognitoClient);
     if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
       headers['Authorization'] = this.cognitoClient.idToken;
     }
@@ -8675,7 +8679,7 @@ class VersionApi {
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
-    ApiClient.instance = new ApiClient(host, userPoolId, clientId);
+    this.apiClient = new ApiClient(host, userPoolId, clientId);
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
     this.searchApi = new SearchApi();
@@ -8685,9 +8689,11 @@ class FormkiqClient {
     this.webFormsHandler.checkWebFormsInDocument();
   }
 
-  login(email, password) {
-    if (ApiClient.instance.cognitoClient) {
-      return ApiClient.instance.cognitoClient.login(email, password);
+  async login(email, password) {
+    if (this.apiClient.cognitoClient) {
+      const response = await this.apiClient.cognitoClient.login(email, password);
+      console.log(response);
+      return response;
     } else {
       return {
         message: 'No authentication client (e.g., Cognito) has been initialized.'

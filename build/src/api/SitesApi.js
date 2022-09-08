@@ -3,8 +3,19 @@ import { ApiClient } from '../ApiClient.js';
 export class SitesApi {
 
   constructor(apiClient) {
-		ApiClient.instance = apiClient || ApiClient.instance;
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!SitesApi.instance) { 
+      SitesApi.instance = this;
+		}
   }
+
+  get instance() {
+		return SitesApi.instance;
+  }
+  
+  set instance(value) {
+		SitesApi.instance = value;
+	}
     
   async getSites(siteId) {
     const params = {
@@ -13,9 +24,9 @@ export class SitesApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${ApiClient.instance.host}/sites${ApiClient.instance.buildQueryString(params)}`;
-    const options = ApiClient.instance.buildOptions('GET');
-    return await ApiClient.instance.fetchAndRespond(url, options);
+    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
   }
 
 }

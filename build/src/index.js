@@ -38,17 +38,31 @@ export class FormkiqClient {
     }
   }
 
-  logout() {
-    const response = this.apiClient.logout();
+  async logout() {
+    const response = await this.apiClient.logout();
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.documentsApi.apiClient.cognitoClient = null;
-    this.presetsApi.apiClient.cognitoClient = null;
-    this.searchApi.apiClient.cognitoClient = null;
-    this.sitesApi.apiClient.cognitoClient = null;
-    this.versionApi.apiClient.cognitoClient = null;
+    this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
+  }
+
+  rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
+    this.apiClient.cognitoClient.username = username;
+    this.apiClient.cognitoClient.idToken = idToken;
+    this.apiClient.cognitoClient.accessToken = accessToken;
+    this.apiClient.cognitoClient.refreshToken = refreshToken;
+    
+    // TODO: determine better way of ensuring cognito client is updated across API instances
+    this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

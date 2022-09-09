@@ -27,8 +27,8 @@ export class ApiClient {
     }
   }
 
-  logout() {
-    this.cognitoClient = null;
+  async logout() {
+    this.cognitoClient.removeUser();
   }
 
   buildCognitoClient(userPoolId, clientId) {
@@ -52,7 +52,6 @@ export class ApiClient {
     if (!headers) {
       headers = {};
     }
-    // console.log(this.cognitoClient);
     if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
       headers['Authorization'] = this.cognitoClient.idToken;
     }

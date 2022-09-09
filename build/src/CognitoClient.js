@@ -291,4 +291,11 @@ export class CognitoClient {
     });
   }
 
+  removeUser() {
+    this.username = '';
+    this.accessToken = '';
+    this.idToken = '';
+    this.refreshToken = '';
+  }
+
 }

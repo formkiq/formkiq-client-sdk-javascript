@@ -3,8 +3,19 @@ import { ApiClient } from '../ApiClient.js';
 export class PresetsApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!PresetsApi.instance) { 
+      PresetsApi.instance = this;
+		}
   }
+
+  get instance() {
+		return PresetsApi.instance;
+  }
+  
+  set instance(value) {
+		PresetsApi.instance = value;
+	}
     
   async getPresets(siteId, previous, next, limit) {
     const params = {

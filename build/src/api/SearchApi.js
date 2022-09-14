@@ -3,8 +3,19 @@ import { ApiClient } from '../ApiClient.js';
 export class SearchApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!SearchApi.instance) { 
+      SearchApi.instance = this;
+		}
   }
+
+  get instance() {
+		return SearchApi.instance;
+  }
+  
+  set instance(value) {
+		SearchApi.instance = value;
+	}
     
   async search(searchParameters, siteId, previous, next, limit) {
     const params = {

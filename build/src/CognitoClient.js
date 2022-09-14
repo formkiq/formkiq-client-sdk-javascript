@@ -74,7 +74,7 @@ export class CognitoClient {
     });
   }
 
-  login(email, password) {
+  async login(email, password) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -85,44 +85,57 @@ export class CognitoClient {
       Password: password
     });
     const cognitoUser = this.getCognitoUser(email);
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        this.username = email;
-        this.idToken = result.getIdToken().getJwtToken();
-        this.accessToken = result.getAccessToken().getJwtToken();
-        this.refreshToken = result.getRefreshToken().getToken();
-        return {
-          message: 'Cognito User has been logged in.'
-        };
-      },
-      onFailure: (err) => {
-        if (err.code === 'PasswordResetRequiredException') {          
-          cognitoUser.forgotPassword({
-            onSuccess: () => {
-              return {
-                message: 'Cognito User has been sent an email with password reset instructions.'
-              };
-            },
-            onFailure: (forgotErr) => {
-              return {
-                cognitoErrorCode: forgotErr.code,
-                message: forgotErr.message
-              };
-            },
-          });
-        } else {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
+    let cognitoResponse = null;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          this.username = email;
+          this.idToken = result.getIdToken().getJwtToken();
+          this.accessToken = result.getAccessToken().getJwtToken();
+          this.refreshToken = result.getRefreshToken().getToken();
+          cognitoResponse = {
+            message: 'Cognito User has been logged in.',
+            username: this.username,
+            idToken: this.idToken,
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken
+          };
+          resolve();
+        },
+        onFailure: (err) => {
+          if (err.code === 'PasswordResetRequiredException') {          
+            cognitoUser.forgotPassword({
+              onSuccess: () => {
+                cognitoResponse = {
+                  message: 'Cognito User has been sent an email with password reset instructions.'
+                };
+                resolve();
+              },
+              onFailure: (forgotErr) => {
+                cognitoResponse = {
+                  cognitoErrorCode: forgotErr.code,
+                  message: forgotErr.message
+                };
+                resolve();
+              },
+            });
+          } else {
+            cognitoResponse = {
+              cognitoErrorCode: err.code,
+              message: err.message
+            };
+            resolve();
           }
-        }
-      },
-      newPasswordRequired: () => {
-        return {
-          message: 'Cognito User must change password.'
-        };
-      },
-    });
+        },
+        newPasswordRequired: () => {
+          cognitoResponse = {
+            message: 'Cognito User must change password.'
+          };
+          resolve();
+        },
+      });
+    }));
+    return cognitoResponse;
   }
 
   register(email, password) {
@@ -276,6 +289,13 @@ export class CognitoClient {
         }
       }
     });
+  }
+
+  removeUser() {
+    this.username = '';
+    this.accessToken = '';
+    this.idToken = '';
+    this.refreshToken = '';
   }
 
 }

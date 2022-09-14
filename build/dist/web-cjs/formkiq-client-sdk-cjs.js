@@ -7638,7 +7638,7 @@ class CognitoClient {
     });
   }
 
-  login(email, password) {
+  async login(email, password) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -7649,44 +7649,57 @@ class CognitoClient {
       Password: password
     });
     const cognitoUser = this.getCognitoUser(email);
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        this.username = email;
-        this.idToken = result.getIdToken().getJwtToken();
-        this.accessToken = result.getAccessToken().getJwtToken();
-        this.refreshToken = result.getRefreshToken().getToken();
-        return {
-          message: 'Cognito User has been logged in.'
-        };
-      },
-      onFailure: (err) => {
-        if (err.code === 'PasswordResetRequiredException') {          
-          cognitoUser.forgotPassword({
-            onSuccess: () => {
-              return {
-                message: 'Cognito User has been sent an email with password reset instructions.'
-              };
-            },
-            onFailure: (forgotErr) => {
-              return {
-                cognitoErrorCode: forgotErr.code,
-                message: forgotErr.message
-              };
-            },
-          });
-        } else {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
+    let cognitoResponse = null;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          this.username = email;
+          this.idToken = result.getIdToken().getJwtToken();
+          this.accessToken = result.getAccessToken().getJwtToken();
+          this.refreshToken = result.getRefreshToken().getToken();
+          cognitoResponse = {
+            message: 'Cognito User has been logged in.',
+            username: this.username,
+            idToken: this.idToken,
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken
+          };
+          resolve();
+        },
+        onFailure: (err) => {
+          if (err.code === 'PasswordResetRequiredException') {          
+            cognitoUser.forgotPassword({
+              onSuccess: () => {
+                cognitoResponse = {
+                  message: 'Cognito User has been sent an email with password reset instructions.'
+                };
+                resolve();
+              },
+              onFailure: (forgotErr) => {
+                cognitoResponse = {
+                  cognitoErrorCode: forgotErr.code,
+                  message: forgotErr.message
+                };
+                resolve();
+              },
+            });
+          } else {
+            cognitoResponse = {
+              cognitoErrorCode: err.code,
+              message: err.message
+            };
+            resolve();
           }
-        }
-      },
-      newPasswordRequired: () => {
-        return {
-          message: 'Cognito User must change password.'
-        };
-      },
-    });
+        },
+        newPasswordRequired: () => {
+          cognitoResponse = {
+            message: 'Cognito User must change password.'
+          };
+          resolve();
+        },
+      });
+    }));
+    return cognitoResponse;
   }
 
   register(email, password) {
@@ -7896,6 +7909,7 @@ class ApiClient {
     if (!headers) {
       headers = {};
     }
+    // console.log(this.cognitoClient);
     if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
       headers['Authorization'] = this.cognitoClient.idToken;
     }
@@ -7971,9 +7985,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    if (date && date.match(this.apiClient.validDateRegExp)) {
+    if (date && date.match(ApiClient.instance.validDateRegExp)) {
       params.date = date;
-      if (tz && tz.match(this.apiClient.validTZRegExp)) {
+      if (tz && tz.match(ApiClient.instance.validTZRegExp)) {
         params.tz = tz;
       }
     }
@@ -7986,9 +8000,9 @@ class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocument(documentId, siteId) {
@@ -8003,9 +8017,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addDocument(addOrUpdateDocumentParameters, siteId) {
@@ -8015,9 +8029,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   /**
@@ -8031,9 +8045,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/public/documents${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async updateDocument(documentId, addOrUpdateDocumentParameters, siteId) {
@@ -8048,9 +8062,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('PATCH', addOrUpdateDocumentParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('PATCH', addOrUpdateDocumentParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deleteDocument(documentId, siteId) {
@@ -8065,9 +8079,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentTags(documentId) {
@@ -8076,9 +8090,9 @@ class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentTag(documentId, tagKey) {
@@ -8092,9 +8106,9 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addDocumentTag(documentId, addDocumentTagParameters) {
@@ -8103,9 +8117,9 @@ class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
-    const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags`;
+    const options = ApiClient.instance.buildOptions('POST', addDocumentTagParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deleteDocumentTag(documentId, tagKey) {
@@ -8119,9 +8133,9 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentUrl(documentId) {
@@ -8130,9 +8144,9 @@ class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/url`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/url`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async convertDocumentToFormat(documentId, mime, versionId) {
@@ -8147,9 +8161,9 @@ class DocumentsApi {
     if (versionId) {
       body.versionId = versionId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/formats`;
-    const options = this.apiClient.buildOptions('POST', body);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/formats`;
+    const options = ApiClient.instance.buildOptions('POST', body);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getDocumentVersions(documentId) {
@@ -8158,9 +8172,9 @@ class DocumentsApi {
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/versions`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getSignedUrlForNewDocumentUpload(path) {
@@ -8169,9 +8183,9 @@ class DocumentsApi {
     if (path) {
       params.path = path;
     }
-    const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/upload${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getSignedUrlForDocumentReplacementUpload(documentId, path) {
@@ -8185,9 +8199,9 @@ class DocumentsApi {
     if (path) {
       params.path = path;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/documents/${documentId}/upload${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
@@ -8206,7 +8220,6 @@ class AddOrUpdateDocumentParameters {
 
   constructor(content, contentType, path, tags) {
     if (content) {
-      // this.content = btoa(content);
       this.content = content;
     }
     if (contentType) {
@@ -8450,7 +8463,7 @@ class WebFormsHandler {
 class PresetsApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async getPresets(siteId, previous, next, limit) {
@@ -8469,9 +8482,9 @@ class PresetsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addPreset(addPresetParameters, siteId) {
@@ -8481,9 +8494,9 @@ class PresetsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addPresetParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', addPresetParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deletePreset(presetId, siteId) {
@@ -8498,9 +8511,9 @@ class PresetsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async getPresetTags(presetId) {
@@ -8509,9 +8522,9 @@ class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async addPresetTag(presetId, addPresetTagParameters) {
@@ -8520,9 +8533,9 @@ class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
-    const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags`;
+    const options = ApiClient.instance.buildOptions('POST', addPresetTagParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   async deletePresetTag(presetId, tagKey) {
@@ -8536,9 +8549,9 @@ class PresetsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/presets/${presetId}/tags/${tagKey}`;
+    const options = ApiClient.instance.buildOptions('DELETE');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   buildPresetParametersForAdd(name, tags) {
@@ -8580,7 +8593,7 @@ class AddPresetTagParameters {
 class SearchApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async search(searchParameters, siteId, previous, next, limit) {
@@ -8599,9 +8612,9 @@ class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', searchParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/search${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('POST', searchParameters);
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
   buildTagSearchParameters(key, beginsWith, eq) {
@@ -8632,7 +8645,7 @@ class TagSearchParameters {
 class SitesApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async getSites(siteId) {
@@ -8642,9 +8655,9 @@ class SitesApi {
       siteId = 'default';
     }
     params.siteId = siteId;
-    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/sites${ApiClient.instance.buildQueryString(params)}`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
 }
@@ -8652,13 +8665,13 @@ class SitesApi {
 class VersionApi {
 
   constructor(apiClient) {
-		this.apiClient = apiClient || ApiClient.instance;
+		ApiClient.instance = apiClient || ApiClient.instance;
   }
     
   async getVersion() {
-    const url = `https://${this.apiClient.host}/version`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
+    const url = `https://${ApiClient.instance.host}/version`;
+    const options = ApiClient.instance.buildOptions('GET');
+    return await ApiClient.instance.fetchAndRespond(url, options);
   }
 
 }
@@ -8676,9 +8689,11 @@ class FormkiqClient {
     this.webFormsHandler.checkWebFormsInDocument();
   }
 
-  login(email, password) {
+  async login(email, password) {
     if (this.apiClient.cognitoClient) {
-      return this.apiClient.cognitoClient.login(email, password);
+      const response = await this.apiClient.cognitoClient.login(email, password);
+      console.log(response);
+      return response;
     } else {
       return {
         message: 'No authentication client (e.g., Cognito) has been initialized.'
@@ -8687,7 +8702,7 @@ class FormkiqClient {
   }
 
   logout() {
-    return this.apiClient.logout();
+    return ApiClient.instance.logout();
   }
 
 }

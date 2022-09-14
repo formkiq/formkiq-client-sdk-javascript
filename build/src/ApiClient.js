@@ -27,8 +27,8 @@ export class ApiClient {
     }
   }
 
-  logout() {
-    this.cognitoClient = null;
+  async logout() {
+    this.cognitoClient.removeUser();
   }
 
   buildCognitoClient(userPoolId, clientId) {

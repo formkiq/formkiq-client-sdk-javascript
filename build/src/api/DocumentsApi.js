@@ -269,6 +269,12 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getSignedUrlForNewDocumentUploadWithBody(uploadBody) {
+    const url = `https://${this.apiClient.host}/documents/upload`;
+    const options = this.apiClient.buildOptions('POST', uploadBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getSignedUrlForDocumentReplacementUpload(documentId, path) {
     if (!documentId) {
       return JSON.stringify({

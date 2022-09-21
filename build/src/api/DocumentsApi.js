@@ -44,6 +44,30 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  // docs about documentSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentSearchBody
+  async searchDocuments(documentSearchBody, siteId, limit, next, previous) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+
+    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', documentSearchBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getDocument(documentId, siteId) {
     if (!documentId) {
       return JSON.stringify({
@@ -188,6 +212,24 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
+  async searchFulltext(documentFulltextSearchBody, siteId, limit) {
+    const params = {};
+
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+
+    if (limit) {
+      params.limit = limit
+    }
+
+    const url = `https://${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`
+    const options = this.apiClient.buildOptions('POST', documentFulltextSearchBody)
+    return await this.apiClient.fetchAndRespond(url, options)
+  }
+  
   async convertDocumentToFormat(documentId, mime, versionId) {
     if (!documentId) {
       return JSON.stringify({
@@ -224,6 +266,12 @@ export class DocumentsApi {
     }
     const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getSignedUrlForNewDocumentUploadWithBody(uploadBody) {
+    const url = `https://${this.apiClient.host}/documents/upload`;
+    const options = this.apiClient.buildOptions('POST', uploadBody);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

@@ -7942,12 +7942,13 @@ class ApiClient {
     return response;
   }
 
-  async uploadFile(url, file) {
+  async uploadFile(url, file, onProgressCallback) {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       var xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
       xhttp.setRequestHeader('Content-Type', file.type);
+      xhttp.upload.onprogress = onProgressCallback;
       xhttp.onreadystatechange = function() {
         if (this.status == 200) {          
           response = {

@@ -291,6 +291,29 @@ export class CognitoClient {
     });
   }
 
+  async confirmRegistration(accountUrl, username, userStatus, session, password) {
+    const body = {
+      userStatus,
+      password,
+      session,
+      username
+    };
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {}
+    };
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      fetch(accountUrl, options).then(response => response.json())
+      .then(data => {
+        response = data;
+        resolve();
+      });
+    }));
+    return response;
+  }
+
   removeUser() {
     this.username = '';
     this.accessToken = '';

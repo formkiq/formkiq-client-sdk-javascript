@@ -8153,6 +8153,17 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async updateDocumentTag(documentId, tagKey, tagValues) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
+    const options = this.apiClient.buildOptions('PUT', tagValues);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async deleteDocumentTag(documentId, tagKey) {
     if (!documentId) {
       return JSON.stringify({

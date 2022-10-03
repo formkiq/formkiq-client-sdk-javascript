@@ -8176,6 +8176,24 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async addDocumentTags(documentId, tagKey, tagValues) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
+    let options;
+    if (tagValues.length === 0) {
+      options = this.apiClient.buildOptions('POST', {key: tagKey});
+    } else if (Array.isArray(tagValues) && tagValues.length > 1) {
+      options = this.apiClient.buildOptions('POST', {key: tagKey, values: tagValues});
+    } else {
+      options = this.apiClient.buildOptions('POST', {key: tagKey, value: tagValues});
+    }
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async updateDocumentTag(documentId, tagKey, tagValues) {
     if (!documentId) {
       return JSON.stringify({

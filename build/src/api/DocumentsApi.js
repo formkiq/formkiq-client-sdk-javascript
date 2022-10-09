@@ -212,13 +212,13 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(documentId) {
+  async getDocumentUrl(documentId, inline = false) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/url`;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/url?inline=${inline}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

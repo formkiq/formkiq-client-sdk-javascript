@@ -8293,6 +8293,23 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async editDocumentWithOnlyoffice(documentId, siteId) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

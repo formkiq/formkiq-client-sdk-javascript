@@ -8310,6 +8310,37 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async moveDocument(source, target, siteId) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const body = {
+      source,
+      target
+    };
+    const url = `https://${this.apiClient.host}/indices/folder/move${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async createFolder(path, siteId) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const body = {
+      path
+    };
+    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

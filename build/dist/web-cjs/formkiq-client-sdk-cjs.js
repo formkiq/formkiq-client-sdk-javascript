@@ -8241,23 +8241,6 @@ class DocumentsApi {
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-
-  // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
-  async searchFulltext(documentFulltextSearchBody, limit = null, siteId = null) {
-    const params = {};
-    if (!siteId) {
-      siteId = 'default';
-    }
-    params.siteId = siteId;
-
-    if (limit) {
-      params.limit = limit;
-    }
-
-    const url = `https://${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', documentFulltextSearchBody);
-    return await this.apiClient.fetchAndRespond(url, options)
-  }
   
   async convertDocumentToFormat(documentId, mime, versionId) {
     if (!documentId) {
@@ -8835,6 +8818,21 @@ class SearchApi {
     const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', searchParameters);
     return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
+  async searchFulltext(documentFulltextSearchBody, siteId = null, limit = null) {
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `https://${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', documentFulltextSearchBody);
+    return await this.apiClient.fetchAndRespond(url, options)
   }
 
   buildTagSearchParameters(key, beginsWith, eq) {

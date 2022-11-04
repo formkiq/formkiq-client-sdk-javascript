@@ -8008,7 +8008,7 @@ class DocumentsApi {
 		DocumentsApi.instance = value;
 	}
     
-  async getDocuments(siteId, date, tz, previous, next, limit) {
+  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null) {
     const params = {
     };
     if (!siteId) {
@@ -8036,7 +8036,7 @@ class DocumentsApi {
   }
 
   // docs about documentSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentSearchBody
-  async searchDocuments(documentSearchBody, siteId, limit, next, previous) {
+  async searchDocuments(documentSearchBody, siteId = null, limit = null, next = null, previous = null) {
     const params = {
     };
     if (!siteId) {
@@ -8059,7 +8059,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocument(documentId, siteId) {
+  async getDocument(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8076,7 +8076,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocument(addOrUpdateDocumentParameters, siteId) {
+  async addDocument(addOrUpdateDocumentParameters, siteId = null) {
     const params = {
     };
     if (!siteId) {
@@ -8092,7 +8092,7 @@ class DocumentsApi {
 	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
    * Expected use is for submitting web forms
 	 */
-  async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId) {
+  async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId = null) {
     const params = {
     };
     if (!siteId) {
@@ -8104,7 +8104,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocument(documentId, addOrUpdateDocumentParameters, siteId) {
+  async updateDocument(documentId, addOrUpdateDocumentParameters, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8121,7 +8121,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocument(documentId, siteId) {
+  async deleteDocument(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8138,18 +8138,22 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTags(documentId) {
+  async getDocumentTags(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTag(documentId, tagKey) {
+  async getDocumentTag(documentId, tagKey, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8160,34 +8164,47 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocumentTag(documentId, addDocumentTagParameters) {
+  async addDocumentTag(documentId, addDocumentTagParameters, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocumentTag(documentId, tagKey, tagValues) {
+  async updateDocumentTag(documentId, tagKey, tagValues = null, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', tagValues);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocumentTag(documentId, tagKey) {
+  async deleteDocumentTag(documentId, tagKey, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8198,26 +8215,36 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(documentId, inline = false) {
+  async getDocumentUrl(documentId, inline = false, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/url?inline=${inline}`;
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    params.inline = inline;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/url${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
   // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
-  async searchFulltext(documentFulltextSearchBody, siteId, limit) {
+  async searchFulltext(documentFulltextSearchBody, limit = null, siteId = null) {
     const params = {};
-
     if (!siteId) {
       siteId = 'default';
     }
@@ -8260,9 +8287,13 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUpload(path) {
+  async getSignedUrlForNewDocumentUpload(path, siteId = null) {
     const params = {
     };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
     if (path) {
       params.path = path;
     }
@@ -8271,13 +8302,19 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUploadWithBody(uploadBody) {
-    const url = `https://${this.apiClient.host}/documents/upload`;
+  async getSignedUrlForNewDocumentUploadWithBody(uploadBody, siteId = null) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', uploadBody);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForDocumentReplacementUpload(documentId, path) {
+  async getSignedUrlForDocumentReplacementUpload(documentId, path = null, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8285,6 +8322,9 @@ class DocumentsApi {
     }
     const params = {
     };
+    if (!siteId) {
+      siteId = 'default';
+    }
     if (path) {
       params.path = path;
     }
@@ -8293,7 +8333,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async editDocumentWithOnlyoffice(documentId, siteId) {
+  async editDocumentWithOnlyoffice(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8310,7 +8350,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createDocumentWithOnlyoffice(extension, siteId) {
+  async createDocumentWithOnlyoffice(extension, siteId = null) {
     if (!extension) {
       return JSON.stringify({
         'message': 'No extension specified'
@@ -8331,7 +8371,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async moveDocument(source, target, siteId) {
+  async moveDocument(source, target, siteId = null) {
     const params = {
     };
     if (!siteId) {
@@ -8347,7 +8387,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createFolder(path, siteId) {
+  async createFolder(path, siteId = null) {
     const params = {
     };
     if (!siteId) {

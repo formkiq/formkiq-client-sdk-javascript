@@ -319,6 +319,27 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async createDocumentWithOnlyoffice(extension, siteId) {
+    if (!extension) {
+      return JSON.stringify({
+        'message': 'No extension specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const body = {
+      extension
+    };
+    console.log(body)
+    const url = `https://${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async moveDocument(source, target, siteId) {
     const params = {
     };

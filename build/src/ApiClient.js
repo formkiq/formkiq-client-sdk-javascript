@@ -69,11 +69,15 @@ export class ApiClient {
   async fetchAndRespond(url, options) {
     let response;
     await Promise.resolve(new Promise((resolve) => {
-      fetch(url, options).then(response => response.json())
-      .then(data => {
-        response = data;
-        resolve();
-      });
+      fetch(url, options)
+        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(obj => {
+          response = obj.body;
+          if (!response.status) {
+            response.status = obj.httpStatus;
+          }
+          resolve();
+        });
     }));
     return response;
   }
@@ -88,10 +92,12 @@ export class ApiClient {
       xhttp.onreadystatechange = function() {
         if (this.status == 200) {          
           response = {
+            status: this.status,
             message: 'File uploaded successfully'
           };
         } else {
           response = {
+            status: this.status,
             message: 'An unexpected error has occurred'
           };
         }

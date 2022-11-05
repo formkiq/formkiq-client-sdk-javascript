@@ -7956,11 +7956,12 @@ class ApiClient {
   async fetchAndRespond(url, options) {
     let response;
     await Promise.resolve(new Promise((resolve) => {
-      fetch(url, options).then(response => response.json())
-      .then(data => {
-        response = data;
-        resolve();
-      });
+      fetch(url, options)
+        .then(r =>  r.json().then(data => ({status: r.status, body: data})))
+        .then(data => {
+          response = data;
+          resolve();
+        });
     }));
     return response;
   }
@@ -7975,10 +7976,12 @@ class ApiClient {
       xhttp.onreadystatechange = function() {
         if (this.status == 200) {          
           response = {
+            status: this.status,
             message: 'File uploaded successfully'
           };
         } else {
           response = {
+            status: this.status,
             message: 'An unexpected error has occurred'
           };
         }
@@ -8382,6 +8385,18 @@ class DocumentsApi {
     };
     const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteFolder(indexKey, siteId = null) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

@@ -394,6 +394,18 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async deleteFolder(indexKey, siteId = null) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

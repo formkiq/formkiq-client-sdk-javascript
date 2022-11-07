@@ -157,6 +157,7 @@ export class DocumentsApi {
     if (!siteId) {
       siteId = 'default'
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -177,6 +178,7 @@ export class DocumentsApi {
     if (!siteId) {
       siteId = 'default'
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -192,6 +194,7 @@ export class DocumentsApi {
     if (!siteId) {
       siteId = 'default'
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -207,7 +210,7 @@ export class DocumentsApi {
     if (!siteId) {
       siteId = 'default'
     }
-    params.siteId = siteId
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', tagValues);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -317,6 +320,7 @@ export class DocumentsApi {
     if (!siteId) {
       siteId = 'default'
     }
+    params.siteId = siteId;
     if (path) {
       params.path = path;
     }
@@ -357,7 +361,6 @@ export class DocumentsApi {
     const body = {
       extension
     };
-    console.log(body)
     const url = `https://${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);

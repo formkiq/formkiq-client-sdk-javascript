@@ -7957,9 +7957,12 @@ class ApiClient {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       fetch(url, options)
-        .then(r =>  r.json().then(data => ({status: r.status, body: data})))
-        .then(data => {
-          response = data;
+        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(obj => {
+          response = obj.body;
+          if (!response.status) {
+            response.status = obj.httpStatus;
+          }
           resolve();
         });
     }));
@@ -8151,6 +8154,7 @@ class DocumentsApi {
     if (!siteId) {
       siteId = 'default';
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -8171,6 +8175,7 @@ class DocumentsApi {
     if (!siteId) {
       siteId = 'default';
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -8186,6 +8191,7 @@ class DocumentsApi {
     if (!siteId) {
       siteId = 'default';
     }
+    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -8311,6 +8317,7 @@ class DocumentsApi {
     if (!siteId) {
       siteId = 'default';
     }
+    params.siteId = siteId;
     if (path) {
       params.path = path;
     }
@@ -8351,7 +8358,6 @@ class DocumentsApi {
     const body = {
       extension
     };
-    console.log(body);
     const url = `https://${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);

@@ -5,6 +5,7 @@ import { PresetsApi } from './api/PresetsApi.js';
 import { SearchApi } from './api/SearchApi.js';
 import { SitesApi } from './api/SitesApi.js';
 import { VersionApi } from './api/VersionApi.js';
+import { WebhooksApi } from './api/WebhooksApi.js';
 
 export class FormkiqClient {
     
@@ -15,6 +16,7 @@ export class FormkiqClient {
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
+    this.webhooksApi = new WebhooksApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -29,6 +31,7 @@ export class FormkiqClient {
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -47,6 +50,7 @@ export class FormkiqClient {
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -63,6 +67,7 @@ export class FormkiqClient {
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

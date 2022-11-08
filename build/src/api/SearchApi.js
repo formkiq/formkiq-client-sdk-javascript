@@ -53,6 +53,27 @@ export class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options)
   }
 
+  async searchIndices(indexType, siteId, previous, next, limit) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    if (previous && previous.length) {
+        params.previous = previous;
+      }
+      if (next && next.length) {
+        params.next = next;
+      }
+      if (limit) {
+        params.limit = limit;
+      }
+    const url = `https://${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', {indexType});
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildTagSearchParameters(key, beginsWith, eq) {
     return new TagSearchParameters(key, beginsWith, eq);
   }

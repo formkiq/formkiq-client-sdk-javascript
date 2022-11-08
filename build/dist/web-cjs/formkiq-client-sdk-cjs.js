@@ -8856,6 +8856,27 @@ class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options)
   }
 
+  async searchIndices(indexType, siteId, previous, next, limit) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    if (previous && previous.length) {
+        params.previous = previous;
+      }
+      if (next && next.length) {
+        params.next = next;
+      }
+      if (limit) {
+        params.limit = limit;
+      }
+    const url = `https://${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', {indexType});
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildTagSearchParameters(key, beginsWith, eq) {
     return new TagSearchParameters(key, beginsWith, eq);
   }
@@ -8937,6 +8958,66 @@ class VersionApi {
 
 }
 
+class WebhooksApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!WebhooksApi.instance) { 
+      WebhooksApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return WebhooksApi.instance;
+  }
+  
+  set instance(value) {
+		WebhooksApi.instance = value;
+	}
+    
+  async getWebhooks(siteId = null) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWebhook(addWebhookParameters, siteId = null) {
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addWebhookParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteWebhook(webhookId, siteId = null) {
+    if (!webhookId) {
+      return JSON.stringify({
+        'message': 'No webhook ID specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -8946,6 +9027,7 @@ class FormkiqClient {
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
+    this.webhooksApi = new WebhooksApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -8960,6 +9042,7 @@ class FormkiqClient {
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -8978,6 +9061,7 @@ class FormkiqClient {
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -8994,6 +9078,7 @@ class FormkiqClient {
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

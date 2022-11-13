@@ -8251,6 +8251,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
   
+  /*
   async convertDocumentToFormat(documentId, mime, versionId) {
     if (!documentId) {
       return JSON.stringify({
@@ -8267,6 +8268,7 @@ class DocumentsApi {
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
+  */
 
   async getDocumentVersions(documentId) {
     if (!documentId) {
@@ -8343,7 +8345,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createDocumentWithOnlyoffice(extension, siteId = null) {
+  async createDocumentWithOnlyoffice(extension, path = null, siteId = null) {
     if (!extension) {
       return JSON.stringify({
         'message': 'No extension specified'
@@ -8355,6 +8357,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
+    if (path) {
+      params.path = path;
+    }
     const body = {
       extension
     };

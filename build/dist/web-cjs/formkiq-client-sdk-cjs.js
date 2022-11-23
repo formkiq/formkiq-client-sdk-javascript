@@ -8270,13 +8270,19 @@ class DocumentsApi {
   }
   */
 
-  async getDocumentVersions(documentId) {
+  async getDocumentVersions(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions`;
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

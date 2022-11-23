@@ -187,7 +187,7 @@ export class CognitoClient {
     });
   }
 
-  forgotPassword(email) {
+  async forgotPassword(email) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -197,22 +197,29 @@ export class CognitoClient {
       Username: email,
       Pool: this.cognitoUserPool
     });
-    cognitoUser.forgotPassword({
-      onSuccess: () => {
-        return {
-          message: 'Cognito User has been sent an email with password reset instructions.'
-        };
-      },
-      onFailure: (err) => {
-        return {
-          cognitoErrorCode: err.code,
-          message: err.message
-        };
-      },
-    });
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.forgotPassword({
+        onSuccess: (data) => {
+          response = {
+            message: 'Cognito User has been sent an email with password reset instructions.',
+            details: data
+          };
+          resolve();
+        },
+        onFailure: (err) => {
+          response = {
+            cognitoErrorCode: err.code,
+            message: err.message
+          };
+          resolve();
+        },
+      });
+    }));
+    return response;
   }
 
-  changePassword(email, oldPassword, newPassword) {
+  async changePassword(email, oldPassword, newPassword) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -254,7 +261,7 @@ export class CognitoClient {
     });
   }
 
-  confirmPassword(username, verificationCode, password) {
+  async confirmPassword(email, verificationCode, password) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -264,31 +271,33 @@ export class CognitoClient {
       Username: email,
       Pool: this.cognitoUserPool
     });
-    cognitoUser.confirmPassword(verificationCode, password, {
-      onSuccess: () => {
-        return {
-          message: 'Password has been changed for this Cognito User.'
-        };
-      },
-      onFailure: (err) => {
-        if (err.code === 'ExpiredCodeException') {
-          return {
-            cognitoErrorCode: err.code,
-            message: 'Verification Code has expired. A new reset password request needs to be made.'
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.confirmPassword(verificationCode, password, {
+        onSuccess: (data) => {
+          response = {
+            message: 'Password has been changed for this Cognito User.',
+            details: data
           };
-        } else if (err.code === 'InvalidPasswordException') {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
-          };
-        } else {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
-          };
-        }
-      }
-    });
+          resolve();
+        },
+        onFailure: (err) => {
+          if (err.code === 'ExpiredCodeException') {
+            response = {
+              cognitoErrorCode: err.code,
+              message: 'Verification Code has expired. A new reset password request needs to be made.'
+            };
+          } else {
+            response = {
+              cognitoErrorCode: err.code,
+              message: err.message
+            };
+          }
+          resolve();
+        },
+      });
+    }));
+    return response;
   }
 
   async confirmRegistration(accountUrl, username, userStatus, session, password) {

@@ -273,13 +273,19 @@ export class DocumentsApi {
   }
   */
 
-  async getDocumentVersions(documentId) {
+  async getDocumentVersions(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions`;
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -411,6 +417,58 @@ export class DocumentsApi {
     params.siteId = siteId
     const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getESignatureConfig(siteId = null) {
+    const params = {};
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setESignatureConfig(siteId = null, privateKey, userId, clientId) {
+    const params = {};
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const body = {
+      privateKey,
+      userId,
+      clientId
+    };
+    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async sendForDocusignESignature(documentId, siteId = null, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {};
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const body = {
+      status,
+      developmentMode,
+      emailSubject,
+      signers
+    };
+    if (carbonCopies.length) {
+      body.carbonCopies = carbonCopies
+    }
+    const url = `https://${this.apiClient.host}/esignature/docusign/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

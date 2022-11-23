@@ -7751,7 +7751,7 @@ class CognitoClient {
     });
   }
 
-  forgotPassword(email) {
+  async forgotPassword(email) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -7761,22 +7761,29 @@ class CognitoClient {
       Username: email,
       Pool: this.cognitoUserPool
     });
-    cognitoUser.forgotPassword({
-      onSuccess: () => {
-        return {
-          message: 'Cognito User has been sent an email with password reset instructions.'
-        };
-      },
-      onFailure: (err) => {
-        return {
-          cognitoErrorCode: err.code,
-          message: err.message
-        };
-      },
-    });
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.forgotPassword({
+        onSuccess: (data) => {
+          response = {
+            message: 'Cognito User has been sent an email with password reset instructions.',
+            details: data
+          };
+          resolve();
+        },
+        onFailure: (err) => {
+          response = {
+            cognitoErrorCode: err.code,
+            message: err.message
+          };
+          resolve();
+        },
+      });
+    }));
+    return response;
   }
 
-  changePassword(email, oldPassword, newPassword) {
+  async changePassword(email, oldPassword, newPassword) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -7818,7 +7825,7 @@ class CognitoClient {
     });
   }
 
-  confirmPassword(username, verificationCode, password) {
+  async confirmPassword(email, verificationCode, password) {
     if (!this.cognitoUserPool) {
       return {
         message: 'No user pool assigned'
@@ -7828,31 +7835,33 @@ class CognitoClient {
       Username: email,
       Pool: this.cognitoUserPool
     });
-    cognitoUser.confirmPassword(verificationCode, password, {
-      onSuccess: () => {
-        return {
-          message: 'Password has been changed for this Cognito User.'
-        };
-      },
-      onFailure: (err) => {
-        if (err.code === 'ExpiredCodeException') {
-          return {
-            cognitoErrorCode: err.code,
-            message: 'Verification Code has expired. A new reset password request needs to be made.'
+    let response;
+    await Promise.resolve(new Promise((resolve) => {
+      cognitoUser.confirmPassword(verificationCode, password, {
+        onSuccess: (data) => {
+          response = {
+            message: 'Password has been changed for this Cognito User.',
+            details: data
           };
-        } else if (err.code === 'InvalidPasswordException') {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
-          };
-        } else {
-          return {
-            cognitoErrorCode: err.code,
-            message: err.message
-          };
-        }
-      }
-    });
+          resolve();
+        },
+        onFailure: (err) => {
+          if (err.code === 'ExpiredCodeException') {
+            response = {
+              cognitoErrorCode: err.code,
+              message: 'Verification Code has expired. A new reset password request needs to be made.'
+            };
+          } else {
+            response = {
+              cognitoErrorCode: err.code,
+              message: err.message
+            };
+          }
+          resolve();
+        },
+      });
+    }));
+    return response;
   }
 
   async confirmRegistration(accountUrl, username, userStatus, session, password) {
@@ -8234,13 +8243,36 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(documentId, inline = false, siteId = null) {
+  async getDocumentContent(documentId, versionId = null, inline = false, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
     const params = {};
+    if (versionId) {
+      params.versionId = versionId;
+    }
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    params.inline = inline;
+    const url = `https://${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUrl(documentId, versionId = null, inline = false, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {};
+    if (versionId) {
+      params.versionId = versionId;
+    }
     if (!siteId) {
       siteId = 'default';
     }
@@ -8284,6 +8316,31 @@ class DocumentsApi {
     params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putDocumentVersion(documentId, versionKey, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    if (!versionKey) {
+      return JSON.stringify({
+        'message': 'No version key specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const body = {
+      versionKey
+    };
+    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -8414,6 +8471,58 @@ class DocumentsApi {
     params.siteId = siteId;
     const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getESignatureConfig(siteId = null) {
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setESignatureConfig(siteId = null, privateKey, userId, clientId) {
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const body = {
+      privateKey,
+      userId,
+      clientId
+    };
+    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async sendForDocusignESignature(documentId, siteId = null, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {};
+    if (!siteId) {
+      siteId = 'default';
+    }
+    params.siteId = siteId;
+    const body = {
+      status,
+      developmentMode,
+      emailSubject,
+      signers
+    };
+    if (carbonCopies.length) {
+      body.carbonCopies = carbonCopies;
+    }
+    const url = `https://${this.apiClient.host}/esignature/docusign/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

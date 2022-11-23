@@ -237,13 +237,36 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(documentId, inline = false, siteId = null) {
+  async getDocumentContent(documentId, versionId = null, inline = false, siteId = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
     const params = {};
+    if (versionId) {
+      params.versionId = versionId
+    }
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    params.inline = inline
+    const url = `https://${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUrl(documentId, versionId = null, inline = false, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {};
+    if (versionId) {
+      params.versionId = versionId
+    }
     if (!siteId) {
       siteId = 'default'
     }
@@ -287,6 +310,31 @@ export class DocumentsApi {
     params.siteId = siteId
     const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putDocumentVersion(documentId, versionKey, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    if (!versionKey) {
+      return JSON.stringify({
+        'message': 'No version key specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const body = {
+      versionKey
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

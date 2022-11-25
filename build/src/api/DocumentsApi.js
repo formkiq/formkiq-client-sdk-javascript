@@ -338,6 +338,48 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getDocumentActions(documentId, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const url = `https://${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async postDocumentActions(documentId, actions, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    if (!actions) {
+      return JSON.stringify({
+        'message': 'No actions specified'
+      });
+    }
+    const params = {
+    };
+    if (!siteId) {
+      siteId = 'default'
+    }
+    params.siteId = siteId
+    const body = {
+      actions
+    }
+    const url = `https://${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getSignedUrlForNewDocumentUpload(path, siteId = null) {
     const params = {
     };

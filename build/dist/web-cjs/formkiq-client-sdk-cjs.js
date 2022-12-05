@@ -8153,7 +8153,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTags(documentId, siteId = null) {
+  async getDocumentTags(documentId, siteId = null, limit = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8164,6 +8164,9 @@ class DocumentsApi {
       siteId = 'default';
     }
     params.siteId = siteId;
+    if (limit) {
+      params.limit = limit;
+    }
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);

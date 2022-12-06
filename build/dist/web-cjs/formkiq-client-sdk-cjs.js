@@ -8585,7 +8585,7 @@ class AddOrUpdateDocumentParameters {
 
   documents = [];
 
-  constructor(content, contentType, path, tags) {
+  constructor(content, contentType, path, tags, actions) {
     if (content) {
       this.content = content;
     }
@@ -8598,10 +8598,13 @@ class AddOrUpdateDocumentParameters {
     if (tags) {
       this.tags = tags;
     }
+    if (actions) {
+      this.actions = actions;
+    }
   }
 
-  addChildDocument(content, contentType, path, tags) {
-    const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags);
+  addChildDocument(content, contentType, path, tags, actions) {
+    const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags, actions);
     this.documents.push(document);
   }
 

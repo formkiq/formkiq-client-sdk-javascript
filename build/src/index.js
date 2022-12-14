@@ -55,6 +55,16 @@ export class FormkiqClient {
     return response;
   }
 
+  resetClient(host, userPoolId, clientId) {
+    this.apiClient = new ApiClient(host, userPoolId, clientId);
+    this.documentsApi.apiClient = this.apiClient;
+    this.presetsApi.apiClient = this.apiClient;
+    this.searchApi.apiClient = this.apiClient;
+    this.sitesApi.apiClient = this.apiClient;
+    this.versionApi.apiClient = this.apiClient;
+    this.webhooksApi.apiClient = this.apiClient;
+  }
+
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
     this.apiClient.cognitoClient.username = username;
     this.apiClient.cognitoClient.idToken = idToken;

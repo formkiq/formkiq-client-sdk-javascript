@@ -5,6 +5,8 @@ export class ApiClient {
   host = 'api-demo.tryformkiq.com';
   validDateRegExp = /^d{4}-d{2}-d{2}$/;
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
+  userPoolId = ''
+  clientId = ''
 
   get instance() {
 		return ApiClient.instance;
@@ -20,6 +22,8 @@ export class ApiClient {
       this.host = host;
     }
     if (userPoolId && clientId) {
+      this.userPoolId = userPoolId;
+      this.clientId = clientId;
       this.buildCognitoClient(userPoolId, clientId);
     }
     if (!ApiClient.instance) { 

@@ -7901,6 +7901,8 @@ class ApiClient {
   host = 'api-demo.tryformkiq.com';
   validDateRegExp = /^d{4}-d{2}-d{2}$/;
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
+  userPoolId = ''
+  clientId = ''
 
   get instance() {
 		return ApiClient.instance;
@@ -7916,6 +7918,8 @@ class ApiClient {
       this.host = host;
     }
     if (userPoolId && clientId) {
+      this.userPoolId = userPoolId;
+      this.clientId = clientId;
       this.buildCognitoClient(userPoolId, clientId);
     }
     if (!ApiClient.instance) { 
@@ -9232,6 +9236,10 @@ class FormkiqClient {
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
+  }
+
+  resetClient(host, userPoolId, clientId) {
+    this.apiClient = new ApiClient(host, userPoolId, clientId);
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {

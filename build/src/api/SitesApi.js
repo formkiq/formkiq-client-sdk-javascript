@@ -20,10 +20,9 @@ export class SitesApi {
   async getSites(siteId) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);

@@ -20,10 +20,9 @@ export class PresetsApi {
   async getPresets(siteId, previous, next, limit) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (previous && previous.length) {
       params.previous = previous;
     }
@@ -41,10 +40,9 @@ export class PresetsApi {
   async addPreset(addPresetParameters, siteId) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -58,10 +56,9 @@ export class PresetsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -73,7 +70,12 @@ export class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -84,7 +86,12 @@ export class PresetsApi {
         'message': 'No preset ID specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags`;
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -100,7 +107,12 @@ export class PresetsApi {
         'message': 'No tag key specified'
       });
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}`;
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }

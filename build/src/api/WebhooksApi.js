@@ -20,10 +20,9 @@ export class WebhooksApi {
   async getWebhooks(siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -32,10 +31,9 @@ export class WebhooksApi {
   async addWebhook(addWebhookParameters, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addWebhookParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -49,10 +47,9 @@ export class WebhooksApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);

@@ -20,10 +20,9 @@ export class DocumentsApi {
   async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (date && date.match(this.apiClient.validDateRegExp)) {
       params.date = date;
       if (tz && tz.match(this.apiClient.validTZRegExp)) {
@@ -48,11 +47,9 @@ export class DocumentsApi {
   async searchDocuments(documentSearchBody, siteId = null, limit = null, next = null, previous = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
-
     if (previous && previous.length) {
       params.previous = previous;
     }
@@ -62,7 +59,6 @@ export class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-
     const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', documentSearchBody);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -76,10 +72,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -88,10 +83,9 @@ export class DocumentsApi {
   async addDocument(addOrUpdateDocumentParameters, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -104,10 +98,9 @@ export class DocumentsApi {
   async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -121,10 +114,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -138,10 +130,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -154,10 +145,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (limit) {
       params.limit = limit
     }
@@ -178,10 +168,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -194,10 +183,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -210,10 +198,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', tagValues);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -231,10 +218,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -250,10 +236,9 @@ export class DocumentsApi {
     if (versionKey) {
       params.versionKey = versionKey
     }
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     params.inline = inline
     const url = `https://${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -270,10 +255,9 @@ export class DocumentsApi {
     if (versionKey) {
       params.versionKey = versionKey
     }
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     params.inline = inline
     const url = `https://${this.apiClient.host}/documents/${documentId}/url${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -307,10 +291,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -329,10 +312,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       versionKey
     }
@@ -349,10 +331,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -371,10 +352,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       actions
     }
@@ -386,10 +366,9 @@ export class DocumentsApi {
   async getSignedUrlForNewDocumentUpload(path, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     if (path) {
       params.path = path;
     }
@@ -401,10 +380,9 @@ export class DocumentsApi {
   async getSignedUrlForNewDocumentUploadWithBody(uploadBody, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', uploadBody);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -418,10 +396,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (path) {
       params.path = path;
     }
@@ -438,10 +415,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -455,10 +431,9 @@ export class DocumentsApi {
     }
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     if (path) {
       params.path = path
     }
@@ -473,10 +448,9 @@ export class DocumentsApi {
   async moveDocument(source, target, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       source,
       target
@@ -489,10 +463,9 @@ export class DocumentsApi {
   async createFolder(path, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       path
     };
@@ -504,10 +477,9 @@ export class DocumentsApi {
   async deleteFolder(indexKey, siteId = null) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -515,10 +487,9 @@ export class DocumentsApi {
 
   async getESignatureConfig(siteId = null) {
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -526,10 +497,9 @@ export class DocumentsApi {
 
   async setESignatureConfig(siteId = null, privateKey, userId, clientId) {
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       privateKey,
       userId,
@@ -547,10 +517,9 @@ export class DocumentsApi {
       });
     }
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     const body = {
       status,
       developmentMode,

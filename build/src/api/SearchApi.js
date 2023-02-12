@@ -20,10 +20,9 @@ export class SearchApi {
   async search(searchParameters, siteId, previous, next, limit) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (previous && previous.length) {
         params.previous = previous;
       }
@@ -41,10 +40,9 @@ export class SearchApi {
   // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
   async searchFulltext(documentFulltextSearchBody, siteId = null, limit = null) {
     const params = {};
-    if (!siteId) {
-      siteId = 'default'
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId
     if (limit) {
       params.limit = limit
     }
@@ -56,10 +54,9 @@ export class SearchApi {
   async searchIndices(indexType, siteId, previous, next, limit) {
     const params = {
     };
-    if (!siteId) {
-      siteId = 'default';
+    if (siteId) {
+      params.siteId = siteId;
     }
-    params.siteId = siteId;
     if (previous && previous.length) {
         params.previous = previous;
       }

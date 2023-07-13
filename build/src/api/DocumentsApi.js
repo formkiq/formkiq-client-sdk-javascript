@@ -377,11 +377,14 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUploadWithBody(uploadBody, siteId = null) {
+  async getSignedUrlForNewDocumentUploadWithBody(uploadBody, siteId = null, contentLength = null) {
     const params = {
     };
     if (siteId) {
       params.siteId = siteId;
+    }
+    if (contentLength) {
+      params.contentLength = contentLength;
     }
     const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', uploadBody);

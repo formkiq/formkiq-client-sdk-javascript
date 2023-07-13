@@ -388,7 +388,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForDocumentReplacementUpload(documentId, path = null, siteId = null) {
+  async getSignedUrlForDocumentReplacementUpload(documentId, path = null, siteId = null, contentLength = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -401,6 +401,9 @@ export class DocumentsApi {
     }
     if (path) {
       params.path = path;
+    }
+    if (contentLength) {
+      params.contentLength = contentLength;
     }
     const url = `https://${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');

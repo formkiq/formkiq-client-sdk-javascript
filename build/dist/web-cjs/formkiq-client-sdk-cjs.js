@@ -7934,43 +7934,45 @@ class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getApiKeys(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addApiKey(addApiKeyParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteApiKey(apiKey, siteId = null) {
+    if (!apiKey) {
+      return JSON.stringify({
+        'message': 'No API Key specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `https://${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
-
-/*
-export class AddOrUpdateDocumentParameters {
-
-  documents = [];
-
-  constructor(content, contentType, path, tags, actions) {
-    if (content) {
-      this.content = content;
-    }
-    if (contentType) {
-      this.contentType = contentType;
-    }
-    if (path) {
-      this.path = path;
-    }
-    if (tags) {
-      this.tags = tags;
-    }
-    if (actions) {
-      this.actions = actions;
-    }
-  }
-
-  addChildDocument(content, contentType, path, tags, actions) {
-    const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags, actions);
-    this.documents.push(document);
-  }
-
-  addAttachment(path, tags) {
-    const document = new AddOrUpdateDocumentParameters(null, null, path, tags);
-    this.documents.push(document);
-  }
-
-}
-*/
 
 class PresetsApi {
 

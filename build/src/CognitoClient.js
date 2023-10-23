@@ -21,15 +21,19 @@ export class CognitoClient {
     return this.getCognitoUser(this.username);
   }
 
-  constructor(userPoolId, clientId) {
-    this.buildUserPool(userPoolId, clientId);
+  constructor(userPoolId, clientId, endpoint = '') {
+    this.buildUserPool(userPoolId, clientId, endpoint);
   }
 
-  buildUserPool(userPoolId, clientId) {
-    this.cognitoUserPool = new CognitoUserPool({
+  buildUserPool(userPoolId, clientId, endpoint) {
+    const poolData = {
       UserPoolId: userPoolId,
       ClientId: clientId
-    });
+    }
+    if (endpoint) {
+      poolData.endpoint = endpoint
+    }
+    this.cognitoUserPool = new CognitoUserPool(poolData);
   }
 
   getCognitoUser(username) {

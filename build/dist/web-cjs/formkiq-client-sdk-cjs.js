@@ -6671,15 +6671,19 @@ class CognitoClient {
     return this.getCognitoUser(this.username);
   }
 
-  constructor(userPoolId, clientId) {
-    this.buildUserPool(userPoolId, clientId);
+  constructor(userPoolId, clientId, endpoint = '') {
+    this.buildUserPool(userPoolId, clientId, endpoint);
   }
 
-  buildUserPool(userPoolId, clientId) {
-    this.cognitoUserPool = new CognitoUserPool({
+  buildUserPool(userPoolId, clientId, endpoint) {
+    const poolData = {
       UserPoolId: userPoolId,
       ClientId: clientId
-    });
+    };
+    if (endpoint) {
+      poolData.endpoint = endpoint;
+    }
+    this.cognitoUserPool = new CognitoUserPool(poolData);
   }
 
   getCognitoUser(username) {
@@ -6989,6 +6993,8 @@ class ApiClient {
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
   userPoolId = ''
   clientId = ''
+  cognitoEndpointOverride = ''
+  
 
   get instance() {
 		return ApiClient.instance;
@@ -6998,7 +7004,7 @@ class ApiClient {
 		ApiClient.instance = value;
 	}
 
-  constructor(host, userPoolId, clientId) {
+  constructor(host, userPoolId, clientId, cognitoEndpointOverride = '') {
     if (host) {
       host = host.replace('https://', '').replace(/\/+$/, '');
       this.host = host;
@@ -7006,6 +7012,7 @@ class ApiClient {
     if (userPoolId && clientId) {
       this.userPoolId = userPoolId;
       this.clientId = clientId;
+      this.cognitoEndpointOverride = cognitoEndpointOverride;
       this.buildCognitoClient(userPoolId, clientId);
     }
     if (!ApiClient.instance) { 
@@ -7018,7 +7025,7 @@ class ApiClient {
   }
 
   buildCognitoClient(userPoolId, clientId) {
-    this.cognitoClient = new CognitoClient(userPoolId, clientId);
+    this.cognitoClient = new CognitoClient(userPoolId, clientId, this.cognitoEndpointOverride);
   }
 
   buildQueryString(params) {
@@ -8337,8 +8344,8 @@ class WebhooksApi {
 
 class FormkiqClient {
     
-  constructor(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+  constructor(host, userPoolId, clientId, cognitoEndpointOverride = '') {
+    this.apiClient = new ApiClient(host, userPoolId, clientId, cognitoEndpointOverride);
     this.configurationApi = new ConfigurationApi();
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
@@ -8386,8 +8393,8 @@ class FormkiqClient {
     return response;
   }
 
-  resetClient(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+  resetClient(host, userPoolId, clientId, cognitoEndpointOverride = '') {
+    this.apiClient = new ApiClient(host, userPoolId, clientId, cognitoEndpointOverride);
     this.configurationApi.apiClient = this.apiClient;
     this.documentsApi.apiClient = this.apiClient;
     this.presetsApi.apiClient = this.apiClient;

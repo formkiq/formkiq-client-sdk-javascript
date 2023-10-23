@@ -10,8 +10,8 @@ import { WebhooksApi } from './api/WebhooksApi.js';
 
 export class FormkiqClient {
     
-  constructor(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+  constructor(host, userPoolId, clientId, cognitoEndpointOverride = '') {
+    this.apiClient = new ApiClient(host, userPoolId, clientId, cognitoEndpointOverride);
     this.configurationApi = new ConfigurationApi();
     this.documentsApi = new DocumentsApi();
     this.presetsApi = new PresetsApi();
@@ -59,8 +59,8 @@ export class FormkiqClient {
     return response;
   }
 
-  resetClient(host, userPoolId, clientId) {
-    this.apiClient = new ApiClient(host, userPoolId, clientId);
+  resetClient(host, userPoolId, clientId, cognitoEndpointOverride = '') {
+    this.apiClient = new ApiClient(host, userPoolId, clientId, cognitoEndpointOverride);
     this.configurationApi.apiClient = this.apiClient;
     this.documentsApi.apiClient = this.apiClient;
     this.presetsApi.apiClient = this.apiClient;

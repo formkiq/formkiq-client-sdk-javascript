@@ -7,6 +7,8 @@ export class ApiClient {
   validTZRegExp = /(([+-]?)(d{2}):?(d{0,2}))/;
   userPoolId = ''
   clientId = ''
+  cognitoEndpointOverride = ''
+  
 
   get instance() {
 		return ApiClient.instance;
@@ -16,7 +18,7 @@ export class ApiClient {
 		ApiClient.instance = value;
 	}
 
-  constructor(host, userPoolId, clientId) {
+  constructor(host, userPoolId, clientId, cognitoEndpointOverride = '') {
     if (host) {
       host = host.replace('https://', '').replace(/\/+$/, '');
       this.host = host;
@@ -24,6 +26,7 @@ export class ApiClient {
     if (userPoolId && clientId) {
       this.userPoolId = userPoolId;
       this.clientId = clientId;
+      this.cognitoEndpointOverride = cognitoEndpointOverride;
       this.buildCognitoClient(userPoolId, clientId);
     }
     if (!ApiClient.instance) { 
@@ -36,7 +39,7 @@ export class ApiClient {
   }
 
   buildCognitoClient(userPoolId, clientId) {
-    this.cognitoClient = new CognitoClient(userPoolId, clientId);
+    this.cognitoClient = new CognitoClient(userPoolId, clientId, this.cognitoEndpointOverride);
   }
 
   buildQueryString(params) {

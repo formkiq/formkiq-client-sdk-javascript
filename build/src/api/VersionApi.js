@@ -18,7 +18,7 @@ export class VersionApi {
 	}
     
   async getVersion() {
-    const url = `https://${this.apiClient.host}/version`;
+    const url = `${this.apiClient.host}/version`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

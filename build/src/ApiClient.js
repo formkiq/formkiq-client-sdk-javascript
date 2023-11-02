@@ -18,7 +18,6 @@ export class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      host = host.replace('https://', '').replace(/\/+$/, '');
       this.host = host;
     }
     if (userPoolId && clientId) {

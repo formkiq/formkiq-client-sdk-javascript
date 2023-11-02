@@ -32,7 +32,7 @@ export class PresetsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -43,7 +43,7 @@ export class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -59,7 +59,7 @@ export class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -75,7 +75,7 @@ export class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -91,7 +91,7 @@ export class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -112,7 +112,7 @@ export class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }

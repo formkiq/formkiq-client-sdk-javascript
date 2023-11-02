@@ -23,7 +23,7 @@ export class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -34,7 +34,7 @@ export class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -45,7 +45,7 @@ export class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -56,7 +56,7 @@ export class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -72,7 +72,7 @@ export class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }

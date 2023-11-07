@@ -32,7 +32,7 @@ export class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', searchParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -46,7 +46,7 @@ export class SearchApi {
     if (limit) {
       params.limit = limit
     }
-    const url = `https://${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`
+    const url = `${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`
     const options = this.apiClient.buildOptions('POST', documentFulltextSearchBody)
     return await this.apiClient.fetchAndRespond(url, options)
   }
@@ -66,7 +66,7 @@ export class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', {indexType});
     return await this.apiClient.fetchAndRespond(url, options);
   }

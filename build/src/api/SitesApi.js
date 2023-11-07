@@ -23,7 +23,7 @@ export class SitesApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

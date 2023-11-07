@@ -7134,7 +7134,7 @@ class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7155,7 +7155,7 @@ class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', documentSearchBody);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7171,7 +7171,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7182,7 +7182,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7197,7 +7197,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7213,7 +7213,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7229,7 +7229,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7247,7 +7247,7 @@ class DocumentsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7267,7 +7267,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7282,7 +7282,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7297,7 +7297,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', tagValues);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7317,7 +7317,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7336,7 +7336,7 @@ class DocumentsApi {
       params.siteId = siteId;
     }
     params.inline = inline;
-    const url = `https://${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7355,7 +7355,7 @@ class DocumentsApi {
       params.siteId = siteId;
     }
     params.inline = inline;
-    const url = `https://${this.apiClient.host}/documents/${documentId}/url${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/url${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7373,7 +7373,7 @@ class DocumentsApi {
     if (versionKey) {
       body.versionKey = versionKey;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/formats`;
+    const url = `${this.apiClient.host}/documents/${documentId}/formats`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7390,7 +7390,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7414,7 +7414,7 @@ class DocumentsApi {
     const body = {
       versionKey
     };
-    const url = `https://${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7430,7 +7430,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7454,7 +7454,7 @@ class DocumentsApi {
     const body = {
       actions
     };
-    const url = `https://${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7468,7 +7468,7 @@ class DocumentsApi {
     if (path) {
       params.path = path;
     }
-    const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7482,7 +7482,7 @@ class DocumentsApi {
     if (contentLength) {
       params.contentLength = contentLength;
     }
-    const url = `https://${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', uploadBody);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7504,7 +7504,7 @@ class DocumentsApi {
     if (contentLength) {
       params.contentLength = contentLength;
     }
-    const url = `https://${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/upload${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7520,7 +7520,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7542,7 +7542,7 @@ class DocumentsApi {
     const body = {
       extension
     };
-    const url = `https://${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7557,7 +7557,7 @@ class DocumentsApi {
       source,
       target
     };
-    const url = `https://${this.apiClient.host}/indices/folder/move${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/indices/folder/move${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7571,7 +7571,7 @@ class DocumentsApi {
     const body = {
       path
     };
-    const url = `https://${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7582,7 +7582,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7592,7 +7592,7 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7607,7 +7607,7 @@ class DocumentsApi {
       userId,
       clientId
     };
-    const url = `https://${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7631,7 +7631,7 @@ class DocumentsApi {
     if (carbonCopies.length) {
       body.carbonCopies = carbonCopies;
     }
-    const url = `https://${this.apiClient.host}/esignature/docusign/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/esignature/docusign/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7918,7 +7918,7 @@ class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7929,7 +7929,7 @@ class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7940,7 +7940,7 @@ class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7951,7 +7951,7 @@ class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -7967,7 +7967,7 @@ class ConfigurationApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8006,7 +8006,7 @@ class PresetsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8017,7 +8017,7 @@ class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8033,7 +8033,7 @@ class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8049,7 +8049,7 @@ class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8065,7 +8065,7 @@ class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8086,7 +8086,7 @@ class PresetsApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8159,7 +8159,7 @@ class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', searchParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8173,7 +8173,7 @@ class SearchApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `https://${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/searchFulltext${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', documentFulltextSearchBody);
     return await this.apiClient.fetchAndRespond(url, options)
   }
@@ -8193,7 +8193,7 @@ class SearchApi {
       if (limit) {
         params.limit = limit;
       }
-    const url = `https://${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', {indexType});
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8246,7 +8246,7 @@ class SitesApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8271,7 +8271,7 @@ class VersionApi {
 	}
     
   async getVersion() {
-    const url = `https://${this.apiClient.host}/version`;
+    const url = `${this.apiClient.host}/version`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8301,7 +8301,7 @@ class WebhooksApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8312,7 +8312,7 @@ class WebhooksApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addWebhookParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -8328,7 +8328,7 @@ class WebhooksApi {
     if (siteId) {
       params.siteId = siteId;
     }
-    const url = `https://${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }

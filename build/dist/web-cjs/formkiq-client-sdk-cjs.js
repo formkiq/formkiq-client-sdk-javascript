@@ -7000,7 +7000,6 @@ class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      host = host.replace('https://', '').replace(/\/+$/, '');
       this.host = host;
     }
     if (userPoolId && clientId) {
@@ -7056,15 +7055,27 @@ class ApiClient {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       fetch(url, options)
-        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(r => r.json().then(data => ({httpStatus: r.status, body: data})))
         .then(obj => {
           response = obj.body;
           if (!response.status) {
             response.status = obj.httpStatus;
           }
           resolve();
+        })
+        .catch(error => {
+          // Handle "failed to fetch" errors here
+          if (error.message === "Failed to fetch") {
+            console.error('Fetch failed, but execution continues:', error);
+            // You can set a default response or perform other actions
+            response = { status: 'fetch_failed', error: error };
+          } else {
+            // Handle other errors or rethrow them
+            console.error('Unhandled error:', error);
+          }
+          resolve(); // Resolve the promise even in case of error
         });
-    }));
+    }));    
     return response;
   }
 
@@ -8335,6 +8346,85 @@ class WebhooksApi {
 
 }
 
+class WorkflowsApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!WorkflowsApi.instance) { 
+      WorkflowsApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return WorkflowsApi.instance;
+  }
+  
+  set instance(value) {
+		WorkflowsApi.instance = value;
+	}
+    
+  async getWorkflows(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getWorkflow(workflowId, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWebhook(addWorkflowParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addWorkflowParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteWorkflow(workflowId, siteId = null) {
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflow ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getQueues(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -8346,6 +8436,7 @@ class FormkiqClient {
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
+    this.workflowsApi = new WorkflowsApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -8362,6 +8453,7 @@ class FormkiqClient {
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -8382,6 +8474,7 @@ class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -8395,6 +8488,7 @@ class FormkiqClient {
     this.sitesApi.apiClient = this.apiClient;
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
+    this.workflowsApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -8411,6 +8505,7 @@ class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

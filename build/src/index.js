@@ -7,6 +7,7 @@ import { SearchApi } from './api/SearchApi.js';
 import { SitesApi } from './api/SitesApi.js';
 import { VersionApi } from './api/VersionApi.js';
 import { WebhooksApi } from './api/WebhooksApi.js';
+import { WorkflowsApi } from './api/WorkflowsApi.js';
 
 export class FormkiqClient {
     
@@ -19,6 +20,7 @@ export class FormkiqClient {
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
+    this.workflowsApi = new WorkflowsApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -35,6 +37,7 @@ export class FormkiqClient {
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -55,6 +58,7 @@ export class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -68,6 +72,7 @@ export class FormkiqClient {
     this.sitesApi.apiClient = this.apiClient;
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
+    this.workflowsApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -84,6 +89,7 @@ export class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

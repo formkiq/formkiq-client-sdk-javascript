@@ -7520,6 +7520,25 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async postDocumentCompress(documentIds, siteId = null) {
+    if (!documentIds) {
+      return JSON.stringify({
+        'message': 'No document IDs specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const body = {
+      documentIds
+    };
+    const url = `${this.apiClient.host}/documents/compress${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async editDocumentWithOnlyoffice(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({

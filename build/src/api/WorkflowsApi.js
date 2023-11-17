@@ -39,7 +39,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWebhook(addWorkflowParameters, siteId = null) {
+  async addWorkflow(addWorkflowParameters, siteId = null) {
     const params = {
     };
     if (siteId) {
@@ -77,9 +77,66 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async addQueue(addQueueParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addQueueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteQueue(queueId, siteId = null) {
+    if (!queueId) {
+      return JSON.stringify({
+        'message': 'No queue ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentsInQueue(queueId, siteId = null, limit = null, next = null, previous = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddWorkflowParameters {
+
+  constructor(name) {
+    if (name) {
+      this.name = name;
+    }
+  }
+
+}
+
+export class AddQueueParameters {
 
   constructor(name) {
     if (name) {

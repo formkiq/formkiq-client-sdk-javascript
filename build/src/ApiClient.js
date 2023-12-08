@@ -55,8 +55,8 @@ export class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
-      headers['Authorization'] = this.cognitoClient.idToken;
+    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.accessToken) {
+      headers['Authorization'] = this.cognitoClient.accessToken;
     }
     if (body) {
       if (typeof body === 'string') {

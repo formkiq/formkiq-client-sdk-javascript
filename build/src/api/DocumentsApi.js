@@ -17,7 +17,7 @@ export class DocumentsApi {
 		DocumentsApi.instance = value;
 	}
     
-  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null) {
+  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null, deleted = null) {
     const params = {
     };
     if (siteId) {
@@ -34,6 +34,9 @@ export class DocumentsApi {
     }
     if (next && next.length) {
       params.next = next;
+    }
+    if (deleted && deleted.length) {
+      params.deleted = deleted;
     }
     if (limit) {
       params.limit = limit;
@@ -122,7 +125,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocument(documentId, siteId = null) {
+  async deleteDocument(documentId, siteId = null, softDelete = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -133,11 +136,30 @@ export class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
+    if (softDelete && softDelete.length) {
+      params.softDelete = softDelete;
+    }
     const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async restoreDocument(documentId, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  
   async getDocumentTags(documentId, siteId = null, limit = null) {
     if (!documentId) {
       return JSON.stringify({

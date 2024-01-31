@@ -631,6 +631,138 @@ export class DocumentsApi {
     return new AddDocumentTagParameters(key, value);
   }
 
+  // TODO: create CasesApi.js before next release
+
+  async getCases(siteId = null, next = null, limit = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addCase(addCaseParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addCaseParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCase(caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteCase(caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseDocuments(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseTasks(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseNigos(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // TODO: create OpaApi.js before next release
+
+  // ADD OPA ENDPOINTS HERE
+
 }
 
 export class AddOrUpdateDocumentParameters {

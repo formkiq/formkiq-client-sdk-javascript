@@ -28,6 +28,50 @@ export class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getOpenPolicyAgentConfigurations(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  async getOpenPolicyAgentConfiguration(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async configureOpenPolicyAgent(updateConfigurationParameters,siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteOpenPolicyAgent(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
   async updateConfiguration(updateConfigurationParameters, siteId = null) {
     const params = {
     };

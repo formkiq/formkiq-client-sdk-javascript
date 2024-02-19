@@ -8,6 +8,7 @@ import { SitesApi } from './api/SitesApi.js';
 import { VersionApi } from './api/VersionApi.js';
 import { WebhooksApi } from './api/WebhooksApi.js';
 import { WorkflowsApi } from './api/WorkflowsApi.js';
+import { RulesetsApi } from './api/RulesetsApi.js';
 
 export class FormkiqClient {
     
@@ -21,6 +22,7 @@ export class FormkiqClient {
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
     this.workflowsApi = new WorkflowsApi();
+    this.rulesetsApi = new RulesetsApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -38,6 +40,7 @@ export class FormkiqClient {
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -59,6 +62,7 @@ export class FormkiqClient {
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -73,6 +77,7 @@ export class FormkiqClient {
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
     this.workflowsApi.apiClient = this.apiClient;
+    this.rulesetsApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -90,6 +95,7 @@ export class FormkiqClient {
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

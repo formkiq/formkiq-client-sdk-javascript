@@ -7037,8 +7037,8 @@ class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
-      headers['Authorization'] = this.cognitoClient.idToken;
+    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.accessToken) {
+      headers['Authorization'] = this.cognitoClient.accessToken;
     }
     if (body) {
       if (typeof body === 'string') {
@@ -7055,15 +7055,27 @@ class ApiClient {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       fetch(url, options)
-        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(r => r.json().then(data => ({httpStatus: r.status, body: data})))
         .then(obj => {
           response = obj.body;
           if (!response.status) {
             response.status = obj.httpStatus;
           }
           resolve();
+        })
+        .catch(error => {
+          // Handle "failed to fetch" errors here
+          if (error.message === "Failed to fetch") {
+            console.error('Fetch failed, but execution continues:', error);
+            // You can set a default response or perform other actions
+            response = { status: 'fetch_failed', error: error };
+          } else {
+            // Handle other errors or rethrow them
+            console.error('Unhandled error:', error);
+          }
+          resolve(); // Resolve the promise even in case of error
         });
-    }));
+    }));    
     return response;
   }
 
@@ -7112,7 +7124,7 @@ class DocumentsApi {
 		DocumentsApi.instance = value;
 	}
     
-  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null) {
+  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null, deleted = null) {
     const params = {
     };
     if (siteId) {
@@ -7129,6 +7141,9 @@ class DocumentsApi {
     }
     if (next && next.length) {
       params.next = next;
+    }
+    if (deleted && deleted.length) {
+      params.deleted = deleted;
     }
     if (limit) {
       params.limit = limit;
@@ -7217,7 +7232,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocument(documentId, siteId = null) {
+  async deleteDocument(documentId, siteId = null, softDelete = null) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -7228,11 +7243,30 @@ class DocumentsApi {
     if (siteId) {
       params.siteId = siteId;
     }
+    if (softDelete && softDelete.length) {
+      params.softDelete = softDelete;
+    }
     const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async restoreDocument(documentId, siteId = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  
   async getDocumentTags(documentId, siteId = null, limit = null) {
     if (!documentId) {
       return JSON.stringify({
@@ -7524,6 +7558,48 @@ class DocumentsApi {
     };
     const url = `${this.apiClient.host}/documents/compress${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserActivities(userId = null, siteId = null, next = null, limit = null) {
+    const params = {
+    };
+    if (userId) {
+      params.userId = siteId;
+    }
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities(documentId, siteId = null, next = null, limit = null) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -8353,6 +8429,210 @@ class WebhooksApi {
 
 }
 
+class WorkflowsApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!WorkflowsApi.instance) { 
+      WorkflowsApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return WorkflowsApi.instance;
+  }
+  
+  set instance(value) {
+		WorkflowsApi.instance = value;
+	}
+    
+  async getWorkflows(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getWorkflow(workflowId, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWorkflow(addWorkflowParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addWorkflowParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putWorkflow(workflowId, addWorkflowParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addWorkflowParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteWorkflow(workflowId, siteId = null) {
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflow ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getQueues(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addQueue(addQueueParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addQueueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getQueue(queueId, siteId = null) {
+    if (!queueId) {
+      return JSON.stringify({
+        'message': 'No queue ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteQueue(queueId, siteId = null) {
+    if (!queueId) {
+      return JSON.stringify({
+        'message': 'No queue ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentsInQueue(queueId, siteId = null, limit = null, next = null, previous = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getWorkflowsInDocument(documentId, siteId = null, limit = null, next = null, previous = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWorkflowToDocument(documentId, workflowId, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', {"workflowId": workflowId});
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDecisionToDocumentWorkflow(documentId, workflowId, addDecisionParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/workflows/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDecisionParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -8364,6 +8644,7 @@ class FormkiqClient {
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
+    this.workflowsApi = new WorkflowsApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -8380,6 +8661,7 @@ class FormkiqClient {
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -8400,6 +8682,7 @@ class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -8413,6 +8696,7 @@ class FormkiqClient {
     this.sitesApi.apiClient = this.apiClient;
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
+    this.workflowsApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -8429,6 +8713,7 @@ class FormkiqClient {
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

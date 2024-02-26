@@ -7738,6 +7738,138 @@ class DocumentsApi {
     return new AddDocumentTagParameters(key, value);
   }
 
+  // TODO: create CasesApi.js before next release
+
+  async getCases(siteId = null, next = null, limit = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addCase(addCaseParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addCaseParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCase(caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteCase(caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseDocuments(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseTasks(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCaseNigos(caseId, siteId = null, next = null, limit = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // TODO: create OpaApi.js before next release
+
+  // ADD OPA ENDPOINTS HERE
+
 }
 
 class AddOrUpdateDocumentParameters {
@@ -8016,6 +8148,50 @@ class ConfigurationApi {
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
+
+  async getOpenPolicyAgentConfigurations(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  async getOpenPolicyAgentConfiguration(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async configureOpenPolicyAgent(updateConfigurationParameters,siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteOpenPolicyAgent(siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 
   async updateConfiguration(updateConfigurationParameters, siteId = null) {
     const params = {
@@ -8633,6 +8809,157 @@ class WorkflowsApi {
 
 }
 
+class RulesetsApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!RulesetsApi.instance) {
+      RulesetsApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return RulesetsApi.instance;
+  }
+  
+  set instance(value) {
+		RulesetsApi.instance = value;
+	}
+    
+  async getRulesets(siteId = null,next=null, limit=null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRuleset(rulesetId, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addRuleset(addRulesetParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addRulesetParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async patchRuleset(rulesetId, addRulesetParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addRulesetParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteRuleset(rulesetId, siteId = null) {
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No ruleset ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRules(rulesetId, siteId = null,next=null, limit=null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addRule(rulesetId,addRuleParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addRuleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRule(rulesetId, ruleId, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async patchRule(rulesetId, ruleId, addRuleParameters, siteId = null) {
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addRuleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteRule(rulesetId, ruleId, siteId = null) {
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No ruleset ID specified'
+      });
+    }
+    const params = {
+    };
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -8645,6 +8972,7 @@ class FormkiqClient {
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
     this.workflowsApi = new WorkflowsApi();
+    this.rulesetsApi = new RulesetsApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -8662,6 +8990,7 @@ class FormkiqClient {
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -8683,6 +9012,7 @@ class FormkiqClient {
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -8697,6 +9027,7 @@ class FormkiqClient {
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
     this.workflowsApi.apiClient = this.apiClient;
+    this.rulesetsApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -8714,6 +9045,7 @@ class FormkiqClient {
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

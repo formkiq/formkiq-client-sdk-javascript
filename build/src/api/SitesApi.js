@@ -17,13 +17,8 @@ export class SitesApi {
 		SitesApi.instance = value;
 	}
     
-  async getSites(siteId) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+  async getSites() {
+    const url = `${this.apiClient.host}/sites`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

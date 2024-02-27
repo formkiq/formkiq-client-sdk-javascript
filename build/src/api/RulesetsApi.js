@@ -17,133 +17,144 @@ export class RulesetsApi {
 		RulesetsApi.instance = value;
 	}
     
-  async getRulesets(siteId = null,next=null, limit=null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getRulesets(siteId, limit = null, next = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
     }
     const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRuleset(rulesetId, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getRuleset(siteId, rulesetId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addRuleset(addRulesetParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addRuleset(siteId, addRulesetParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addRulesetParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async patchRuleset(rulesetId, addRulesetParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async patchRuleset(siteId, rulesetId, addRulesetParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addRulesetParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteRuleset(rulesetId, siteId = null) {
-    if (!rulesetId) {
+  async deleteRuleset(siteId, rulesetId) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No ruleset ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
     }
+    const params = {siteId};
+
     const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRules(rulesetId, siteId = null,next=null, limit=null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getRules(siteId, rulesetId, limit = null, next = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
     }
     const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addRule(rulesetId,addRuleParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addRule(siteId, rulesetId,addRuleParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addRuleParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRule(rulesetId, ruleId, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getRule(siteId, rulesetId, ruleId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async patchRule(rulesetId, ruleId, addRuleParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async patchRule(siteId, rulesetId, ruleId, addRuleParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addRuleParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteRule(rulesetId, ruleId, siteId = null) {
-    if (!rulesetId) {
+  async deleteRule(siteId, rulesetId, ruleId) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No ruleset ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);

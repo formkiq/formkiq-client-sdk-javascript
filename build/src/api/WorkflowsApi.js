@@ -17,167 +17,175 @@ export class WorkflowsApi {
 		WorkflowsApi.instance = value;
 	}
     
-  async getWorkflows(siteId = null, status = null, limit = null, next = null, previous = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getWorkflows(siteId, status = null, limit = null, next = null, previous = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     if (status) {
       params.status = status;
     }
-    if (previous && previous.length) {
-      params.previous = previous;
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
     }
-    if (limit) {
-      params.limit = limit;
+    if (previous && previous.length) {
+      params.previous = previous;
     }
     const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getWorkflow(workflowId, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getWorkflow(siteId, workflowId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWorkflow(addWorkflowParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addWorkflow(siteId, addWorkflowParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addWorkflowParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async putWorkflow(workflowId, addWorkflowParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async putWorkflow(siteId, workflowId, addWorkflowParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', addWorkflowParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteWorkflow(workflowId, siteId = null) {
+  async deleteWorkflow(siteId, workflowId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!workflowId) {
       return JSON.stringify({
         'message': 'No workflow ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getQueues(siteId = null, limit = null, next = null, previous = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getQueues(siteId, limit = null, next = null, previous = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
-    if (previous && previous.length) {
-      params.previous = previous;
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
     }
-    if (limit) {
-      params.limit = limit;
+    if (previous && previous.length) {
+      params.previous = previous;
     }
     const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addQueue(addQueueParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addQueue(siteId, addQueueParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addQueueParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getQueue(queueId, siteId = null) {
+  async getQueue(siteId, queueId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!queueId) {
       return JSON.stringify({
         'message': 'No queue ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteQueue(queueId, siteId = null) {
+  async deleteQueue(siteId, queueId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!queueId) {
       return JSON.stringify({
         'message': 'No queue ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentsInQueue(queueId, siteId = null, limit = null, next = null, previous = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getDocumentsInQueue(siteId, queueId, limit = null, next = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
-    if (previous && previous.length) {
-      params.previous = previous;
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
     }
     const url = `${this.apiClient.host}/queues/${queueId}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getWorkflowsInDocument(documentId, siteId = null, limit = null, next = null, previous = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getDocumentsInWorkflow(siteId, workflowId, limit = null, next = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     if (previous && previous.length) {
       params.previous = previous;
     }
@@ -187,39 +195,20 @@ export class WorkflowsApi {
     if (limit) {
       params.limit = limit;
     }
-    const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/workflows/${workflowId}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWorkflowToDocument(documentId, workflowId, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addWorkflowToDocument(siteId, documentId, workflowId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', {"workflowId": workflowId});
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async addDecisionToDocumentWorkflow(documentId, workflowId, addDecisionParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    if (previous && previous.length) {
-      params.previous = previous;
-    }
-    if (next && next.length) {
-      params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
-    }
-    const url = `${this.apiClient.host}/documents/${documentId}/workflows/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addDecisionParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

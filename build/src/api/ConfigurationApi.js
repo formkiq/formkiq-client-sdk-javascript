@@ -17,105 +17,104 @@ export class ConfigurationApi {
 		ConfigurationApi.instance = value;
 	}
     
-  async getConfiguration(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getConfiguration(siteId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getOpenPolicyAgentConfigurations(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getOpenPolicyAgentConfigurations(siteId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  async getOpenPolicyAgentConfiguration(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getOpenPolicyAgentConfiguration(siteId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
-    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/configuration/opa/${siteId}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async configureOpenPolicyAgent(updateConfigurationParameters,siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async configureOpenPolicyAgent(siteId, updateConfigurationParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteOpenPolicyAgent(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async deleteOpenPolicyAgent(siteId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
 
-  async updateConfiguration(updateConfigurationParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async updateConfiguration(siteId, updateConfigurationParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getApiKeys(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+  async getApiKeys(siteId) {
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addApiKey(addApiKeyParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+  async addApiKey(siteId, addApiKeyParameters) {
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteApiKey(apiKey, siteId = null) {
+  // NOTE: apiKey is the OBFUSCATED key, i.e., the one with the '****' within it
+  async deleteApiKey(siteId, apiKey) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!apiKey) {
       return JSON.stringify({
         'message': 'No API Key specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);

@@ -17,32 +17,35 @@ export class SearchApi {
 		SearchApi.instance = value;
 	}
     
-  async search(searchParameters, siteId, previous, next, limit) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async search(searchParameters, siteId, limit = null, next = null, previous = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     if (previous && previous.length) {
-        params.previous = previous;
-      }
-      if (next && next.length) {
-        params.next = next;
-      }
-      if (limit) {
-        params.limit = limit;
-      }
+      params.previous = previous;
+    }
     const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', searchParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
   // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
-  async searchFulltext(documentFulltextSearchBody, siteId = null, limit = null) {
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+  async searchFulltext(siteId, documentFulltextSearchBody, limit = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     if (limit) {
       params.limit = limit
     }
@@ -51,21 +54,19 @@ export class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options)
   }
 
-  async searchIndices(indexType, siteId, previous, next, limit) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async searchIndices(siteId, indexType, limit = null, next = null) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
-    if (previous && previous.length) {
-        params.previous = previous;
-      }
-      if (next && next.length) {
-        params.next = next;
-      }
-      if (limit) {
-        params.limit = limit;
-      }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
     const url = `${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', {indexType});
     return await this.apiClient.fetchAndRespond(url, options);

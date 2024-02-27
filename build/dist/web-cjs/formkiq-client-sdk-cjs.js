@@ -8622,11 +8622,23 @@ class WorkflowsApi {
 		WorkflowsApi.instance = value;
 	}
     
-  async getWorkflows(siteId = null) {
+  async getWorkflows(siteId = null, status = null, limit = null, next = null, previous = null) {
     const params = {
     };
     if (siteId) {
       params.siteId = siteId;
+    }
+    if (status) {
+      params.status = status;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
     }
     const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -8682,11 +8694,20 @@ class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getQueues(siteId = null) {
+  async getQueues(siteId = null, limit = null, next = null, previous = null) {
     const params = {
     };
     if (siteId) {
       params.siteId = siteId;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
     }
     const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');

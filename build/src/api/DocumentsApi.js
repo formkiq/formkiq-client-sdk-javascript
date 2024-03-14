@@ -345,6 +345,75 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getDocumentAccessAttributes(siteId, documentId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }   
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAccessAttributes(siteId, documentId, addDocumentAccessAttributesParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentAccessAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAccessAttributes(siteId, documentId, addDocumentAccessAttributesParameters) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addDocumentAccessAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAccessAttributes(siteId, documentId) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getDocumentActions(documentId, siteId = null) {
     if (!documentId) {
       return JSON.stringify({

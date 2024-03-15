@@ -161,7 +161,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentsInQueue({siteId, queueId, limit = null, next = null}) {
+  async getDocumentsInQueue({siteId, queueId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -171,6 +171,9 @@ export class WorkflowsApi {
     if (limit) {
       params.limit = limit;
     }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
     if (next && next.length) {
       params.next = next;
     }
@@ -179,7 +182,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentsInWorkflow({siteId, workflowId, limit = null, next = null}) {
+  async getDocumentsInWorkflow({siteId, workflowId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

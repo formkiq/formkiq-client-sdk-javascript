@@ -17,7 +17,7 @@ export class RulesetsApi {
 		RulesetsApi.instance = value;
 	}
     
-  async getRulesets(siteId, limit = null, next = null) {
+  async getRulesets({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -35,7 +35,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRuleset(siteId, rulesetId) {
+  async getRuleset({siteId, rulesetId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -47,7 +47,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addRuleset(siteId, addRulesetParameters) {
+  async addRuleset({siteId, addRulesetParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -59,7 +59,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async patchRuleset(siteId, rulesetId, addRulesetParameters) {
+  async patchRuleset({siteId, rulesetId, addRulesetParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -71,7 +71,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteRuleset(siteId, rulesetId) {
+  async deleteRuleset({siteId, rulesetId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -89,7 +89,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRules(siteId, rulesetId, limit = null, next = null) {
+  async getRules({siteId, rulesetId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -107,7 +107,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addRule(siteId, rulesetId,addRuleParameters) {
+  async addRule({siteId, rulesetId, addRuleParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -119,7 +119,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getRule(siteId, rulesetId, ruleId) {
+  async getRule({siteId, rulesetId, ruleId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -131,7 +131,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async patchRule(siteId, rulesetId, ruleId, addRuleParameters) {
+  async patchRule({siteId, rulesetId, ruleId, addRuleParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -143,7 +143,7 @@ export class RulesetsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteRule(siteId, rulesetId, ruleId) {
+  async deleteRule({siteId, rulesetId, ruleId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

@@ -17,7 +17,7 @@ export class WebhooksApi {
 		WebhooksApi.instance = value;
 	}
     
-  async getWebhooks(siteId) {
+  async getWebhooks({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -29,7 +29,7 @@ export class WebhooksApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWebhook(siteId, addWebhookParameters) {
+  async addWebhook({siteId, addWebhookParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -41,7 +41,7 @@ export class WebhooksApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteWebhook(siteId, webhookId) {
+  async deleteWebhook({siteId, webhookId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

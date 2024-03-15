@@ -17,7 +17,7 @@ export class DocumentsApi {
 		DocumentsApi.instance = value;
 	}
     
-  async getDocuments(siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null) {
+  async getDocuments({siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -48,7 +48,7 @@ export class DocumentsApi {
   }
 
   // docs about documentSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentSearchBody
-  async searchDocuments(siteId, documentSearchBody, limit = null, next = null, previous = null) {
+  async searchDocuments({siteId, documentSearchBody, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -69,7 +69,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocument(siteId, documentId) {
+  async getDocument({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -86,7 +86,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocument(siteId, addOrUpdateDocumentParameters) {
+  async addDocument({siteId, addOrUpdateDocumentParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -102,7 +102,7 @@ export class DocumentsApi {
 	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
    * Expected use is for submitting web forms
 	 */
-  async addDocumentUsingPublicPath(siteId, addOrUpdateDocumentParameters) {
+  async addDocumentUsingPublicPath({siteId, addOrUpdateDocumentParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -114,7 +114,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocument(siteId, documentId, addOrUpdateDocumentParameters) {
+  async updateDocument({siteId, documentId, addOrUpdateDocumentParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -131,7 +131,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocument(siteId, documentId, softDelete = null) {
+  async deleteDocument({siteId, documentId, softDelete = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -151,7 +151,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async restoreDocument(siteId, documentId) {
+  async restoreDocument({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -168,7 +168,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
   
-  async getDocumentTags(siteId, documentId, limit = null, next = null, previous = null) {
+  async getDocumentTags({siteId, documentId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -194,7 +194,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTag(siteId, documentId, tagKey) {
+  async getDocumentTag({siteId, documentId, tagKey}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -216,7 +216,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocumentTag(siteId, documentId, addDocumentTagParameters) {
+  async addDocumentTag({siteId, documentId, addDocumentTagParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -233,7 +233,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocumentTag(siteId, documentId, tagKey, tagValues = null) {
+  async updateDocumentTag({siteId, documentId, tagKey, tagValues = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -250,7 +250,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocumentTag(siteId, documentId, tagKey) {
+  async deleteDocumentTag({siteId, documentId, tagKey}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -272,7 +272,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentContent(siteId, documentId, versionKey = null, inline = false) {
+  async getDocumentContent({siteId, documentId, versionKey = null, inline = false}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -293,7 +293,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(siteId, documentId, versionKey = null, inline = false) {
+  async getDocumentUrl({siteId, documentId, versionKey = null, inline = false}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -314,7 +314,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentVersions(siteId, documentId, limit = null, next = null) {
+  async getDocumentVersions({siteId, documentId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -338,7 +338,7 @@ export class DocumentsApi {
   }
 
   // TODO: add the replacement POST endpoint, once this is ready to deprecate pre version 2.*+
-  async putDocumentVersion(siteId, documentId, versionKey) {
+  async putDocumentVersion({siteId, documentId, versionKey}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -363,7 +363,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentAccessAttributes(siteId, documentId) {
+  async getDocumentAccessAttributes({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No site ID specified'
@@ -380,7 +380,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocumentAccessAttributes(siteId, documentId, addDocumentAccessAttributesParameters) {
+  async addDocumentAccessAttributes({siteId, documentId, addDocumentAccessAttributesParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No site ID specified'
@@ -397,7 +397,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocumentAccessAttributes(siteId, documentId, addDocumentAccessAttributesParameters) {
+  async addDocumentAccessAttributes({siteId, documentId, addDocumentAccessAttributesParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No site ID specified'
@@ -414,7 +414,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocumentAccessAttributes(siteId, documentId) {
+  async deleteDocumentAccessAttributes({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No site ID specified'
@@ -432,7 +432,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentActions(documentId, siteId = null) {
+  async getDocumentActions({documentId, siteId = null}) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -448,7 +448,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async postDocumentActions(siteId, documentId, actions) {
+  async postDocumentActions({siteId, documentId, actions}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -473,7 +473,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getWorkflowsInDocument(siteId, documentId, limit = null, next = null) {
+  async getWorkflowsInDocument({siteId, documentId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -491,7 +491,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDecisionToDocumentWorkflow(siteId, documentId, workflowId, addDecisionParameters) {
+  async addDecisionToDocumentWorkflow({siteId, documentId, workflowId, addDecisionParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -512,7 +512,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUpload(siteId, path) {
+  async getSignedUrlForNewDocumentUpload({siteId, path}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -527,7 +527,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUploadWithBody(siteId, uploadBody, contentLength = null) {
+  async getSignedUrlForNewDocumentUploadWithBody({siteId, uploadBody, contentLength = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -542,7 +542,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForDocumentReplacementUpload(siteId, documentId, path = null, contentLength = null) {
+  async getSignedUrlForDocumentReplacementUpload({siteId, documentId, path = null, contentLength = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -565,7 +565,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async postDocumentCompress(siteId, documentIds) {
+  async postDocumentCompress({siteId, documentIds}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -585,7 +585,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getUserActivities(siteId, userId = null, limit = null, next = null) {
+  async getUserActivities({siteId, userId = null, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -606,7 +606,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUserActivities(siteId, documentId, limit = null, next = null) {
+  async getDocumentUserActivities({siteId, documentId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -629,7 +629,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentSyncs(siteId, documentId, limit = null) {
+  async getDocumentSyncs({siteId, documentId, limit = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -649,7 +649,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async editDocumentWithOnlyoffice(siteId, documentId) {
+  async editDocumentWithOnlyoffice({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -666,7 +666,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createDocumentWithOnlyoffice(siteId, extension, path = null) {
+  async createDocumentWithOnlyoffice({siteId, extension, path = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -689,7 +689,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async moveDocument(siteId, source, target) {
+  async moveDocument({siteId, source, target}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -705,7 +705,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getFolders(siteId, indexKey, limit = null, next = null) {
+  async getFolders({siteId, indexKey, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -727,7 +727,7 @@ export class DocumentsApi {
   }
 
 
-  async createFolder(siteId, path) {
+  async createFolder({siteId, path}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -742,7 +742,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteFolder(siteId, indexKey) {
+  async deleteFolder({siteId, indexKey}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -754,7 +754,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getESignatureConfig(siteId) {
+  async getESignatureConfig({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -766,7 +766,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async setESignatureConfig(siteId, privateKey, userId, clientId) {
+  async setESignatureConfig({siteId, privateKey, userId, clientId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -783,7 +783,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async sendForDocusignESignature(siteId, documentId, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []) {
+  async sendForDocusignESignature({siteId, documentId, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -809,11 +809,11 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
+  buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }
 
-  buildDocumentTagParametersForAdd(key, value) {
+  buildDocumentTagParametersForAdd({key, value}) {
     return new AddDocumentTagParameters(key, value);
   }
 
@@ -841,12 +841,12 @@ export class AddOrUpdateDocumentParameters {
     }
   }
 
-  addChildDocument(content, contentType, path, tags, actions) {
+  addChildDocument({content, contentType, path, tags, actions}) {
     const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags, actions);
     this.documents.push(document);
   }
 
-  addAttachment(path, tags) {
+  addAttachment({path, tags}) {
     const document = new AddOrUpdateDocumentParameters(null, null, path, tags);
     this.documents.push(document);
   }

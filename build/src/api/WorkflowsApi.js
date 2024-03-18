@@ -17,7 +17,7 @@ export class WorkflowsApi {
 		WorkflowsApi.instance = value;
 	}
     
-  async getWorkflows(siteId, status = null, limit = null, next = null, previous = null) {
+  async getWorkflows({siteId, status = null, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -41,7 +41,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getWorkflow(siteId, workflowId) {
+  async getWorkflow({siteId, workflowId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -53,7 +53,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWorkflow(siteId, addWorkflowParameters) {
+  async addWorkflow({siteId, addWorkflowParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -65,7 +65,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async putWorkflow(siteId, workflowId, addWorkflowParameters) {
+  async putWorkflow({siteId, workflowId, addWorkflowParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -77,7 +77,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteWorkflow(siteId, workflowId) {
+  async deleteWorkflow({siteId, workflowId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -94,7 +94,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getQueues(siteId, limit = null, next = null, previous = null) {
+  async getQueues({siteId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -115,7 +115,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addQueue(siteId, addQueueParameters) {
+  async addQueue({siteId, addQueueParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -127,7 +127,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getQueue(siteId, queueId) {
+  async getQueue({siteId, queueId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -144,7 +144,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteQueue(siteId, queueId) {
+  async deleteQueue({siteId, queueId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -161,7 +161,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentsInQueue(siteId, queueId, limit = null, next = null) {
+  async getDocumentsInQueue({siteId, queueId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -171,6 +171,9 @@ export class WorkflowsApi {
     if (limit) {
       params.limit = limit;
     }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
     if (next && next.length) {
       params.next = next;
     }
@@ -179,7 +182,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentsInWorkflow(siteId, workflowId, limit = null, next = null) {
+  async getDocumentsInWorkflow({siteId, workflowId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -200,7 +203,7 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWorkflowToDocument(siteId, documentId, workflowId) {
+  async addWorkflowToDocument({siteId, documentId, workflowId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

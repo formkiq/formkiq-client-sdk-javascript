@@ -17,7 +17,7 @@ export class ConfigurationApi {
 		ConfigurationApi.instance = value;
 	}
     
-  async getConfiguration(siteId) {
+  async getConfiguration({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -29,7 +29,7 @@ export class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getOpenPolicyAgentConfigurations(siteId) {
+  async getOpenPolicyAgentConfigurations({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -40,7 +40,7 @@ export class ConfigurationApi {
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  async getOpenPolicyAgentConfiguration(siteId) {
+  async getOpenPolicyAgentConfiguration({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -51,7 +51,7 @@ export class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async configureOpenPolicyAgent(siteId, updateConfigurationParameters) {
+  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -63,7 +63,7 @@ export class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteOpenPolicyAgent(siteId) {
+  async deleteOpenPolicyAgent({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -76,7 +76,7 @@ export class ConfigurationApi {
   }
 
 
-  async updateConfiguration(siteId, updateConfigurationParameters) {
+  async updateConfiguration({siteId, updateConfigurationParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -88,14 +88,14 @@ export class ConfigurationApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getApiKeys(siteId) {
+  async getApiKeys({siteId}) {
     const params = {siteId};
     const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addApiKey(siteId, addApiKeyParameters) {
+  async addApiKey({siteId, addApiKeyParameters}) {
     const params = {siteId};
     const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
@@ -103,7 +103,7 @@ export class ConfigurationApi {
   }
 
   // NOTE: apiKey is the OBFUSCATED key, i.e., the one with the '****' within it
-  async deleteApiKey(siteId, apiKey) {
+  async deleteApiKey({siteId, apiKey}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

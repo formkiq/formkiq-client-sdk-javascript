@@ -17,7 +17,7 @@ export class SearchApi {
 		SearchApi.instance = value;
 	}
     
-  async search(searchParameters, siteId, limit = null, next = null, previous = null) {
+  async search({searchParameters, siteId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -39,7 +39,7 @@ export class SearchApi {
   }
 
   // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
-  async searchFulltext(siteId, documentFulltextSearchBody, limit = null) {
+  async searchFulltext({siteId, documentFulltextSearchBody, limit = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -54,7 +54,7 @@ export class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options)
   }
 
-  async searchIndices(siteId, indexType, limit = null, next = null) {
+  async searchIndices({siteId, indexType, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -72,7 +72,7 @@ export class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  buildTagSearchParameters(key, beginsWith, eq) {
+  buildTagSearchParameters({key, beginsWith, eq}) {
     return new TagSearchParameters(key, beginsWith, eq);
   }
 

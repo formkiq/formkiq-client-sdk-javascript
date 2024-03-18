@@ -18,7 +18,7 @@ export class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      this.host = host;
+      this.host = host?.replace(/\/+$/, ""); // Remove extra trailing slash
     }
     if (userPoolId && clientId) {
       this.userPoolId = userPoolId;

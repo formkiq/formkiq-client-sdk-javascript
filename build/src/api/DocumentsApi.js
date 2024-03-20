@@ -809,6 +809,35 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getPdfUploadUrl({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getPdfDetails({siteId, objectId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!objectId) {
+      return JSON.stringify({
+        'message': 'No objectId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/${objectId}/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

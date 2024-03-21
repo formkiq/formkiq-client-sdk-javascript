@@ -809,7 +809,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getPdfUploadUrl({siteId}) {
+  async getExaminePdfUploadUrl({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -821,7 +821,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getPdfDetails({siteId, objectId = null}) {
+  async getExaminePdfDetails({siteId, objectId = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'

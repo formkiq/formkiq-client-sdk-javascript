@@ -7539,7 +7539,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentActions({siteId, documentId, limit = null, next = null}) {
+  async getDocumentActions({documentId, siteId = null}) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -7915,6 +7915,35 @@ class DocumentsApi {
     }
     const url = `${this.apiClient.host}/esignature/docusign/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getExaminePdfUploadUrl({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getExaminePdfDetails({siteId, objectId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!objectId) {
+      return JSON.stringify({
+        'message': 'No objectId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/${objectId}/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

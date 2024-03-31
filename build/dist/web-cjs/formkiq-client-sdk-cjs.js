@@ -7539,7 +7539,7 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentActions({documentId, siteId = null}) {
+  async getDocumentActions({siteId, documentId, limit = null, next = null}) {
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
@@ -8206,128 +8206,6 @@ class WebFormsHandler {
 
 }
 
-class ConfigurationApi {
-
-  constructor(apiClient) {
-    this.apiClient = apiClient || ApiClient.instance;
-    if (!ConfigurationApi.instance) { 
-      ConfigurationApi.instance = this;
-		}
-  }
-
-  get instance() {
-		return ConfigurationApi.instance;
-  }
-  
-  set instance(value) {
-		ConfigurationApi.instance = value;
-	}
-    
-  async getConfiguration({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getOpenPolicyAgentConfigurations({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-  async getOpenPolicyAgentConfiguration({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const url = `${this.apiClient.host}/configuration/opa/${siteId}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/opa${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async deleteOpenPolicyAgent({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/opa/${siteId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-
-  async updateConfiguration({siteId, updateConfigurationParameters}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getApiKeys({siteId}) {
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async addApiKey({siteId, addApiKeyParameters}) {
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  // NOTE: apiKey is the OBFUSCATED key, i.e., the one with the '****' within it
-  async deleteApiKey({siteId, apiKey}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    if (!apiKey) {
-      return JSON.stringify({
-        'message': 'No API Key specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-}
-
 class SearchApi {
 
   constructor(apiClient) {
@@ -8445,6 +8323,122 @@ class SitesApi {
   async getSites() {
     const url = `${this.apiClient.host}/sites`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getConfiguration({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/configuration`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateConfiguration({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/configuration`;
+    const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getApiKeys({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addApiKey({siteId, addApiKeyParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
+    const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // NOTE: apiKey is the OBFUSCATED key, i.e., the one with the '****' within it
+  async deleteApiKey({siteId, apiKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!apiKey) {
+      return JSON.stringify({
+        'message': 'No API Key specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys/${apiKey}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getOpenPolicyAgentConfigurations({siteId}) {
+    // NOTE: params is temporary; awaiting bug fix
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/opa/accessPolicies${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getOpenPolicyAgentConfiguration({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/opa/accessPolicies`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // Should change to this:
+  /*
+  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  */
+
+  async deleteOpenPolicyAgent({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -9069,7 +9063,6 @@ class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi = new ConfigurationApi();
     this.documentsApi = new DocumentsApi();
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
@@ -9087,7 +9080,6 @@ class FormkiqClient {
       const response = await this.apiClient.cognitoClient.login(email, password);
 
       // TODO: determine better way of ensuring cognito client is updated across API instances
-      this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -9109,7 +9101,6 @@ class FormkiqClient {
     const response = await this.apiClient.logout();
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -9124,7 +9115,6 @@ class FormkiqClient {
 
   resetClient(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi.apiClient = this.apiClient;
     this.documentsApi.apiClient = this.apiClient;
     this.searchApi.apiClient = this.apiClient;
     this.sitesApi.apiClient = this.apiClient;
@@ -9142,7 +9132,6 @@ class FormkiqClient {
     this.apiClient.cognitoClient.refreshToken = refreshToken;
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;

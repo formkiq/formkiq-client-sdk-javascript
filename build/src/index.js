@@ -1,6 +1,5 @@
 import { ApiClient } from './ApiClient.js';
 import { WebFormsHandler } from './WebFormsHandler.js';
-import { ConfigurationApi } from './api/ConfigurationApi.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
 import { SearchApi } from './api/SearchApi.js';
 import { SitesApi } from './api/SitesApi.js';
@@ -14,7 +13,6 @@ export class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi = new ConfigurationApi();
     this.documentsApi = new DocumentsApi();
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
@@ -32,7 +30,6 @@ export class FormkiqClient {
       const response = await this.apiClient.cognitoClient.login(email, password);
 
       // TODO: determine better way of ensuring cognito client is updated across API instances
-      this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -54,7 +51,6 @@ export class FormkiqClient {
     const response = await this.apiClient.logout();
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -69,7 +65,6 @@ export class FormkiqClient {
 
   resetClient(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi.apiClient = this.apiClient;
     this.documentsApi.apiClient = this.apiClient;
     this.searchApi.apiClient = this.apiClient;
     this.sitesApi.apiClient = this.apiClient;
@@ -87,7 +82,6 @@ export class FormkiqClient {
     this.apiClient.cognitoClient.refreshToken = refreshToken;
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;

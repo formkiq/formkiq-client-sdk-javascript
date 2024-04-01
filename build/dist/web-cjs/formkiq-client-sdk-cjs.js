@@ -9059,6 +9059,90 @@ class CasesApi {
 
 }
 
+class TagSchemasApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!TagSchemasApi.instance) {
+      TagSchemasApi.instance = this;
+    }
+  }
+
+  get instance() {
+    return TagSchemasApi.instance;
+  }
+
+  set instance(value) {
+    TagSchemasApi.instance = value;
+  }
+
+  async getTagSchemas({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/tagSchemas${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addTagSchema({siteId, addTagSchemaParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/tagSchemas${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addTagSchemaParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getTagSchema({siteId, tagSchemaId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!tagSchemaId) {
+      return JSON.stringify({
+        'message': 'No tagSchemaId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/tagSchemas/${tagSchemaId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteTagSchema({siteId, tagSchemaId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!tagSchemaId) {
+      return JSON.stringify({
+        'message': 'No tagSchemaId specified'
+      });
+    }
+    const params = {siteId};
+
+    const url = `${this.apiClient.host}/tagSchemas/${tagSchemaId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+  
+}
+
 class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
@@ -9071,6 +9155,7 @@ class FormkiqClient {
     this.workflowsApi = new WorkflowsApi();
     this.rulesetsApi = new RulesetsApi();
     this.casesApi = new CasesApi();
+    this.tagSchemasApi = new TagSchemasApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -9088,6 +9173,7 @@ class FormkiqClient {
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -9109,6 +9195,7 @@ class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -9123,6 +9210,7 @@ class FormkiqClient {
     this.workflowsApi.apiClient = this.apiClient;
     this.rulesetsApi.apiClient = this.apiClient;
     this.casesApi.apiClient = this.apiClient;
+    this.tagSchemasApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -9140,6 +9228,7 @@ class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

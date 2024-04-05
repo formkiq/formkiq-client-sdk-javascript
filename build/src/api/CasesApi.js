@@ -74,7 +74,7 @@ export class CasesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getCaseTasks(caseId, siteId = null, next = null, limit = null) {
+  async getTasks(caseId, siteId = null, next = null, limit = null) {
     if (!caseId) {
       return JSON.stringify({
         'message': 'No case ID specified'
@@ -96,7 +96,7 @@ export class CasesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getCaseNigos(caseId, siteId = null, next = null, limit = null) {
+  async getNigos(caseId, siteId = null, next = null, limit = null) {
     if (!caseId) {
       return JSON.stringify({
         'message': 'No case ID specified'
@@ -149,6 +149,160 @@ export class CasesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async deleteDocumentFromCase(caseId, documentId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getTask(caseId, taskId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getNigo(caseId, nigoId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addTask(addTaskParameters, caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!addTaskParameters) {
+      return JSON.stringify({
+        'message': 'No task parameters specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addTaskParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addNigo(addNigoParameters, caseId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!addNigoParameters) {
+      return JSON.stringify({
+        'message': 'No NIGO parameters specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addNigoParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async deleteDocumentFromTask(caseId, taskId, documentId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentFromNigo(caseId, nigoId, documentId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
   async updateTask(caseId, taskId, addTaskParameters, siteId = null) {
     const params = {};
     if (siteId) {
@@ -175,6 +329,26 @@ export class CasesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   };
 
+  async deleteTask(caseId, taskId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async updateNigo(caseId, nigoId, addNigoParameters, siteId = null) {
     const params = {};
     if (siteId) {
@@ -200,4 +374,24 @@ export class CasesApi {
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   };
+
+  async deleteNigo(caseId, nigoId, siteId = null) {
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {};
+    if (siteId) {
+      params.siteId = siteId;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
 }

@@ -215,6 +215,27 @@ export class WorkflowsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getGroups({siteId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    const url = `${this.apiClient.host}/groups${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddWorkflowParameters {

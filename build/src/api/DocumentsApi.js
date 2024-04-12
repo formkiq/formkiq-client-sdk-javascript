@@ -499,20 +499,22 @@ export class DocumentsApi {
         'message': 'No siteId specified'
       });
     }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflowId specified'
+      });
+    }
     const params = {siteId};
-    if (previous && previous.length) {
-      params.previous = previous;
-    }
-    if (next && next.length) {
-      params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
-    }
-    const url = `${this.apiClient.host}/documents/${documentId}/workflows/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/workflow/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDecisionParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
+
 
   async getSignedUrlForNewDocumentUpload({siteId, path}) {
     if (!siteId) {

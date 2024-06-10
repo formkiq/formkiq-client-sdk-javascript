@@ -840,6 +840,239 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getAttributes({siteId, next = null, limit = null }) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addAttribute({siteId, addAttributeParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addAttributeParameters) {
+      return JSON.stringify({
+        'message': 'No addAttributeParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addAttributeParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributes({siteId, limit = null, next = null,documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAttributes({siteId, ws, documentId, addDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+
+    if (!ws) {
+      return JSON.stringify({
+        'message': 'No ws specified'
+      });
+    }
+
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+
+    if (!addDocumentAttributesParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentAttributesParameters specified'
+      });
+    }
+
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributes({siteId, documentId, setDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId, documentId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributeValue({siteId, documentId, attributeKey, setDocumentsAttributeValueParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentsAttributeValueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttributeValue({siteId, documentId, attributeKey, attributeValue}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    if (!attributeValue) {
+      return JSON.stringify({
+        'message': 'No attributeValue specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey, attributeValue};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/${attributeValue}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

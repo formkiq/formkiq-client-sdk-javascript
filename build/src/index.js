@@ -9,6 +9,7 @@ import { WorkflowsApi } from './api/WorkflowsApi.js';
 import { RulesetsApi } from './api/RulesetsApi.js';
 import { CasesApi } from './api/CasesApi.js';
 import { TagSchemasApi } from './api/TagSchemasApi.js';
+import { UserManagementApi } from './api/UserManagementApi.js';
 
 
 
@@ -25,6 +26,7 @@ export class FormkiqClient {
     this.rulesetsApi = new RulesetsApi();
     this.casesApi = new CasesApi();
     this.tagSchemasApi = new TagSchemasApi();
+    this.userManagementApi = new UserManagementApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -43,6 +45,7 @@ export class FormkiqClient {
       this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -65,6 +68,7 @@ export class FormkiqClient {
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -80,6 +84,7 @@ export class FormkiqClient {
     this.rulesetsApi.apiClient = this.apiClient;
     this.casesApi.apiClient = this.apiClient;
     this.tagSchemasApi.apiClient = this.apiClient;
+    this.userManagementApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -98,6 +103,7 @@ export class FormkiqClient {
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

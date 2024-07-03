@@ -17,21 +17,13 @@ export class UserManagementApi {
     UserManagementApi.instance = value;
   }
 
-  async getGroups({siteId, limit = null, next = null, previous = null}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const params = {siteId};
+  async getGroups({limit = null, next = null}) {
+    const params = {};
     if (limit) {
       params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
-    }
-    if (previous && previous.length) {
-      params.previous = previous;
     }
     const url = `${this.apiClient.host}/groups${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');

@@ -211,7 +211,7 @@ export class WorkflowsApi {
     }
     const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', {"workflowId": workflowId});
+    const options = this.apiClient.buildOptions('POST', {"documentId": documentId, "workflowId": workflowId});
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

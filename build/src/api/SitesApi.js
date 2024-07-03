@@ -84,61 +84,55 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getOpenPolicyAgentConfigurations({siteId}) {
-    // NOTE: params is temporary; awaiting bug fix
-    const params = {siteId};
-    const url = `${this.apiClient.host}/sites/opa/accessPolicies${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getOpenPolicyAgentConfiguration({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
+  async getOpenPolicyAgentPolicies() {
     const url = `${this.apiClient.host}/sites/opa/accessPolicies`;
-    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  // Should change to this:
-  /*
-  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
+  async getOpenPolicyAgentPolicy({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
     const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
-    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  */
 
-  async deleteOpenPolicyAgent({siteId}) {
+  async getOpenPolicyAgentPolicyItems({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setOpenPolicyAgentPolicyItems({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteOpenPolicyAgentPolicyItems({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-
 }
 
 export class AddApiKeyParameters {

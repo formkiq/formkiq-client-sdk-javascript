@@ -41,6 +41,16 @@ export class UserManagementApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getGroup({groupName}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('GET');
+  }
+
   async deleteGroup({groupName}) {
     if (!groupName) {
       return JSON.stringify({
@@ -58,7 +68,7 @@ export class UserManagementApi {
         'message': 'No groupName specified'
       });
     }
-    const params = {groupName};
+    const params = {};
     if (limit) {
       params.limit = limit;
     }
@@ -103,7 +113,7 @@ export class UserManagementApi {
   }
 
   async getUsers({limit = null, next = null}) {
-    const params = {siteId};
+    const params = {};
     if (limit) {
       params.limit = limit;
     }

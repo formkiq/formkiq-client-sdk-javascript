@@ -49,6 +49,7 @@ export class UserManagementApi {
     }
     const url = `${this.apiClient.host}/groups/${groupName}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
   }
 
   async deleteGroup({groupName}) {

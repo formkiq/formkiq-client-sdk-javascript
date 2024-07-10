@@ -1,22 +1,22 @@
-import { ApiClient } from '../ApiClient.js';
+import {ApiClient} from '../ApiClient.js';
 
 export class DocumentsApi {
 
   constructor(apiClient) {
     this.apiClient = apiClient || ApiClient.instance;
-    if (!DocumentsApi.instance) { 
+    if (!DocumentsApi.instance) {
       DocumentsApi.instance = this;
-		}
+    }
   }
 
   get instance() {
-		return DocumentsApi.instance;
+    return DocumentsApi.instance;
   }
-  
+
   set instance(value) {
-		DocumentsApi.instance = value;
-	}
-    
+    DocumentsApi.instance = value;
+  }
+
   async getDocuments({siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
@@ -99,9 +99,9 @@ export class DocumentsApi {
   }
 
   /**
-	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
+   * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
    * Expected use is for submitting web forms
-	 */
+   */
   async addDocumentUsingPublicPath({siteId, addOrUpdateDocumentParameters}) {
     if (!siteId) {
       return JSON.stringify({
@@ -119,7 +119,7 @@ export class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -136,7 +136,7 @@ export class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -156,7 +156,7 @@ export class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -167,7 +167,7 @@ export class DocumentsApi {
     const options = this.apiClient.buildOptions('PUT');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  
+
   async getDocumentTags({siteId, documentId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
@@ -373,7 +373,7 @@ export class DocumentsApi {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
-    }   
+    }
     const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -499,20 +499,22 @@ export class DocumentsApi {
         'message': 'No siteId specified'
       });
     }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflowId specified'
+      });
+    }
     const params = {siteId};
-    if (previous && previous.length) {
-      params.previous = previous;
-    }
-    if (next && next.length) {
-      params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
-    }
-    const url = `${this.apiClient.host}/documents/${documentId}/workflows/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/workflow/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDecisionParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
+
 
   async getSignedUrlForNewDocumentUpload({siteId, path}) {
     if (!siteId) {
@@ -785,7 +787,15 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async sendForDocusignESignature({siteId, documentId, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []}) {
+  async sendForDocusignESignature({
+                                    siteId,
+                                    documentId,
+                                    emailSubject = '',
+                                    status = 'created',
+                                    developmentMode = true,
+                                    signers = [],
+                                    carbonCopies = []
+                                  }) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -840,7 +850,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getAttributes({siteId, next = null, limit = null }) {
+  async getAttributes({siteId, next = null, limit = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -909,7 +919,7 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentAttributes({siteId, limit = null, next = null,documentId}) {
+  async getDocumentAttributes({siteId, limit = null, next = null, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -1070,6 +1080,34 @@ export class DocumentsApi {
     const params = {siteId, documentId, attributeKey, attributeValue};
     const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/${attributeValue}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributeVersions({siteId, limit = null, next = null, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/versions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

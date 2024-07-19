@@ -1127,7 +1127,7 @@ export class DocumentsApi {
     if (userId) {
       params.userId = userId;
     }
-    const url = `${this.apiClient.host}/usersActivities${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -1150,7 +1150,7 @@ export class DocumentsApi {
     if (next && next.length) {
       params.next = next;
     }
-    const url = `${this.apiClient.host}/documents/${documentId}/usersActivities${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

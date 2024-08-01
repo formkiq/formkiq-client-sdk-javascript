@@ -1111,6 +1111,24 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getMappings({siteId, limit = null, next = null, }) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

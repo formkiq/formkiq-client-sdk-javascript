@@ -1129,6 +1129,73 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async addMapping({siteId, addMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addMappingParameters) {
+      return JSON.stringify({
+        'message': 'No addMappingParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setMapping({siteId, mappingId, setMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setMappingParameters);
+  }
+
+  async deleteMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }

@@ -1177,6 +1177,7 @@ export class DocumentsApi {
     const params = {siteId};
     const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', setMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
   }
 
   async deleteMapping({siteId, mappingId}) {

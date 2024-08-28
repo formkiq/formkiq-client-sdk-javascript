@@ -1128,6 +1128,23 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async restoreDocument({siteId, documentId}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getMappings({siteId, limit = null, next = null, }) {
     if (!siteId) {
       return JSON.stringify({

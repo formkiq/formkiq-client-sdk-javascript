@@ -1150,6 +1150,51 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getUserActivities({siteId, limit = null, next = null, userId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (userId) {
+      params.userId = userId;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities({siteId, limit = null, next = null, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
   async restoreDocument({siteId, documentId}){
     if (!siteId) {
       return JSON.stringify({

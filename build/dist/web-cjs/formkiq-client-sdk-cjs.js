@@ -7111,19 +7111,19 @@ class DocumentsApi {
 
   constructor(apiClient) {
     this.apiClient = apiClient || ApiClient.instance;
-    if (!DocumentsApi.instance) { 
+    if (!DocumentsApi.instance) {
       DocumentsApi.instance = this;
-		}
+    }
   }
 
   get instance() {
-		return DocumentsApi.instance;
+    return DocumentsApi.instance;
   }
-  
+
   set instance(value) {
-		DocumentsApi.instance = value;
-	}
-    
+    DocumentsApi.instance = value;
+  }
+
   async getDocuments({siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
@@ -7206,9 +7206,9 @@ class DocumentsApi {
   }
 
   /**
-	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
+   * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
    * Expected use is for submitting web forms
-	 */
+   */
   async addDocumentUsingPublicPath({siteId, addOrUpdateDocumentParameters}) {
     if (!siteId) {
       return JSON.stringify({
@@ -7226,7 +7226,7 @@ class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -7243,7 +7243,7 @@ class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -7263,7 +7263,7 @@ class DocumentsApi {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
-    }    
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No documentId specified'
@@ -7274,7 +7274,7 @@ class DocumentsApi {
     const options = this.apiClient.buildOptions('PUT');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  
+
   async getDocumentTags({siteId, documentId, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
@@ -7470,6 +7470,28 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async deleteDocumentVersion({siteId, documentId, versionKey}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!versionKey) {
+      return JSON.stringify({
+        'message': 'No version key specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/versions/${versionKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getDocumentAccessAttributes({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
@@ -7480,7 +7502,7 @@ class DocumentsApi {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
-    }   
+    }
     const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -7582,6 +7604,23 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async retryDocumentActions({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/actions/retry${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getWorkflowsInDocument({siteId, documentId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
@@ -7606,20 +7645,22 @@ class DocumentsApi {
         'message': 'No siteId specified'
       });
     }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflowId specified'
+      });
+    }
     const params = {siteId};
-    if (previous && previous.length) {
-      params.previous = previous;
-    }
-    if (next && next.length) {
-      params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
-    }
-    const url = `${this.apiClient.host}/documents/${documentId}/workflows/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/documents/${documentId}/workflow/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDecisionParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
+
 
   async getSignedUrlForNewDocumentUpload({siteId, path}) {
     if (!siteId) {
@@ -7892,7 +7933,15 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async sendForDocusignESignature({siteId, documentId, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []}) {
+  async sendForDocusignESignature({
+                                    siteId,
+                                    documentId,
+                                    emailSubject = '',
+                                    status = 'created',
+                                    developmentMode = true,
+                                    signers = [],
+                                    carbonCopies = []
+                                  }) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -7944,6 +7993,427 @@ class DocumentsApi {
     const params = {siteId};
     const url = `${this.apiClient.host}/objects/examine/${objectId}/pdf${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getAttributes({siteId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addAttribute({siteId, addAttributeParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addAttributeParameters) {
+      return JSON.stringify({
+        'message': 'No addAttributeParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addAttributeParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributes({siteId, limit = null, next = null, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAttributes({siteId, ws, documentId, addDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+
+    if (!ws) {
+      return JSON.stringify({
+        'message': 'No ws specified'
+      });
+    }
+
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+
+    if (!addDocumentAttributesParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentAttributesParameters specified'
+      });
+    }
+
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributes({siteId, documentId, setDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId, documentId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributeValue({siteId, documentId, attributeKey, setDocumentsAttributeValueParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentsAttributeValueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttributeValue({siteId, documentId, attributeKey, attributeValue}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    if (!attributeValue) {
+      return JSON.stringify({
+        'message': 'No attributeValue specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey, attributeValue};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/${attributeValue}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributeVersions({siteId, limit = null, next = null, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/versions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentGenerate({siteId, documentId, addDocumentGenerateParameters}) {
+    if (!addDocumentGenerateParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentGenerateParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/generate${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentGenerateParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserActivities({siteId, limit = null, next = null, userId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (userId) {
+      params.userId = userId;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities({siteId, limit = null, next = null, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async restoreDocument({siteId, documentId}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMappings({siteId, limit = null, next = null, }) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addMapping({siteId, addMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addMappingParameters) {
+      return JSON.stringify({
+        'message': 'No addMappingParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setMapping({siteId, mappingId, setMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -8387,61 +8857,55 @@ class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getOpenPolicyAgentConfigurations({siteId}) {
-    // NOTE: params is temporary; awaiting bug fix
-    const params = {siteId};
-    const url = `${this.apiClient.host}/sites/opa/accessPolicies${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getOpenPolicyAgentConfiguration({siteId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
+  async getOpenPolicyAgentPolicies() {
     const url = `${this.apiClient.host}/sites/opa/accessPolicies`;
-    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  // Should change to this:
-  /*
-  async configureOpenPolicyAgent({siteId, updateConfigurationParameters}) {
+  async getOpenPolicyAgentPolicy({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
     const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
-    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  */
 
-  async deleteOpenPolicyAgent({siteId}) {
+  async getOpenPolicyAgentPolicyItems({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setOpenPolicyAgentPolicyItems({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteOpenPolicyAgentPolicyItems({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-
 }
 
 class VersionApi {
@@ -9385,88 +9849,324 @@ class CasesApi {
   }
 }
 
-class TagSchemasApi {
+class SchemasApi {
 
   constructor(apiClient) {
     this.apiClient = apiClient || ApiClient.instance;
-    if (!TagSchemasApi.instance) {
-      TagSchemasApi.instance = this;
+    if (!SchemasApi.instance) {
+      SchemasApi.instance = this;
     }
   }
 
   get instance() {
-    return TagSchemasApi.instance;
+    return SchemasApi.instance;
   }
 
   set instance(value) {
-    TagSchemasApi.instance = value;
+    SchemasApi.instance = value;
   }
 
-  async getTagSchemas({siteId, limit = null, next = null}) {
+  async getSiteSchema({siteId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/schema/document`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setSiteSchema({siteId, schema}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!schema) {
+      return JSON.stringify({
+        'message': 'No schema specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/schema/document`;
+    const options = this.apiClient.buildOptions('PUT', schema);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getSiteClassifications({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {};
     if (limit) {
       params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
     }
-    const url = `${this.apiClient.host}/tagSchemas${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addTagSchema({siteId, addTagSchemaParameters}) {
+  async addSiteClassification({siteId, classification}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/tagSchemas${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addTagSchemaParameters);
+    if (!classification) {
+      return JSON.stringify({
+        'message': 'No classification specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications`;
+    const options = this.apiClient.buildOptions('POST', classification);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getTagSchema({siteId, tagSchemaId}) {
+  async getClassification({siteId, classificationId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    if (!tagSchemaId) {
+    if (!classificationId) {
       return JSON.stringify({
-        'message': 'No tagSchemaId specified'
+        'message': 'No classificationId specified'
       });
     }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/tagSchemas/${tagSchemaId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteTagSchema({siteId, tagSchemaId}) {
+  async deleteClassification({siteId, classificationId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    if (!tagSchemaId) {
+    if (!classificationId) {
       return JSON.stringify({
-        'message': 'No tagSchemaId specified'
+        'message': 'No classificationId specified'
       });
     }
-    const params = {siteId};
-
-    const url = `${this.apiClient.host}/tagSchemas/${tagSchemaId}${this.apiClient.buildQueryString(params)}`;
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  
+
+  async setClassification({siteId, classificationId, classification}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!classificationId) {
+      return JSON.stringify({
+        'message': 'No classificationId specified'
+      });
+    }
+    if (!classification) {
+      return JSON.stringify({
+        'message': 'No classification specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
+    const options = this.apiClient.buildOptions('PUT', classification);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+}
+
+class UserManagementApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!UserManagementApi.instance) {
+      UserManagementApi.instance = this;
+    }
+  }
+
+  get instance() {
+    return UserManagementApi.instance;
+  }
+
+  set instance(value) {
+    UserManagementApi.instance = value;
+  }
+
+  async getGroups({limit = null, next = null}) {
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/groups${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addGroup({groupBody}) {
+    if (!groupBody) {
+      return JSON.stringify({
+        'message': 'No groupBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups`;
+    const options = this.apiClient.buildOptions('POST', groupBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getGroup({groupName}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteGroup({groupName}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getGroupUsers({groupName, limit = null, next = null}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addUserToGroup({groupName, userBody}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    if (!userBody) {
+      return JSON.stringify({
+        'message': 'No userBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users`;
+    const options = this.apiClient.buildOptions('POST', userBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteUserFromGroup({groupName, username}){
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users/${username}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUsers({limit = null, next = null}) {
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/users${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addUser({userBody}) {
+    if (!userBody) {
+      return JSON.stringify({
+        'message': 'No userBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users`;
+    const options = this.apiClient.buildOptions('POST', userBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUser({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteUser({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserGroups({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}/groups`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setUserOperation({username, userOperation}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    if (!userOperation) {
+      return JSON.stringify({
+        'message': 'No userOperation specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}/${userOperation}`;
+    const options = this.apiClient.buildOptions('PUT',);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 class FormkiqClient {
@@ -9481,7 +10181,8 @@ class FormkiqClient {
     this.workflowsApi = new WorkflowsApi();
     this.rulesetsApi = new RulesetsApi();
     this.casesApi = new CasesApi();
-    this.tagSchemasApi = new TagSchemasApi();
+    this.schemasApi = new SchemasApi();
+    this.userManagementApi = new UserManagementApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -9499,7 +10200,8 @@ class FormkiqClient {
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-      this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -9521,7 +10223,8 @@ class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
@@ -9536,7 +10239,8 @@ class FormkiqClient {
     this.workflowsApi.apiClient = this.apiClient;
     this.rulesetsApi.apiClient = this.apiClient;
     this.casesApi.apiClient = this.apiClient;
-    this.tagSchemasApi.apiClient = this.apiClient;
+    this.schemasApi.apiClient = this.apiClient;
+    this.userManagementApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -9554,7 +10258,8 @@ class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

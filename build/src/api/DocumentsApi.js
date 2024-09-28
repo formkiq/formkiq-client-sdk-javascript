@@ -1150,6 +1150,18 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async addDocumentGenerate({siteId, documentId, addDocumentGenerateParameters}) {
+    if (!addDocumentGenerateParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentGenerateParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/generate${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentGenerateParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getUserActivities({siteId, limit = null, next = null, userId = null}) {
     if (!siteId) {
       return JSON.stringify({

@@ -8,7 +8,7 @@ import { WebhooksApi } from './api/WebhooksApi.js';
 import { WorkflowsApi } from './api/WorkflowsApi.js';
 import { RulesetsApi } from './api/RulesetsApi.js';
 import { CasesApi } from './api/CasesApi.js';
-import { TagSchemasApi } from './api/TagSchemasApi.js';
+import { SchemasApi } from './api/SchemasApi.js';
 import { UserManagementApi } from './api/UserManagementApi.js';
 
 
@@ -25,7 +25,7 @@ export class FormkiqClient {
     this.workflowsApi = new WorkflowsApi();
     this.rulesetsApi = new RulesetsApi();
     this.casesApi = new CasesApi();
-    this.tagSchemasApi = new TagSchemasApi();
+    this.schemasApi = new SchemasApi();
     this.userManagementApi = new UserManagementApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
@@ -44,7 +44,7 @@ export class FormkiqClient {
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-      this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
@@ -67,7 +67,7 @@ export class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
@@ -83,7 +83,7 @@ export class FormkiqClient {
     this.workflowsApi.apiClient = this.apiClient;
     this.rulesetsApi.apiClient = this.apiClient;
     this.casesApi.apiClient = this.apiClient;
-    this.tagSchemasApi.apiClient = this.apiClient;
+    this.schemasApi.apiClient = this.apiClient;
     this.userManagementApi.apiClient = this.apiClient;
   }
 
@@ -102,7 +102,7 @@ export class FormkiqClient {
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.tagSchemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 

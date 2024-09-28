@@ -363,6 +363,28 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async deleteDocumentVersion({siteId, documentId, versionKey}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!versionKey) {
+      return JSON.stringify({
+        'message': 'No version key specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/versions/${versionKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getDocumentAccessAttributes({siteId, documentId}) {
     if (!siteId) {
       return JSON.stringify({
@@ -472,6 +494,23 @@ export class DocumentsApi {
     }
     const url = `${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', body);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async retryDocumentActions({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/actions/retry${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -1112,6 +1151,39 @@ export class DocumentsApi {
   }
 
   async addDocumentGenerate({siteId, documentId, addDocumentGenerateParameters}) {
+    if (!addDocumentGenerateParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentGenerateParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/generate${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentGenerateParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserActivities({siteId, limit = null, next = null, userId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (userId) {
+      params.userId = userId;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities({siteId, limit = null, next = null, documentId}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -1122,14 +1194,119 @@ export class DocumentsApi {
         'message': 'No documentId specified'
       });
     }
-    if (!addDocumentGenerateParameters) {
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async restoreDocument({siteId, documentId}){
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No addDocumentGenerateParameters specified'
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
       });
     }
     const params = {siteId};
-    const url = `${this.apiClient.host}/documents/${documentId}/generate${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addDocumentGenerateParameters);
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMappings({siteId, limit = null, next = null, }) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addMapping({siteId, addMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addMappingParameters) {
+      return JSON.stringify({
+        'message': 'No addMappingParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setMapping({siteId, mappingId, setMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 

@@ -209,6 +209,22 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async deleteSiteGroupPermissions({siteId, groupName}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddApiKeyParameters {

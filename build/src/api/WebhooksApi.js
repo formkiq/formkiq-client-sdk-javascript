@@ -17,13 +17,19 @@ export class WebhooksApi {
 		WebhooksApi.instance = value;
 	}
     
-  async getWebhooks({siteId}) {
+  async getWebhooks({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
     const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);

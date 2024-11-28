@@ -45,11 +45,18 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getApiKeys({siteId}) {
+  async getApiKeys({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
+    }
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
     const options = this.apiClient.buildOptions('GET');

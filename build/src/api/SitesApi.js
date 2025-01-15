@@ -58,7 +58,7 @@ export class SitesApi {
     if (next && next.length) {
       params.next = next;
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

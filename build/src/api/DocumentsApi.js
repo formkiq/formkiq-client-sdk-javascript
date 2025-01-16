@@ -314,6 +314,26 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getDocumentOcr({siteId, documentId, outputType = 'TEXT'}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (outputType) {
+      params.outputType = outputType
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/ocr${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
   async getDocumentVersions({siteId, documentId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({

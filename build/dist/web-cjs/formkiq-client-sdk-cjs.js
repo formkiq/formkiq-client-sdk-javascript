@@ -4,10 +4,29 @@ var exports = {"__esModule": true};
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var CryptoJS = require('crypto-js/core');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var CryptoJS__default = /*#__PURE__*/_interopDefault(CryptoJS);
+
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
+
 /** @class */
 var AuthenticationDetails = /*#__PURE__*/function () {
   /**
@@ -20,53 +39,61 @@ var AuthenticationDetails = /*#__PURE__*/function () {
    */
   function AuthenticationDetails(data) {
     var _ref = data || {},
-      ValidationData = _ref.ValidationData,
-      Username = _ref.Username,
-      Password = _ref.Password,
-      AuthParameters = _ref.AuthParameters,
-      ClientMetadata = _ref.ClientMetadata;
+        ValidationData = _ref.ValidationData,
+        Username = _ref.Username,
+        Password = _ref.Password,
+        AuthParameters = _ref.AuthParameters,
+        ClientMetadata = _ref.ClientMetadata;
+
     this.validationData = ValidationData || {};
     this.authParameters = AuthParameters || {};
     this.clientMetadata = ClientMetadata || {};
     this.username = Username;
     this.password = Password;
   }
-
   /**
    * @returns {string} the record's username
    */
+
+
   var _proto = AuthenticationDetails.prototype;
+
   _proto.getUsername = function getUsername() {
     return this.username;
   }
-
   /**
    * @returns {string} the record's password
-   */;
+   */
+  ;
+
   _proto.getPassword = function getPassword() {
     return this.password;
   }
-
   /**
    * @returns {Array} the record's validationData
-   */;
+   */
+  ;
+
   _proto.getValidationData = function getValidationData() {
     return this.validationData;
   }
-
   /**
    * @returns {Array} the record's authParameters
-   */;
+   */
+  ;
+
   _proto.getAuthParameters = function getAuthParameters() {
     return this.authParameters;
   }
-
   /**
    * @returns {ClientMetadata} the clientMetadata for a Lambda trigger
-   */;
+   */
+  ;
+
   _proto.getClientMetadata = function getClientMetadata() {
     return this.clientMetadata;
   };
+
   return AuthenticationDetails;
 }();
 
@@ -311,6 +338,11 @@ var INSPECT_MAX_BYTES = 50;
 Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
   ? global$1.TYPED_ARRAY_SUPPORT
   : true;
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+kMaxLength();
 
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
@@ -2042,96 +2074,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
 }
 
-var crypto;
-
-// Native crypto from window (Browser)
-if (typeof window !== 'undefined' && window.crypto) {
-  crypto = window.crypto;
-}
-
-// Native (experimental IE 11) crypto from window (Browser)
-if (!crypto && typeof window !== 'undefined' && window.msCrypto) {
-  crypto = window.msCrypto;
-}
-
-// Native crypto from global (NodeJS)
-if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
-  crypto = global$1.crypto;
-}
-
-// Native crypto import via require (NodeJS)
-if (!crypto && typeof require === 'function') {
-  try {
-    crypto = require('crypto');
-  } catch (err) {}
-}
-
-/*
- * Cryptographically secure pseudorandom number generator
- * As Math.random() is cryptographically not safe to use
- */
-function cryptoSecureRandomInt() {
-  if (crypto) {
-    // Use getRandomValues method (Browser)
-    if (typeof crypto.getRandomValues === 'function') {
-      try {
-        return crypto.getRandomValues(new Uint32Array(1))[0];
-      } catch (err) {}
-    }
-
-    // Use randomBytes method (NodeJS)
-    if (typeof crypto.randomBytes === 'function') {
-      try {
-        return crypto.randomBytes(4).readInt32LE();
-      } catch (err) {}
-    }
-  }
-  throw new Error('Native crypto module could not be used to get secure random number.');
-}
-
-/**
- * Hex encoding strategy.
- * Converts a word array to a hex string.
- * @param {WordArray} wordArray The word array.
- * @return {string} The hex string.
- * @static
- */
-function hexStringify(wordArray) {
-  // Shortcuts
-  var words = wordArray.words;
-  var sigBytes = wordArray.sigBytes;
-
-  // Convert
-  var hexChars = [];
-  for (var i = 0; i < sigBytes; i++) {
-    var bite = words[i >>> 2] >>> 24 - i % 4 * 8 & 0xff;
-    hexChars.push((bite >>> 4).toString(16));
-    hexChars.push((bite & 0x0f).toString(16));
-  }
-  return hexChars.join('');
-}
-var WordArray = /*#__PURE__*/function () {
-  function WordArray(words, sigBytes) {
-    words = this.words = words || [];
-    if (sigBytes != undefined) {
-      this.sigBytes = sigBytes;
-    } else {
-      this.sigBytes = words.length * 4;
-    }
-  }
-  var _proto = WordArray.prototype;
-  _proto.random = function random(nBytes) {
-    var words = [];
-    for (var i = 0; i < nBytes; i += 4) {
-      words.push(cryptoSecureRandomInt());
-    }
-    return new WordArray(words, nBytes);
-  };
-  _proto.toString = function toString() {
-    return hexStringify(this);
-  };
-  return WordArray;
-}();
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function createCommonjsModule(fn, basedir, module) {
 	return module = {
@@ -2162,667 +2105,1339 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
+(function (root, factory) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory();
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define([], factory);
+	}
+	else {
+		// Global (browser)
+		root.CryptoJS = factory();
+	}
+}(undefined, function () {
 
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
+	/*globals window, global, require*/
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise */
+	/**
+	 * CryptoJS core components.
+	 */
+	var CryptoJS = CryptoJS || (function (Math, undefined$1) {
 
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
+	    var crypto;
 
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
+	    // Native crypto from window (Browser)
+	    if (typeof window !== 'undefined' && window.crypto) {
+	        crypto = window.crypto;
+	    }
 
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+	    // Native crypto in web worker (Browser)
+	    if (typeof self !== 'undefined' && self.crypto) {
+	        crypto = self.crypto;
+	    }
 
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
+	    // Native crypto from worker
+	    if (typeof globalThis !== 'undefined' && globalThis.crypto) {
+	        crypto = globalThis.crypto;
+	    }
 
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
+	    // Native (experimental IE 11) crypto from window (Browser)
+	    if (!crypto && typeof window !== 'undefined' && window.msCrypto) {
+	        crypto = window.msCrypto;
+	    }
 
-function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-}
+	    // Native crypto from global (NodeJS)
+	    if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
+	        crypto = global$1.crypto;
+	    }
 
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
+	    // Native crypto import via require (NodeJS)
+	    if (!crypto && typeof require === 'function') {
+	        try {
+	            crypto = require('crypto');
+	        } catch (err) {}
+	    }
 
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
+	    /*
+	     * Cryptographically secure pseudorandom number generator
+	     *
+	     * As Math.random() is cryptographically not safe to use
+	     */
+	    var cryptoSecureRandomInt = function () {
+	        if (crypto) {
+	            // Use getRandomValues method (Browser)
+	            if (typeof crypto.getRandomValues === 'function') {
+	                try {
+	                    return crypto.getRandomValues(new Uint32Array(1))[0];
+	                } catch (err) {}
+	            }
 
-function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-}
+	            // Use randomBytes method (NodeJS)
+	            if (typeof crypto.randomBytes === 'function') {
+	                try {
+	                    return crypto.randomBytes(4).readInt32LE();
+	                } catch (err) {}
+	            }
+	        }
 
-function __createBinding(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}
+	        throw new Error('Native crypto module could not be used to get secure random number.');
+	    };
 
-function __exportStar(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+	    /*
+	     * Local polyfill of Object.create
 
-function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-}
+	     */
+	    var create = Object.create || (function () {
+	        function F() {}
 
-function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-}
+	        return function (obj) {
+	            var subtype;
 
-function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
-}
+	            F.prototype = obj;
 
-function __spreadArrays() {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-}
-function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
-}
+	            subtype = new F();
 
-function __asyncGenerator(thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-}
+	            F.prototype = null;
 
-function __asyncDelegator(o) {
-    var i, p;
-    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
-}
+	            return subtype;
+	        };
+	    }());
 
-function __asyncValues(o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-}
+	    /**
+	     * CryptoJS namespace.
+	     */
+	    var C = {};
 
-function __makeTemplateObject(cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-}
-function __importStar(mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result.default = mod;
-    return result;
-}
+	    /**
+	     * Library namespace.
+	     */
+	    var C_lib = C.lib = {};
 
-function __importDefault(mod) {
-    return (mod && mod.__esModule) ? mod : { default: mod };
-}
+	    /**
+	     * Base object for prototypal inheritance.
+	     */
+	    var Base = C_lib.Base = (function () {
 
-function __classPrivateFieldGet(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-}
 
-function __classPrivateFieldSet(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-}
+	        return {
+	            /**
+	             * Creates a new object that inherits from this object.
+	             *
+	             * @param {Object} overrides Properties to copy into the new object.
+	             *
+	             * @return {Object} The new object.
+	             *
+	             * @static
+	             *
+	             * @example
+	             *
+	             *     var MyType = CryptoJS.lib.Base.extend({
+	             *         field: 'value',
+	             *
+	             *         method: function () {
+	             *         }
+	             *     });
+	             */
+	            extend: function (overrides) {
+	                // Spawn
+	                var subtype = create(this);
 
-var tslib_es6 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  __extends: __extends,
-  get __assign () { return __assign; },
-  __rest: __rest,
-  __decorate: __decorate,
-  __param: __param,
-  __metadata: __metadata,
-  __awaiter: __awaiter,
-  __generator: __generator,
-  __createBinding: __createBinding,
-  __exportStar: __exportStar,
-  __values: __values,
-  __read: __read,
-  __spread: __spread,
-  __spreadArrays: __spreadArrays,
-  __await: __await,
-  __asyncGenerator: __asyncGenerator,
-  __asyncDelegator: __asyncDelegator,
-  __asyncValues: __asyncValues,
-  __makeTemplateObject: __makeTemplateObject,
-  __importStar: __importStar,
-  __importDefault: __importDefault,
-  __classPrivateFieldGet: __classPrivateFieldGet,
-  __classPrivateFieldSet: __classPrivateFieldSet
-});
+	                // Augment
+	                if (overrides) {
+	                    subtype.mixIn(overrides);
+	                }
 
-var constants = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MAX_HASHABLE_LENGTH = exports.INIT = exports.KEY = exports.DIGEST_LENGTH = exports.BLOCK_SIZE = void 0;
-/**
- * @internal
- */
-exports.BLOCK_SIZE = 64;
-/**
- * @internal
- */
-exports.DIGEST_LENGTH = 32;
-/**
- * @internal
- */
-exports.KEY = new Uint32Array([
-    0x428a2f98,
-    0x71374491,
-    0xb5c0fbcf,
-    0xe9b5dba5,
-    0x3956c25b,
-    0x59f111f1,
-    0x923f82a4,
-    0xab1c5ed5,
-    0xd807aa98,
-    0x12835b01,
-    0x243185be,
-    0x550c7dc3,
-    0x72be5d74,
-    0x80deb1fe,
-    0x9bdc06a7,
-    0xc19bf174,
-    0xe49b69c1,
-    0xefbe4786,
-    0x0fc19dc6,
-    0x240ca1cc,
-    0x2de92c6f,
-    0x4a7484aa,
-    0x5cb0a9dc,
-    0x76f988da,
-    0x983e5152,
-    0xa831c66d,
-    0xb00327c8,
-    0xbf597fc7,
-    0xc6e00bf3,
-    0xd5a79147,
-    0x06ca6351,
-    0x14292967,
-    0x27b70a85,
-    0x2e1b2138,
-    0x4d2c6dfc,
-    0x53380d13,
-    0x650a7354,
-    0x766a0abb,
-    0x81c2c92e,
-    0x92722c85,
-    0xa2bfe8a1,
-    0xa81a664b,
-    0xc24b8b70,
-    0xc76c51a3,
-    0xd192e819,
-    0xd6990624,
-    0xf40e3585,
-    0x106aa070,
-    0x19a4c116,
-    0x1e376c08,
-    0x2748774c,
-    0x34b0bcb5,
-    0x391c0cb3,
-    0x4ed8aa4a,
-    0x5b9cca4f,
-    0x682e6ff3,
-    0x748f82ee,
-    0x78a5636f,
-    0x84c87814,
-    0x8cc70208,
-    0x90befffa,
-    0xa4506ceb,
-    0xbef9a3f7,
-    0xc67178f2
-]);
-/**
- * @internal
- */
-exports.INIT = [
-    0x6a09e667,
-    0xbb67ae85,
-    0x3c6ef372,
-    0xa54ff53a,
-    0x510e527f,
-    0x9b05688c,
-    0x1f83d9ab,
-    0x5be0cd19
-];
-/**
- * @internal
- */
-exports.MAX_HASHABLE_LENGTH = Math.pow(2, 53) - 1;
+	                // Create default initializer
+	                if (!subtype.hasOwnProperty('init') || this.init === subtype.init) {
+	                    subtype.init = function () {
+	                        subtype.$super.init.apply(this, arguments);
+	                    };
+	                }
 
-});
+	                // Initializer's prototype is the subtype object
+	                subtype.init.prototype = subtype;
 
-var RawSha256_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RawSha256 = void 0;
+	                // Reference supertype
+	                subtype.$super = this;
 
-/**
- * @internal
- */
-var RawSha256 = /** @class */ (function () {
-    function RawSha256() {
-        this.state = Int32Array.from(constants.INIT);
-        this.temp = new Int32Array(64);
-        this.buffer = new Uint8Array(64);
-        this.bufferLength = 0;
-        this.bytesHashed = 0;
-        /**
-         * @internal
-         */
-        this.finished = false;
-    }
-    RawSha256.prototype.update = function (data) {
-        if (this.finished) {
-            throw new Error("Attempted to update an already finished hash.");
-        }
-        var position = 0;
-        var byteLength = data.byteLength;
-        this.bytesHashed += byteLength;
-        if (this.bytesHashed * 8 > constants.MAX_HASHABLE_LENGTH) {
-            throw new Error("Cannot hash more than 2^53 - 1 bits");
-        }
-        while (byteLength > 0) {
-            this.buffer[this.bufferLength++] = data[position++];
-            byteLength--;
-            if (this.bufferLength === constants.BLOCK_SIZE) {
-                this.hashBuffer();
-                this.bufferLength = 0;
-            }
-        }
-    };
-    RawSha256.prototype.digest = function () {
-        if (!this.finished) {
-            var bitsHashed = this.bytesHashed * 8;
-            var bufferView = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
-            var undecoratedLength = this.bufferLength;
-            bufferView.setUint8(this.bufferLength++, 0x80);
-            // Ensure the final block has enough room for the hashed length
-            if (undecoratedLength % constants.BLOCK_SIZE >= constants.BLOCK_SIZE - 8) {
-                for (var i = this.bufferLength; i < constants.BLOCK_SIZE; i++) {
-                    bufferView.setUint8(i, 0);
-                }
-                this.hashBuffer();
-                this.bufferLength = 0;
-            }
-            for (var i = this.bufferLength; i < constants.BLOCK_SIZE - 8; i++) {
-                bufferView.setUint8(i, 0);
-            }
-            bufferView.setUint32(constants.BLOCK_SIZE - 8, Math.floor(bitsHashed / 0x100000000), true);
-            bufferView.setUint32(constants.BLOCK_SIZE - 4, bitsHashed);
-            this.hashBuffer();
-            this.finished = true;
-        }
-        // The value in state is little-endian rather than big-endian, so flip
-        // each word into a new Uint8Array
-        var out = new Uint8Array(constants.DIGEST_LENGTH);
-        for (var i = 0; i < 8; i++) {
-            out[i * 4] = (this.state[i] >>> 24) & 0xff;
-            out[i * 4 + 1] = (this.state[i] >>> 16) & 0xff;
-            out[i * 4 + 2] = (this.state[i] >>> 8) & 0xff;
-            out[i * 4 + 3] = (this.state[i] >>> 0) & 0xff;
-        }
-        return out;
-    };
-    RawSha256.prototype.hashBuffer = function () {
-        var _a = this, buffer = _a.buffer, state = _a.state;
-        var state0 = state[0], state1 = state[1], state2 = state[2], state3 = state[3], state4 = state[4], state5 = state[5], state6 = state[6], state7 = state[7];
-        for (var i = 0; i < constants.BLOCK_SIZE; i++) {
-            if (i < 16) {
-                this.temp[i] =
-                    ((buffer[i * 4] & 0xff) << 24) |
-                        ((buffer[i * 4 + 1] & 0xff) << 16) |
-                        ((buffer[i * 4 + 2] & 0xff) << 8) |
-                        (buffer[i * 4 + 3] & 0xff);
-            }
-            else {
-                var u = this.temp[i - 2];
-                var t1_1 = ((u >>> 17) | (u << 15)) ^ ((u >>> 19) | (u << 13)) ^ (u >>> 10);
-                u = this.temp[i - 15];
-                var t2_1 = ((u >>> 7) | (u << 25)) ^ ((u >>> 18) | (u << 14)) ^ (u >>> 3);
-                this.temp[i] =
-                    ((t1_1 + this.temp[i - 7]) | 0) + ((t2_1 + this.temp[i - 16]) | 0);
-            }
-            var t1 = ((((((state4 >>> 6) | (state4 << 26)) ^
-                ((state4 >>> 11) | (state4 << 21)) ^
-                ((state4 >>> 25) | (state4 << 7))) +
-                ((state4 & state5) ^ (~state4 & state6))) |
-                0) +
-                ((state7 + ((constants.KEY[i] + this.temp[i]) | 0)) | 0)) |
-                0;
-            var t2 = ((((state0 >>> 2) | (state0 << 30)) ^
-                ((state0 >>> 13) | (state0 << 19)) ^
-                ((state0 >>> 22) | (state0 << 10))) +
-                ((state0 & state1) ^ (state0 & state2) ^ (state1 & state2))) |
-                0;
-            state7 = state6;
-            state6 = state5;
-            state5 = state4;
-            state4 = (state3 + t1) | 0;
-            state3 = state2;
-            state2 = state1;
-            state1 = state0;
-            state0 = (t1 + t2) | 0;
-        }
-        state[0] += state0;
-        state[1] += state1;
-        state[2] += state2;
-        state[3] += state3;
-        state[4] += state4;
-        state[5] += state5;
-        state[6] += state6;
-        state[7] += state7;
-    };
-    return RawSha256;
-}());
-exports.RawSha256 = RawSha256;
+	                return subtype;
+	            },
 
-});
+	            /**
+	             * Extends this object and runs the init method.
+	             * Arguments to create() will be passed to init().
+	             *
+	             * @return {Object} The new object.
+	             *
+	             * @static
+	             *
+	             * @example
+	             *
+	             *     var instance = MyType.create();
+	             */
+	            create: function () {
+	                var instance = this.extend();
+	                instance.init.apply(instance, arguments);
 
-// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertToBuffer = void 0;
-var util_utf8_browser_1 = require("@aws-sdk/util-utf8-browser");
-// Quick polyfill
-var fromUtf8 = typeof Buffer !== "undefined" && Buffer.from
-    ? function (input) { return Buffer.from(input, "utf8"); }
-    : util_utf8_browser_1.fromUtf8;
-function convertToBuffer(data) {
-    // Already a Uint8, do nothing
-    if (data instanceof Uint8Array)
-        return data;
-    if (typeof data === "string") {
-        return fromUtf8(data);
-    }
-    if (ArrayBuffer.isView(data)) {
-        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
-    }
-    return new Uint8Array(data);
-}
-exports.convertToBuffer = convertToBuffer;
+	                return instance;
+	            },
 
-var convertToBuffer$1 = /*#__PURE__*/Object.freeze({
+	            /**
+	             * Initializes a newly created object.
+	             * Override this method to add some logic when your objects are created.
+	             *
+	             * @example
+	             *
+	             *     var MyType = CryptoJS.lib.Base.extend({
+	             *         init: function () {
+	             *             // ...
+	             *         }
+	             *     });
+	             */
+	            init: function () {
+	            },
+
+	            /**
+	             * Copies properties into this object.
+	             *
+	             * @param {Object} properties The properties to mix in.
+	             *
+	             * @example
+	             *
+	             *     MyType.mixIn({
+	             *         field: 'value'
+	             *     });
+	             */
+	            mixIn: function (properties) {
+	                for (var propertyName in properties) {
+	                    if (properties.hasOwnProperty(propertyName)) {
+	                        this[propertyName] = properties[propertyName];
+	                    }
+	                }
+
+	                // IE won't copy toString using the loop above
+	                if (properties.hasOwnProperty('toString')) {
+	                    this.toString = properties.toString;
+	                }
+	            },
+
+	            /**
+	             * Creates a copy of this object.
+	             *
+	             * @return {Object} The clone.
+	             *
+	             * @example
+	             *
+	             *     var clone = instance.clone();
+	             */
+	            clone: function () {
+	                return this.init.prototype.extend(this);
+	            }
+	        };
+	    }());
+
+	    /**
+	     * An array of 32-bit words.
+	     *
+	     * @property {Array} words The array of 32-bit words.
+	     * @property {number} sigBytes The number of significant bytes in this word array.
+	     */
+	    var WordArray = C_lib.WordArray = Base.extend({
+	        /**
+	         * Initializes a newly created word array.
+	         *
+	         * @param {Array} words (Optional) An array of 32-bit words.
+	         * @param {number} sigBytes (Optional) The number of significant bytes in the words.
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.lib.WordArray.create();
+	         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607]);
+	         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607], 6);
+	         */
+	        init: function (words, sigBytes) {
+	            words = this.words = words || [];
+
+	            if (sigBytes != undefined$1) {
+	                this.sigBytes = sigBytes;
+	            } else {
+	                this.sigBytes = words.length * 4;
+	            }
+	        },
+
+	        /**
+	         * Converts this word array to a string.
+	         *
+	         * @param {Encoder} encoder (Optional) The encoding strategy to use. Default: CryptoJS.enc.Hex
+	         *
+	         * @return {string} The stringified word array.
+	         *
+	         * @example
+	         *
+	         *     var string = wordArray + '';
+	         *     var string = wordArray.toString();
+	         *     var string = wordArray.toString(CryptoJS.enc.Utf8);
+	         */
+	        toString: function (encoder) {
+	            return (encoder || Hex).stringify(this);
+	        },
+
+	        /**
+	         * Concatenates a word array to this word array.
+	         *
+	         * @param {WordArray} wordArray The word array to append.
+	         *
+	         * @return {WordArray} This word array.
+	         *
+	         * @example
+	         *
+	         *     wordArray1.concat(wordArray2);
+	         */
+	        concat: function (wordArray) {
+	            // Shortcuts
+	            var thisWords = this.words;
+	            var thatWords = wordArray.words;
+	            var thisSigBytes = this.sigBytes;
+	            var thatSigBytes = wordArray.sigBytes;
+
+	            // Clamp excess bits
+	            this.clamp();
+
+	            // Concat
+	            if (thisSigBytes % 4) {
+	                // Copy one byte at a time
+	                for (var i = 0; i < thatSigBytes; i++) {
+	                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
+	                }
+	            } else {
+	                // Copy one word at a time
+	                for (var j = 0; j < thatSigBytes; j += 4) {
+	                    thisWords[(thisSigBytes + j) >>> 2] = thatWords[j >>> 2];
+	                }
+	            }
+	            this.sigBytes += thatSigBytes;
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Removes insignificant bits.
+	         *
+	         * @example
+	         *
+	         *     wordArray.clamp();
+	         */
+	        clamp: function () {
+	            // Shortcuts
+	            var words = this.words;
+	            var sigBytes = this.sigBytes;
+
+	            // Clamp
+	            words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
+	            words.length = Math.ceil(sigBytes / 4);
+	        },
+
+	        /**
+	         * Creates a copy of this word array.
+	         *
+	         * @return {WordArray} The clone.
+	         *
+	         * @example
+	         *
+	         *     var clone = wordArray.clone();
+	         */
+	        clone: function () {
+	            var clone = Base.clone.call(this);
+	            clone.words = this.words.slice(0);
+
+	            return clone;
+	        },
+
+	        /**
+	         * Creates a word array filled with random bytes.
+	         *
+	         * @param {number} nBytes The number of random bytes to generate.
+	         *
+	         * @return {WordArray} The random word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.lib.WordArray.random(16);
+	         */
+	        random: function (nBytes) {
+	            var words = [];
+
+	            for (var i = 0; i < nBytes; i += 4) {
+	                words.push(cryptoSecureRandomInt());
+	            }
+
+	            return new WordArray.init(words, nBytes);
+	        }
+	    });
+
+	    /**
+	     * Encoder namespace.
+	     */
+	    var C_enc = C.enc = {};
+
+	    /**
+	     * Hex encoding strategy.
+	     */
+	    var Hex = C_enc.Hex = {
+	        /**
+	         * Converts a word array to a hex string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The hex string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var hexString = CryptoJS.enc.Hex.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var hexChars = [];
+	            for (var i = 0; i < sigBytes; i++) {
+	                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                hexChars.push((bite >>> 4).toString(16));
+	                hexChars.push((bite & 0x0f).toString(16));
+	            }
+
+	            return hexChars.join('');
+	        },
+
+	        /**
+	         * Converts a hex string to a word array.
+	         *
+	         * @param {string} hexStr The hex string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Hex.parse(hexString);
+	         */
+	        parse: function (hexStr) {
+	            // Shortcut
+	            var hexStrLength = hexStr.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < hexStrLength; i += 2) {
+	                words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+	            }
+
+	            return new WordArray.init(words, hexStrLength / 2);
+	        }
+	    };
+
+	    /**
+	     * Latin1 encoding strategy.
+	     */
+	    var Latin1 = C_enc.Latin1 = {
+	        /**
+	         * Converts a word array to a Latin1 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The Latin1 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var latin1String = CryptoJS.enc.Latin1.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var latin1Chars = [];
+	            for (var i = 0; i < sigBytes; i++) {
+	                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                latin1Chars.push(String.fromCharCode(bite));
+	            }
+
+	            return latin1Chars.join('');
+	        },
+
+	        /**
+	         * Converts a Latin1 string to a word array.
+	         *
+	         * @param {string} latin1Str The Latin1 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Latin1.parse(latin1String);
+	         */
+	        parse: function (latin1Str) {
+	            // Shortcut
+	            var latin1StrLength = latin1Str.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < latin1StrLength; i++) {
+	                words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+	            }
+
+	            return new WordArray.init(words, latin1StrLength);
+	        }
+	    };
+
+	    /**
+	     * UTF-8 encoding strategy.
+	     */
+	    var Utf8 = C_enc.Utf8 = {
+	        /**
+	         * Converts a word array to a UTF-8 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The UTF-8 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var utf8String = CryptoJS.enc.Utf8.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            try {
+	                return decodeURIComponent(escape(Latin1.stringify(wordArray)));
+	            } catch (e) {
+	                throw new Error('Malformed UTF-8 data');
+	            }
+	        },
+
+	        /**
+	         * Converts a UTF-8 string to a word array.
+	         *
+	         * @param {string} utf8Str The UTF-8 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Utf8.parse(utf8String);
+	         */
+	        parse: function (utf8Str) {
+	            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
+	        }
+	    };
+
+	    /**
+	     * Abstract buffered block algorithm template.
+	     *
+	     * The property blockSize must be implemented in a concrete subtype.
+	     *
+	     * @property {number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
+	     */
+	    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({
+	        /**
+	         * Resets this block algorithm's data buffer to its initial state.
+	         *
+	         * @example
+	         *
+	         *     bufferedBlockAlgorithm.reset();
+	         */
+	        reset: function () {
+	            // Initial values
+	            this._data = new WordArray.init();
+	            this._nDataBytes = 0;
+	        },
+
+	        /**
+	         * Adds new data to this block algorithm's buffer.
+	         *
+	         * @param {WordArray|string} data The data to append. Strings are converted to a WordArray using UTF-8.
+	         *
+	         * @example
+	         *
+	         *     bufferedBlockAlgorithm._append('data');
+	         *     bufferedBlockAlgorithm._append(wordArray);
+	         */
+	        _append: function (data) {
+	            // Convert string to WordArray, else assume WordArray already
+	            if (typeof data == 'string') {
+	                data = Utf8.parse(data);
+	            }
+
+	            // Append
+	            this._data.concat(data);
+	            this._nDataBytes += data.sigBytes;
+	        },
+
+	        /**
+	         * Processes available data blocks.
+	         *
+	         * This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
+	         *
+	         * @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
+	         *
+	         * @return {WordArray} The processed data.
+	         *
+	         * @example
+	         *
+	         *     var processedData = bufferedBlockAlgorithm._process();
+	         *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
+	         */
+	        _process: function (doFlush) {
+	            var processedWords;
+
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+	            var dataSigBytes = data.sigBytes;
+	            var blockSize = this.blockSize;
+	            var blockSizeBytes = blockSize * 4;
+
+	            // Count blocks ready
+	            var nBlocksReady = dataSigBytes / blockSizeBytes;
+	            if (doFlush) {
+	                // Round up to include partial blocks
+	                nBlocksReady = Math.ceil(nBlocksReady);
+	            } else {
+	                // Round down to include only full blocks,
+	                // less the number of blocks that must remain in the buffer
+	                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
+	            }
+
+	            // Count words ready
+	            var nWordsReady = nBlocksReady * blockSize;
+
+	            // Count bytes ready
+	            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
+
+	            // Process blocks
+	            if (nWordsReady) {
+	                for (var offset = 0; offset < nWordsReady; offset += blockSize) {
+	                    // Perform concrete-algorithm logic
+	                    this._doProcessBlock(dataWords, offset);
+	                }
+
+	                // Remove processed words
+	                processedWords = dataWords.splice(0, nWordsReady);
+	                data.sigBytes -= nBytesReady;
+	            }
+
+	            // Return processed words
+	            return new WordArray.init(processedWords, nBytesReady);
+	        },
+
+	        /**
+	         * Creates a copy of this object.
+	         *
+	         * @return {Object} The clone.
+	         *
+	         * @example
+	         *
+	         *     var clone = bufferedBlockAlgorithm.clone();
+	         */
+	        clone: function () {
+	            var clone = Base.clone.call(this);
+	            clone._data = this._data.clone();
+
+	            return clone;
+	        },
+
+	        _minBufferSize: 0
+	    });
+
+	    /**
+	     * Abstract hasher template.
+	     *
+	     * @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
+	     */
+	    C_lib.Hasher = BufferedBlockAlgorithm.extend({
+	        /**
+	         * Configuration options.
+	         */
+	        cfg: Base.extend(),
+
+	        /**
+	         * Initializes a newly created hasher.
+	         *
+	         * @param {Object} cfg (Optional) The configuration options to use for this hash computation.
+	         *
+	         * @example
+	         *
+	         *     var hasher = CryptoJS.algo.SHA256.create();
+	         */
+	        init: function (cfg) {
+	            // Apply config defaults
+	            this.cfg = this.cfg.extend(cfg);
+
+	            // Set initial values
+	            this.reset();
+	        },
+
+	        /**
+	         * Resets this hasher to its initial state.
+	         *
+	         * @example
+	         *
+	         *     hasher.reset();
+	         */
+	        reset: function () {
+	            // Reset data buffer
+	            BufferedBlockAlgorithm.reset.call(this);
+
+	            // Perform concrete-hasher logic
+	            this._doReset();
+	        },
+
+	        /**
+	         * Updates this hasher with a message.
+	         *
+	         * @param {WordArray|string} messageUpdate The message to append.
+	         *
+	         * @return {Hasher} This hasher.
+	         *
+	         * @example
+	         *
+	         *     hasher.update('message');
+	         *     hasher.update(wordArray);
+	         */
+	        update: function (messageUpdate) {
+	            // Append
+	            this._append(messageUpdate);
+
+	            // Update the hash
+	            this._process();
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Finalizes the hash computation.
+	         * Note that the finalize operation is effectively a destructive, read-once operation.
+	         *
+	         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	         *
+	         * @return {WordArray} The hash.
+	         *
+	         * @example
+	         *
+	         *     var hash = hasher.finalize();
+	         *     var hash = hasher.finalize('message');
+	         *     var hash = hasher.finalize(wordArray);
+	         */
+	        finalize: function (messageUpdate) {
+	            // Final message update
+	            if (messageUpdate) {
+	                this._append(messageUpdate);
+	            }
+
+	            // Perform concrete-hasher logic
+	            var hash = this._doFinalize();
+
+	            return hash;
+	        },
+
+	        blockSize: 512/32,
+
+	        /**
+	         * Creates a shortcut function to a hasher's object interface.
+	         *
+	         * @param {Hasher} hasher The hasher to create a helper for.
+	         *
+	         * @return {Function} The shortcut function.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var SHA256 = CryptoJS.lib.Hasher._createHelper(CryptoJS.algo.SHA256);
+	         */
+	        _createHelper: function (hasher) {
+	            return function (message, cfg) {
+	                return new hasher.init(cfg).finalize(message);
+	            };
+	        },
+
+	        /**
+	         * Creates a shortcut function to the HMAC's object interface.
+	         *
+	         * @param {Hasher} hasher The hasher to use in this HMAC helper.
+	         *
+	         * @return {Function} The shortcut function.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var HmacSHA256 = CryptoJS.lib.Hasher._createHmacHelper(CryptoJS.algo.SHA256);
+	         */
+	        _createHmacHelper: function (hasher) {
+	            return function (message, key) {
+	                return new C_algo.HMAC.init(hasher, key).finalize(message);
+	            };
+	        }
+	    });
+
+	    /**
+	     * Algorithm namespace.
+	     */
+	    var C_algo = C.algo = {};
+
+	    return C;
+	}(Math));
+
+
+	return CryptoJS;
+
+}));
+
+var core = /*#__PURE__*/Object.freeze({
   __proto__: null
 });
 
-var isEmptyData_1 = createCommonjsModule(function (module, exports) {
-// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isEmptyData = void 0;
-function isEmptyData(data) {
-    if (typeof data === "string") {
-        return data.length === 0;
-    }
-    return data.byteLength === 0;
+var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(core);
+
+createCommonjsModule(function (module, exports) {
+(function (root, factory) {
+	{
+		// CommonJS
+		module.exports = factory(require$$0$1);
+	}
+}(commonjsGlobal, function (CryptoJS) {
+
+	(function () {
+	    // Check if typed arrays are supported
+	    if (typeof ArrayBuffer != 'function') {
+	        return;
+	    }
+
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+
+	    // Reference original init
+	    var superInit = WordArray.init;
+
+	    // Augment WordArray.init to handle typed arrays
+	    var subInit = WordArray.init = function (typedArray) {
+	        // Convert buffers to uint8
+	        if (typedArray instanceof ArrayBuffer) {
+	            typedArray = new Uint8Array(typedArray);
+	        }
+
+	        // Convert other array views to uint8
+	        if (
+	            typedArray instanceof Int8Array ||
+	            (typeof Uint8ClampedArray !== "undefined" && typedArray instanceof Uint8ClampedArray) ||
+	            typedArray instanceof Int16Array ||
+	            typedArray instanceof Uint16Array ||
+	            typedArray instanceof Int32Array ||
+	            typedArray instanceof Uint32Array ||
+	            typedArray instanceof Float32Array ||
+	            typedArray instanceof Float64Array
+	        ) {
+	            typedArray = new Uint8Array(typedArray.buffer, typedArray.byteOffset, typedArray.byteLength);
+	        }
+
+	        // Handle Uint8Array
+	        if (typedArray instanceof Uint8Array) {
+	            // Shortcut
+	            var typedArrayByteLength = typedArray.byteLength;
+
+	            // Extract bytes
+	            var words = [];
+	            for (var i = 0; i < typedArrayByteLength; i++) {
+	                words[i >>> 2] |= typedArray[i] << (24 - (i % 4) * 8);
+	            }
+
+	            // Initialize this word array
+	            superInit.call(this, words, typedArrayByteLength);
+	        } else {
+	            // Else call normal init
+	            superInit.apply(this, arguments);
+	        }
+	    };
+
+	    subInit.prototype = WordArray;
+	}());
+
+
+	return CryptoJS.lib.WordArray;
+
+}));
+});
+
+var sha256 = createCommonjsModule(function (module, exports) {
+(function (root, factory) {
+	{
+		// CommonJS
+		module.exports = factory(require$$0$1);
+	}
+}(commonjsGlobal, function (CryptoJS) {
+
+	(function (Math) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_algo = C.algo;
+
+	    // Initialization and round constants tables
+	    var H = [];
+	    var K = [];
+
+	    // Compute constants
+	    (function () {
+	        function isPrime(n) {
+	            var sqrtN = Math.sqrt(n);
+	            for (var factor = 2; factor <= sqrtN; factor++) {
+	                if (!(n % factor)) {
+	                    return false;
+	                }
+	            }
+
+	            return true;
+	        }
+
+	        function getFractionalBits(n) {
+	            return ((n - (n | 0)) * 0x100000000) | 0;
+	        }
+
+	        var n = 2;
+	        var nPrime = 0;
+	        while (nPrime < 64) {
+	            if (isPrime(n)) {
+	                if (nPrime < 8) {
+	                    H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));
+	                }
+	                K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));
+
+	                nPrime++;
+	            }
+
+	            n++;
+	        }
+	    }());
+
+	    // Reusable object
+	    var W = [];
+
+	    /**
+	     * SHA-256 hash algorithm.
+	     */
+	    var SHA256 = C_algo.SHA256 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash = new WordArray.init(H.slice(0));
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcut
+	            var H = this._hash.words;
+
+	            // Working variables
+	            var a = H[0];
+	            var b = H[1];
+	            var c = H[2];
+	            var d = H[3];
+	            var e = H[4];
+	            var f = H[5];
+	            var g = H[6];
+	            var h = H[7];
+
+	            // Computation
+	            for (var i = 0; i < 64; i++) {
+	                if (i < 16) {
+	                    W[i] = M[offset + i] | 0;
+	                } else {
+	                    var gamma0x = W[i - 15];
+	                    var gamma0  = ((gamma0x << 25) | (gamma0x >>> 7))  ^
+	                                  ((gamma0x << 14) | (gamma0x >>> 18)) ^
+	                                   (gamma0x >>> 3);
+
+	                    var gamma1x = W[i - 2];
+	                    var gamma1  = ((gamma1x << 15) | (gamma1x >>> 17)) ^
+	                                  ((gamma1x << 13) | (gamma1x >>> 19)) ^
+	                                   (gamma1x >>> 10);
+
+	                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
+	                }
+
+	                var ch  = (e & f) ^ (~e & g);
+	                var maj = (a & b) ^ (a & c) ^ (b & c);
+
+	                var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
+	                var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7)  | (e >>> 25));
+
+	                var t1 = h + sigma1 + ch + K[i] + W[i];
+	                var t2 = sigma0 + maj;
+
+	                h = g;
+	                g = f;
+	                f = e;
+	                e = (d + t1) | 0;
+	                d = c;
+	                c = b;
+	                b = a;
+	                a = (t1 + t2) | 0;
+	            }
+
+	            // Intermediate hash value
+	            H[0] = (H[0] + a) | 0;
+	            H[1] = (H[1] + b) | 0;
+	            H[2] = (H[2] + c) | 0;
+	            H[3] = (H[3] + d) | 0;
+	            H[4] = (H[4] + e) | 0;
+	            H[5] = (H[5] + f) | 0;
+	            H[6] = (H[6] + g) | 0;
+	            H[7] = (H[7] + h) | 0;
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+	            data.sigBytes = dataWords.length * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Return final computed hash
+	            return this._hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA256('message');
+	     *     var hash = CryptoJS.SHA256(wordArray);
+	     */
+	    C.SHA256 = Hasher._createHelper(SHA256);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA256(message, key);
+	     */
+	    C.HmacSHA256 = Hasher._createHmacHelper(SHA256);
+	}(Math));
+
+
+	return CryptoJS.SHA256;
+
+}));
+});
+
+var hmac = createCommonjsModule(function (module, exports) {
+(function (root, factory) {
+	{
+		// CommonJS
+		module.exports = factory(require$$0$1);
+	}
+}(commonjsGlobal, function (CryptoJS) {
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var C_enc = C.enc;
+	    var Utf8 = C_enc.Utf8;
+	    var C_algo = C.algo;
+
+	    /**
+	     * HMAC algorithm.
+	     */
+	    C_algo.HMAC = Base.extend({
+	        /**
+	         * Initializes a newly created HMAC.
+	         *
+	         * @param {Hasher} hasher The hash algorithm to use.
+	         * @param {WordArray|string} key The secret key.
+	         *
+	         * @example
+	         *
+	         *     var hmacHasher = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, key);
+	         */
+	        init: function (hasher, key) {
+	            // Init hasher
+	            hasher = this._hasher = new hasher.init();
+
+	            // Convert string to WordArray, else assume WordArray already
+	            if (typeof key == 'string') {
+	                key = Utf8.parse(key);
+	            }
+
+	            // Shortcuts
+	            var hasherBlockSize = hasher.blockSize;
+	            var hasherBlockSizeBytes = hasherBlockSize * 4;
+
+	            // Allow arbitrary length keys
+	            if (key.sigBytes > hasherBlockSizeBytes) {
+	                key = hasher.finalize(key);
+	            }
+
+	            // Clamp excess bits
+	            key.clamp();
+
+	            // Clone key for inner and outer pads
+	            var oKey = this._oKey = key.clone();
+	            var iKey = this._iKey = key.clone();
+
+	            // Shortcuts
+	            var oKeyWords = oKey.words;
+	            var iKeyWords = iKey.words;
+
+	            // XOR keys with pad constants
+	            for (var i = 0; i < hasherBlockSize; i++) {
+	                oKeyWords[i] ^= 0x5c5c5c5c;
+	                iKeyWords[i] ^= 0x36363636;
+	            }
+	            oKey.sigBytes = iKey.sigBytes = hasherBlockSizeBytes;
+
+	            // Set initial values
+	            this.reset();
+	        },
+
+	        /**
+	         * Resets this HMAC to its initial state.
+	         *
+	         * @example
+	         *
+	         *     hmacHasher.reset();
+	         */
+	        reset: function () {
+	            // Shortcut
+	            var hasher = this._hasher;
+
+	            // Reset
+	            hasher.reset();
+	            hasher.update(this._iKey);
+	        },
+
+	        /**
+	         * Updates this HMAC with a message.
+	         *
+	         * @param {WordArray|string} messageUpdate The message to append.
+	         *
+	         * @return {HMAC} This HMAC instance.
+	         *
+	         * @example
+	         *
+	         *     hmacHasher.update('message');
+	         *     hmacHasher.update(wordArray);
+	         */
+	        update: function (messageUpdate) {
+	            this._hasher.update(messageUpdate);
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Finalizes the HMAC computation.
+	         * Note that the finalize operation is effectively a destructive, read-once operation.
+	         *
+	         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	         *
+	         * @return {WordArray} The HMAC.
+	         *
+	         * @example
+	         *
+	         *     var hmac = hmacHasher.finalize();
+	         *     var hmac = hmacHasher.finalize('message');
+	         *     var hmac = hmacHasher.finalize(wordArray);
+	         */
+	        finalize: function (messageUpdate) {
+	            // Shortcut
+	            var hasher = this._hasher;
+
+	            // Compute HMAC
+	            var innerHash = hasher.finalize(messageUpdate);
+	            hasher.reset();
+	            var hmac = hasher.finalize(this._oKey.clone().concat(innerHash));
+
+	            return hmac;
+	        }
+	    });
+	}());
+
+
+}));
+});
+
+var hmacSha256 = createCommonjsModule(function (module, exports) {
+(function (root, factory, undef) {
+	{
+		// CommonJS
+		module.exports = factory(require$$0$1, sha256, hmac);
+	}
+}(commonjsGlobal, function (CryptoJS) {
+
+	return CryptoJS.HmacSHA256;
+
+}));
+});
+
+var crypto; // Native crypto from window (Browser)
+
+if (typeof window !== 'undefined' && window.crypto) {
+  crypto = window.crypto;
+} // Native (experimental IE 11) crypto from window (Browser)
+
+
+if (!crypto && typeof window !== 'undefined' && window.msCrypto) {
+  crypto = window.msCrypto;
+} // Native crypto from global (NodeJS)
+
+
+if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
+  crypto = global$1.crypto;
+} // Native crypto import via require (NodeJS)
+
+
+if (!crypto && typeof require === 'function') {
+  try {
+    crypto = require('crypto');
+  } catch (err) {}
 }
-exports.isEmptyData = isEmptyData;
+/*
+ * Cryptographically secure pseudorandom number generator
+ * As Math.random() is cryptographically not safe to use
+ */
 
-});
 
-var numToUint8_1 = createCommonjsModule(function (module, exports) {
-// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.numToUint8 = void 0;
-function numToUint8(num) {
-    return new Uint8Array([
-        (num & 0xff000000) >> 24,
-        (num & 0x00ff0000) >> 16,
-        (num & 0x0000ff00) >> 8,
-        num & 0x000000ff,
-    ]);
-}
-exports.numToUint8 = numToUint8;
+function cryptoSecureRandomInt() {
+  if (crypto) {
+    // Use getRandomValues method (Browser)
+    if (typeof crypto.getRandomValues === 'function') {
+      try {
+        return crypto.getRandomValues(new Uint32Array(1))[0];
+      } catch (err) {}
+    } // Use randomBytes method (NodeJS)
 
-});
 
-var uint32ArrayFrom_1 = createCommonjsModule(function (module, exports) {
-// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.uint32ArrayFrom = void 0;
-// IE 11 does not support Array.from, so we do it manually
-function uint32ArrayFrom(a_lookUpTable) {
-    if (!Array.from) {
-        var return_array = new Uint32Array(a_lookUpTable.length);
-        var a_index = 0;
-        while (a_index < a_lookUpTable.length) {
-            return_array[a_index] = a_lookUpTable[a_index];
-        }
-        return return_array;
+    if (typeof crypto.randomBytes === 'function') {
+      try {
+        return crypto.randomBytes(4).readInt32LE();
+      } catch (err) {}
     }
-    return Uint32Array.from(a_lookUpTable);
-}
-exports.uint32ArrayFrom = uint32ArrayFrom;
+  }
 
-});
-
-var convertToBuffer_1 = /*@__PURE__*/getAugmentedNamespace(convertToBuffer$1);
-
-var build = createCommonjsModule(function (module, exports) {
-// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.uint32ArrayFrom = exports.numToUint8 = exports.isEmptyData = exports.convertToBuffer = void 0;
-
-Object.defineProperty(exports, "convertToBuffer", { enumerable: true, get: function () { return convertToBuffer_1.convertToBuffer; } });
-
-Object.defineProperty(exports, "isEmptyData", { enumerable: true, get: function () { return isEmptyData_1.isEmptyData; } });
-
-Object.defineProperty(exports, "numToUint8", { enumerable: true, get: function () { return numToUint8_1.numToUint8; } });
-
-Object.defineProperty(exports, "uint32ArrayFrom", { enumerable: true, get: function () { return uint32ArrayFrom_1.uint32ArrayFrom; } });
-
-});
-
-var tslib_1 = /*@__PURE__*/getAugmentedNamespace(tslib_es6);
-
-var jsSha256 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sha256 = void 0;
-
-
-
-
-var Sha256 = /** @class */ (function () {
-    function Sha256(secret) {
-        this.hash = new RawSha256_1.RawSha256();
-        if (secret) {
-            this.outer = new RawSha256_1.RawSha256();
-            var inner = bufferFromSecret(secret);
-            var outer = new Uint8Array(constants.BLOCK_SIZE);
-            outer.set(inner);
-            for (var i = 0; i < constants.BLOCK_SIZE; i++) {
-                inner[i] ^= 0x36;
-                outer[i] ^= 0x5c;
-            }
-            this.hash.update(inner);
-            this.outer.update(outer);
-            // overwrite the copied key in memory
-            for (var i = 0; i < inner.byteLength; i++) {
-                inner[i] = 0;
-            }
-        }
-    }
-    Sha256.prototype.update = function (toHash) {
-        if ((0, build.isEmptyData)(toHash) || this.error) {
-            return;
-        }
-        try {
-            this.hash.update((0, build.convertToBuffer)(toHash));
-        }
-        catch (e) {
-            this.error = e;
-        }
-    };
-    /* This synchronous method keeps compatibility
-     * with the v2 aws-sdk.
-     */
-    Sha256.prototype.digestSync = function () {
-        if (this.error) {
-            throw this.error;
-        }
-        if (this.outer) {
-            if (!this.outer.finished) {
-                this.outer.update(this.hash.digest());
-            }
-            return this.outer.digest();
-        }
-        return this.hash.digest();
-    };
-    /* The underlying digest method here is synchronous.
-     * To keep the same interface with the other hash functions
-     * the default is to expose this as an async method.
-     * However, it can sometimes be useful to have a sync method.
-     */
-    Sha256.prototype.digest = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            return (0, tslib_1.__generator)(this, function (_a) {
-                return [2 /*return*/, this.digestSync()];
-            });
-        });
-    };
-    return Sha256;
-}());
-exports.Sha256 = Sha256;
-function bufferFromSecret(secret) {
-    var input = (0, build.convertToBuffer)(secret);
-    if (input.byteLength > constants.BLOCK_SIZE) {
-        var bufferHash = new RawSha256_1.RawSha256();
-        bufferHash.update(input);
-        input = bufferHash.digest();
-    }
-    var buffer = new Uint8Array(constants.BLOCK_SIZE);
-    buffer.set(input);
-    return buffer;
+  throw new Error('Native crypto module could not be used to get secure random number.');
 }
 
-});
+/**
+ * Hex encoding strategy.
+ * Converts a word array to a hex string.
+ * @param {WordArray} wordArray The word array.
+ * @return {string} The hex string.
+ * @static
+ */
 
-var build$1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
+function hexStringify(wordArray) {
+  // Shortcuts
+  var words = wordArray.words;
+  var sigBytes = wordArray.sigBytes; // Convert
 
-(0, tslib_1.__exportStar)(jsSha256, exports);
+  var hexChars = [];
 
-});
+  for (var i = 0; i < sigBytes; i++) {
+    var bite = words[i >>> 2] >>> 24 - i % 4 * 8 & 0xff;
+    hexChars.push((bite >>> 4).toString(16));
+    hexChars.push((bite & 0x0f).toString(16));
+  }
+
+  return hexChars.join('');
+}
+
+var WordArray = /*#__PURE__*/function () {
+  function WordArray(words, sigBytes) {
+    words = this.words = words || [];
+
+    if (sigBytes != undefined) {
+      this.sigBytes = sigBytes;
+    } else {
+      this.sigBytes = words.length * 4;
+    }
+  }
+
+  var _proto = WordArray.prototype;
+
+  _proto.random = function random(nBytes) {
+    var words = [];
+
+    for (var i = 0; i < nBytes; i += 4) {
+      words.push(cryptoSecureRandomInt());
+    }
+
+    return new WordArray(words, nBytes);
+  };
+
+  _proto.toString = function toString() {
+    return hexStringify(this);
+  };
+
+  return WordArray;
+}();
 
 // A small implementation of BigInteger based on http://www-cs-students.stanford.edu/~tjw/jsbn/
-
 /*
  * Copyright (c) 2003-2005  Tom Wu
  * All Rights Reserved.
@@ -2853,46 +3468,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * All redistributions must retain an intact copy of this copyright notice
  * and disclaimer.
  */
-
 // (public) Constructor
+
 function BigInteger(a, b) {
   if (a != null) this.fromString(a, b);
-}
+} // return new, unset BigInteger
 
-// return new, unset BigInteger
+
 function nbi() {
   return new BigInteger(null);
-}
+} // Bits per digit
 
-// Bits per digit
-var dbits;
 
-// JavaScript engine analysis
+var dbits; // JavaScript engine analysis
+
 var canary = 0xdeadbeefcafe;
-var j_lm = (canary & 0xffffff) == 0xefcafe;
-
-// am: Compute w_j += (x*this_i), propagate carries,
+var j_lm = (canary & 0xffffff) == 0xefcafe; // am: Compute w_j += (x*this_i), propagate carries,
 // c is initial carry, returns final carry.
 // c < 3*dvalue, x < 2*dvalue, this_i < dvalue
 // We need to select the fastest one that works in this environment.
-
 // am1: use a single mult and divide to get the high bits,
 // max digit bits should be 26 because
 // max internal value = 2*dvalue^2-2*dvalue (< 2^53)
+
 function am1(i, x, w, j, c, n) {
   while (--n >= 0) {
     var v = x * this[i++] + w[j] + c;
     c = Math.floor(v / 0x4000000);
     w[j++] = v & 0x3ffffff;
   }
+
   return c;
-}
-// am2 avoids a big mult-and-extract completely.
+} // am2 avoids a big mult-and-extract completely.
 // Max digit bits should be <= 30 because we do bitwise ops
 // on values up to 2*hdvalue^2-hdvalue-1 (< 2^31)
+
+
 function am2(i, x, w, j, c, n) {
   var xl = x & 0x7fff,
-    xh = x >> 15;
+      xh = x >> 15;
+
   while (--n >= 0) {
     var l = this[i] & 0x7fff;
     var h = this[i++] >> 15;
@@ -2901,13 +3516,16 @@ function am2(i, x, w, j, c, n) {
     c = (l >>> 30) + (m >>> 15) + xh * h + (c >>> 30);
     w[j++] = l & 0x3fffffff;
   }
+
   return c;
-}
-// Alternately, set max digit bits to 28 since some
+} // Alternately, set max digit bits to 28 since some
 // browsers slow down when dealing with 32-bit numbers.
+
+
 function am3(i, x, w, j, c, n) {
   var xl = x & 0x3fff,
-    xh = x >> 14;
+      xh = x >> 14;
+
   while (--n >= 0) {
     var l = this[i] & 0x3fff;
     var h = this[i++] >> 14;
@@ -2916,9 +3534,12 @@ function am3(i, x, w, j, c, n) {
     c = (l >> 28) + (m >> 14) + xh * h;
     w[j++] = l & 0xfffffff;
   }
+
   return c;
 }
+
 var inBrowser = typeof navigator !== 'undefined';
+
 if (inBrowser && j_lm && navigator.appName == 'Microsoft Internet Explorer') {
   BigInteger.prototype.am = am2;
   dbits = 30;
@@ -2930,68 +3551,87 @@ if (inBrowser && j_lm && navigator.appName == 'Microsoft Internet Explorer') {
   BigInteger.prototype.am = am3;
   dbits = 28;
 }
+
 BigInteger.prototype.DB = dbits;
 BigInteger.prototype.DM = (1 << dbits) - 1;
 BigInteger.prototype.DV = 1 << dbits;
 var BI_FP = 52;
 BigInteger.prototype.FV = Math.pow(2, BI_FP);
 BigInteger.prototype.F1 = BI_FP - dbits;
-BigInteger.prototype.F2 = 2 * dbits - BI_FP;
+BigInteger.prototype.F2 = 2 * dbits - BI_FP; // Digit conversions
 
-// Digit conversions
 var BI_RM = '0123456789abcdefghijklmnopqrstuvwxyz';
 var BI_RC = new Array();
 var rr, vv;
 rr = '0'.charCodeAt(0);
-for (vv = 0; vv <= 9; ++vv) BI_RC[rr++] = vv;
+
+for (vv = 0; vv <= 9; ++vv) {
+  BI_RC[rr++] = vv;
+}
+
 rr = 'a'.charCodeAt(0);
-for (vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
+
+for (vv = 10; vv < 36; ++vv) {
+  BI_RC[rr++] = vv;
+}
+
 rr = 'A'.charCodeAt(0);
-for (vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
+
+for (vv = 10; vv < 36; ++vv) {
+  BI_RC[rr++] = vv;
+}
+
 function int2char(n) {
   return BI_RM.charAt(n);
 }
+
 function intAt(s, i) {
   var c = BI_RC[s.charCodeAt(i)];
   return c == null ? -1 : c;
-}
+} // (protected) copy this to r
 
-// (protected) copy this to r
+
 function bnpCopyTo(r) {
-  for (var i = this.t - 1; i >= 0; --i) r[i] = this[i];
+  for (var i = this.t - 1; i >= 0; --i) {
+    r[i] = this[i];
+  }
+
   r.t = this.t;
   r.s = this.s;
-}
+} // (protected) set from integer value x, -DV <= x < DV
 
-// (protected) set from integer value x, -DV <= x < DV
+
 function bnpFromInt(x) {
   this.t = 1;
   this.s = x < 0 ? -1 : 0;
   if (x > 0) this[0] = x;else if (x < -1) this[0] = x + this.DV;else this.t = 0;
-}
+} // return bigint initialized to value
 
-// return bigint initialized to value
+
 function nbv(i) {
   var r = nbi();
   r.fromInt(i);
   return r;
-}
+} // (protected) set from string and radix
 
-// (protected) set from string and radix
+
 function bnpFromString(s, b) {
   var k;
   if (b == 16) k = 4;else if (b == 8) k = 3;else if (b == 2) k = 1;else if (b == 32) k = 5;else if (b == 4) k = 2;else throw new Error('Only radix 2, 4, 8, 16, 32 are supported');
   this.t = 0;
   this.s = 0;
   var i = s.length,
-    mi = false,
-    sh = 0;
+      mi = false,
+      sh = 0;
+
   while (--i >= 0) {
     var x = intAt(s, i);
+
     if (x < 0) {
       if (s.charAt(i) == '-') mi = true;
       continue;
     }
+
     mi = false;
     if (sh == 0) this[this.t++] = x;else if (sh + k > this.DB) {
       this[this.t - 1] |= (x & (1 << this.DB - sh) - 1) << sh;
@@ -3000,243 +3640,303 @@ function bnpFromString(s, b) {
     sh += k;
     if (sh >= this.DB) sh -= this.DB;
   }
+
   this.clamp();
   if (mi) BigInteger.ZERO.subTo(this, this);
-}
+} // (protected) clamp off excess high words
 
-// (protected) clamp off excess high words
+
 function bnpClamp() {
   var c = this.s & this.DM;
-  while (this.t > 0 && this[this.t - 1] == c) --this.t;
-}
 
-// (public) return string representation in given radix
+  while (this.t > 0 && this[this.t - 1] == c) {
+    --this.t;
+  }
+} // (public) return string representation in given radix
+
+
 function bnToString(b) {
   if (this.s < 0) return '-' + this.negate().toString(b);
   var k;
   if (b == 16) k = 4;else if (b == 8) k = 3;else if (b == 2) k = 1;else if (b == 32) k = 5;else if (b == 4) k = 2;else throw new Error('Only radix 2, 4, 8, 16, 32 are supported');
   var km = (1 << k) - 1,
-    d,
-    m = false,
-    r = '',
-    i = this.t;
+      d,
+      m = false,
+      r = '',
+      i = this.t;
   var p = this.DB - i * this.DB % k;
+
   if (i-- > 0) {
     if (p < this.DB && (d = this[i] >> p) > 0) {
       m = true;
       r = int2char(d);
     }
+
     while (i >= 0) {
       if (p < k) {
         d = (this[i] & (1 << p) - 1) << k - p;
         d |= this[--i] >> (p += this.DB - k);
       } else {
         d = this[i] >> (p -= k) & km;
+
         if (p <= 0) {
           p += this.DB;
           --i;
         }
       }
+
       if (d > 0) m = true;
       if (m) r += int2char(d);
     }
   }
-  return m ? r : '0';
-}
 
-// (public) -this
+  return m ? r : '0';
+} // (public) -this
+
+
 function bnNegate() {
   var r = nbi();
   BigInteger.ZERO.subTo(this, r);
   return r;
-}
+} // (public) |this|
 
-// (public) |this|
+
 function bnAbs() {
   return this.s < 0 ? this.negate() : this;
-}
+} // (public) return + if this > a, - if this < a, 0 if equal
 
-// (public) return + if this > a, - if this < a, 0 if equal
+
 function bnCompareTo(a) {
   var r = this.s - a.s;
   if (r != 0) return r;
   var i = this.t;
   r = i - a.t;
   if (r != 0) return this.s < 0 ? -r : r;
-  while (--i >= 0) if ((r = this[i] - a[i]) != 0) return r;
-  return 0;
-}
 
-// returns bit length of the integer x
+  while (--i >= 0) {
+    if ((r = this[i] - a[i]) != 0) return r;
+  }
+
+  return 0;
+} // returns bit length of the integer x
+
+
 function nbits(x) {
   var r = 1,
-    t;
+      t;
+
   if ((t = x >>> 16) != 0) {
     x = t;
     r += 16;
   }
+
   if ((t = x >> 8) != 0) {
     x = t;
     r += 8;
   }
+
   if ((t = x >> 4) != 0) {
     x = t;
     r += 4;
   }
+
   if ((t = x >> 2) != 0) {
     x = t;
     r += 2;
   }
+
   if ((t = x >> 1) != 0) {
     x = t;
     r += 1;
   }
-  return r;
-}
 
-// (public) return the number of bits in "this"
+  return r;
+} // (public) return the number of bits in "this"
+
+
 function bnBitLength() {
   if (this.t <= 0) return 0;
   return this.DB * (this.t - 1) + nbits(this[this.t - 1] ^ this.s & this.DM);
-}
+} // (protected) r = this << n*DB
 
-// (protected) r = this << n*DB
+
 function bnpDLShiftTo(n, r) {
   var i;
-  for (i = this.t - 1; i >= 0; --i) r[i + n] = this[i];
-  for (i = n - 1; i >= 0; --i) r[i] = 0;
+
+  for (i = this.t - 1; i >= 0; --i) {
+    r[i + n] = this[i];
+  }
+
+  for (i = n - 1; i >= 0; --i) {
+    r[i] = 0;
+  }
+
   r.t = this.t + n;
   r.s = this.s;
-}
+} // (protected) r = this >> n*DB
 
-// (protected) r = this >> n*DB
+
 function bnpDRShiftTo(n, r) {
-  for (var i = n; i < this.t; ++i) r[i - n] = this[i];
+  for (var i = n; i < this.t; ++i) {
+    r[i - n] = this[i];
+  }
+
   r.t = Math.max(this.t - n, 0);
   r.s = this.s;
-}
+} // (protected) r = this << n
 
-// (protected) r = this << n
+
 function bnpLShiftTo(n, r) {
   var bs = n % this.DB;
   var cbs = this.DB - bs;
   var bm = (1 << cbs) - 1;
   var ds = Math.floor(n / this.DB),
-    c = this.s << bs & this.DM,
-    i;
+      c = this.s << bs & this.DM,
+      i;
+
   for (i = this.t - 1; i >= 0; --i) {
     r[i + ds + 1] = this[i] >> cbs | c;
     c = (this[i] & bm) << bs;
   }
-  for (i = ds - 1; i >= 0; --i) r[i] = 0;
+
+  for (i = ds - 1; i >= 0; --i) {
+    r[i] = 0;
+  }
+
   r[ds] = c;
   r.t = this.t + ds + 1;
   r.s = this.s;
   r.clamp();
-}
+} // (protected) r = this >> n
 
-// (protected) r = this >> n
+
 function bnpRShiftTo(n, r) {
   r.s = this.s;
   var ds = Math.floor(n / this.DB);
+
   if (ds >= this.t) {
     r.t = 0;
     return;
   }
+
   var bs = n % this.DB;
   var cbs = this.DB - bs;
   var bm = (1 << bs) - 1;
   r[0] = this[ds] >> bs;
+
   for (var i = ds + 1; i < this.t; ++i) {
     r[i - ds - 1] |= (this[i] & bm) << cbs;
     r[i - ds] = this[i] >> bs;
   }
+
   if (bs > 0) r[this.t - ds - 1] |= (this.s & bm) << cbs;
   r.t = this.t - ds;
   r.clamp();
-}
+} // (protected) r = this - a
 
-// (protected) r = this - a
+
 function bnpSubTo(a, r) {
   var i = 0,
-    c = 0,
-    m = Math.min(a.t, this.t);
+      c = 0,
+      m = Math.min(a.t, this.t);
+
   while (i < m) {
     c += this[i] - a[i];
     r[i++] = c & this.DM;
     c >>= this.DB;
   }
+
   if (a.t < this.t) {
     c -= a.s;
+
     while (i < this.t) {
       c += this[i];
       r[i++] = c & this.DM;
       c >>= this.DB;
     }
+
     c += this.s;
   } else {
     c += this.s;
+
     while (i < a.t) {
       c -= a[i];
       r[i++] = c & this.DM;
       c >>= this.DB;
     }
+
     c -= a.s;
   }
+
   r.s = c < 0 ? -1 : 0;
   if (c < -1) r[i++] = this.DV + c;else if (c > 0) r[i++] = c;
   r.t = i;
   r.clamp();
-}
-
-// (protected) r = this * a, r != this,a (HAC 14.12)
+} // (protected) r = this * a, r != this,a (HAC 14.12)
 // "this" should be the larger one if appropriate.
+
+
 function bnpMultiplyTo(a, r) {
   var x = this.abs(),
-    y = a.abs();
+      y = a.abs();
   var i = x.t;
   r.t = i + y.t;
-  while (--i >= 0) r[i] = 0;
-  for (i = 0; i < y.t; ++i) r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
+
+  while (--i >= 0) {
+    r[i] = 0;
+  }
+
+  for (i = 0; i < y.t; ++i) {
+    r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
+  }
+
   r.s = 0;
   r.clamp();
   if (this.s != a.s) BigInteger.ZERO.subTo(r, r);
-}
+} // (protected) r = this^2, r != this (HAC 14.16)
 
-// (protected) r = this^2, r != this (HAC 14.16)
+
 function bnpSquareTo(r) {
   var x = this.abs();
   var i = r.t = 2 * x.t;
-  while (--i >= 0) r[i] = 0;
+
+  while (--i >= 0) {
+    r[i] = 0;
+  }
+
   for (i = 0; i < x.t - 1; ++i) {
     var c = x.am(i, x[i], r, 2 * i, 0, 1);
+
     if ((r[i + x.t] += x.am(i + 1, 2 * x[i], r, 2 * i + 1, c, x.t - i - 1)) >= x.DV) {
       r[i + x.t] -= x.DV;
       r[i + x.t + 1] = 1;
     }
   }
+
   if (r.t > 0) r[r.t - 1] += x.am(i, x[i], r, 2 * i, 0, 1);
   r.s = 0;
   r.clamp();
-}
-
-// (protected) divide this by m, quotient and remainder to q, r (HAC 14.20)
+} // (protected) divide this by m, quotient and remainder to q, r (HAC 14.20)
 // r != q, this != m.  q or r may be null.
+
+
 function bnpDivRemTo(m, q, r) {
   var pm = m.abs();
   if (pm.t <= 0) return;
   var pt = this.abs();
+
   if (pt.t < pm.t) {
     if (q != null) q.fromInt(0);
     if (r != null) this.copyTo(r);
     return;
   }
+
   if (r == null) r = nbi();
   var y = nbi(),
-    ts = this.s,
-    ms = m.s;
-  var nsh = this.DB - nbits(pm[pm.t - 1]);
-  // normalize modulus
+      ts = this.s,
+      ms = m.s;
+  var nsh = this.DB - nbits(pm[pm.t - 1]); // normalize modulus
+
   if (nsh > 0) {
     pm.lShiftTo(nsh, y);
     pt.lShiftTo(nsh, r);
@@ -3244,55 +3944,65 @@ function bnpDivRemTo(m, q, r) {
     pm.copyTo(y);
     pt.copyTo(r);
   }
+
   var ys = y.t;
   var y0 = y[ys - 1];
   if (y0 == 0) return;
   var yt = y0 * (1 << this.F1) + (ys > 1 ? y[ys - 2] >> this.F2 : 0);
   var d1 = this.FV / yt,
-    d2 = (1 << this.F1) / yt,
-    e = 1 << this.F2;
+      d2 = (1 << this.F1) / yt,
+      e = 1 << this.F2;
   var i = r.t,
-    j = i - ys,
-    t = q == null ? nbi() : q;
+      j = i - ys,
+      t = q == null ? nbi() : q;
   y.dlShiftTo(j, t);
+
   if (r.compareTo(t) >= 0) {
     r[r.t++] = 1;
     r.subTo(t, r);
   }
+
   BigInteger.ONE.dlShiftTo(ys, t);
-  t.subTo(y, y);
-  // "negative" y so we can replace sub with am later
-  while (y.t < ys) y[y.t++] = 0;
+  t.subTo(y, y); // "negative" y so we can replace sub with am later
+
+  while (y.t < ys) {
+    y[y.t++] = 0;
+  }
+
   while (--j >= 0) {
     // Estimate quotient digit
     var qd = r[--i] == y0 ? this.DM : Math.floor(r[i] * d1 + (r[i - 1] + e) * d2);
+
     if ((r[i] += y.am(0, qd, r, j, 0, ys)) < qd) {
       // Try it out
       y.dlShiftTo(j, t);
       r.subTo(t, r);
-      while (r[i] < --qd) r.subTo(t, r);
+
+      while (r[i] < --qd) {
+        r.subTo(t, r);
+      }
     }
   }
+
   if (q != null) {
     r.drShiftTo(ys, q);
     if (ts != ms) BigInteger.ZERO.subTo(q, q);
   }
+
   r.t = ys;
   r.clamp();
-  if (nsh > 0) r.rShiftTo(nsh, r);
-  // Denormalize remainder
-  if (ts < 0) BigInteger.ZERO.subTo(r, r);
-}
+  if (nsh > 0) r.rShiftTo(nsh, r); // Denormalize remainder
 
-// (public) this mod a
+  if (ts < 0) BigInteger.ZERO.subTo(r, r);
+} // (public) this mod a
+
+
 function bnMod(a) {
   var r = nbi();
   this.abs().divRemTo(a, null, r);
   if (this.s < 0 && r.compareTo(BigInteger.ZERO) > 0) a.subTo(r, r);
   return r;
-}
-
-// (protected) return "-1/this % 2^DB"; useful for Mont. reduction
+} // (protected) return "-1/this % 2^DB"; useful for Mont. reduction
 // justification:
 //         xy == 1 (mod m)
 //         xy =  1+km
@@ -3302,91 +4012,101 @@ function bnMod(a) {
 // if y is 1/x mod m, then y(2-xy) is 1/x mod m^2
 // should reduce x and y(2-xy) by m^2 at each step to keep size bounded.
 // JS multiply "overflows" differently from C/C++, so care is needed here.
+
+
 function bnpInvDigit() {
   if (this.t < 1) return 0;
   var x = this[0];
   if ((x & 1) == 0) return 0;
-  var y = x & 3;
-  // y == 1/x mod 2^2
-  y = y * (2 - (x & 0xf) * y) & 0xf;
-  // y == 1/x mod 2^4
-  y = y * (2 - (x & 0xff) * y) & 0xff;
-  // y == 1/x mod 2^8
-  y = y * (2 - ((x & 0xffff) * y & 0xffff)) & 0xffff;
-  // y == 1/x mod 2^16
+  var y = x & 3; // y == 1/x mod 2^2
+
+  y = y * (2 - (x & 0xf) * y) & 0xf; // y == 1/x mod 2^4
+
+  y = y * (2 - (x & 0xff) * y) & 0xff; // y == 1/x mod 2^8
+
+  y = y * (2 - ((x & 0xffff) * y & 0xffff)) & 0xffff; // y == 1/x mod 2^16
   // last step - calculate inverse mod DV directly;
   // assumes 16 < DB <= 32 and assumes ability to handle 48-bit ints
-  y = y * (2 - x * y % this.DV) % this.DV;
-  // y == 1/x mod 2^dbits
+
+  y = y * (2 - x * y % this.DV) % this.DV; // y == 1/x mod 2^dbits
   // we really want the negative inverse, and -DV < y < DV
+
   return y > 0 ? this.DV - y : -y;
 }
+
 function bnEquals(a) {
   return this.compareTo(a) == 0;
-}
+} // (protected) r = this + a
 
-// (protected) r = this + a
+
 function bnpAddTo(a, r) {
   var i = 0,
-    c = 0,
-    m = Math.min(a.t, this.t);
+      c = 0,
+      m = Math.min(a.t, this.t);
+
   while (i < m) {
     c += this[i] + a[i];
     r[i++] = c & this.DM;
     c >>= this.DB;
   }
+
   if (a.t < this.t) {
     c += a.s;
+
     while (i < this.t) {
       c += this[i];
       r[i++] = c & this.DM;
       c >>= this.DB;
     }
+
     c += this.s;
   } else {
     c += this.s;
+
     while (i < a.t) {
       c += a[i];
       r[i++] = c & this.DM;
       c >>= this.DB;
     }
+
     c += a.s;
   }
+
   r.s = c < 0 ? -1 : 0;
   if (c > 0) r[i++] = c;else if (c < -1) r[i++] = this.DV + c;
   r.t = i;
   r.clamp();
-}
+} // (public) this + a
 
-// (public) this + a
+
 function bnAdd(a) {
   var r = nbi();
   this.addTo(a, r);
   return r;
-}
+} // (public) this - a
 
-// (public) this - a
+
 function bnSubtract(a) {
   var r = nbi();
   this.subTo(a, r);
   return r;
-}
+} // (public) this * a
 
-// (public) this * a
+
 function bnMultiply(a) {
   var r = nbi();
   this.multiplyTo(a, r);
   return r;
-}
+} // (public) this / a
 
-// (public) this / a
+
 function bnDivide(a) {
   var r = nbi();
   this.divRemTo(a, r, null);
   return r;
-}
+} // Montgomery reduction
 
-// Montgomery reduction
+
 function Montgomery(m) {
   this.m = m;
   this.mp = m.invDigit();
@@ -3394,108 +4114,117 @@ function Montgomery(m) {
   this.mph = this.mp >> 15;
   this.um = (1 << m.DB - 15) - 1;
   this.mt2 = 2 * m.t;
-}
+} // xR mod m
 
-// xR mod m
+
 function montConvert(x) {
   var r = nbi();
   x.abs().dlShiftTo(this.m.t, r);
   r.divRemTo(this.m, null, r);
   if (x.s < 0 && r.compareTo(BigInteger.ZERO) > 0) this.m.subTo(r, r);
   return r;
-}
+} // x/R mod m
 
-// x/R mod m
+
 function montRevert(x) {
   var r = nbi();
   x.copyTo(r);
   this.reduce(r);
   return r;
-}
+} // x = x/R mod m (HAC 14.32)
 
-// x = x/R mod m (HAC 14.32)
+
 function montReduce(x) {
-  while (x.t <= this.mt2)
-  // pad x so am has enough room later
-  x[x.t++] = 0;
+  while (x.t <= this.mt2) {
+    // pad x so am has enough room later
+    x[x.t++] = 0;
+  }
+
   for (var i = 0; i < this.m.t; ++i) {
     // faster way of calculating u0 = x[i]*mp mod DV
     var j = x[i] & 0x7fff;
-    var u0 = j * this.mpl + ((j * this.mph + (x[i] >> 15) * this.mpl & this.um) << 15) & x.DM;
-    // use am to combine the multiply-shift-add into one call
+    var u0 = j * this.mpl + ((j * this.mph + (x[i] >> 15) * this.mpl & this.um) << 15) & x.DM; // use am to combine the multiply-shift-add into one call
+
     j = i + this.m.t;
-    x[j] += this.m.am(0, u0, x, i, 0, this.m.t);
-    // propagate carry
+    x[j] += this.m.am(0, u0, x, i, 0, this.m.t); // propagate carry
+
     while (x[j] >= x.DV) {
       x[j] -= x.DV;
       x[++j]++;
     }
   }
+
   x.clamp();
   x.drShiftTo(this.m.t, x);
   if (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
-}
+} // r = "x^2/R mod m"; x != r
 
-// r = "x^2/R mod m"; x != r
+
 function montSqrTo(x, r) {
   x.squareTo(r);
   this.reduce(r);
-}
+} // r = "xy/R mod m"; x,y != r
 
-// r = "xy/R mod m"; x,y != r
+
 function montMulTo(x, y, r) {
   x.multiplyTo(y, r);
   this.reduce(r);
 }
+
 Montgomery.prototype.convert = montConvert;
 Montgomery.prototype.revert = montRevert;
 Montgomery.prototype.reduce = montReduce;
 Montgomery.prototype.mulTo = montMulTo;
-Montgomery.prototype.sqrTo = montSqrTo;
+Montgomery.prototype.sqrTo = montSqrTo; // (public) this^e % m (HAC 14.85)
 
-// (public) this^e % m (HAC 14.85)
 function bnModPow(e, m, callback) {
   var i = e.bitLength(),
-    k,
-    r = nbv(1),
-    z = new Montgomery(m);
-  if (i <= 0) return r;else if (i < 18) k = 1;else if (i < 48) k = 3;else if (i < 144) k = 4;else if (i < 768) k = 5;else k = 6;
+      k,
+      r = nbv(1),
+      z = new Montgomery(m);
+  if (i <= 0) return r;else if (i < 18) k = 1;else if (i < 48) k = 3;else if (i < 144) k = 4;else if (i < 768) k = 5;else k = 6; // precomputation
 
-  // precomputation
   var g = new Array(),
-    n = 3,
-    k1 = k - 1,
-    km = (1 << k) - 1;
+      n = 3,
+      k1 = k - 1,
+      km = (1 << k) - 1;
   g[1] = z.convert(this);
+
   if (k > 1) {
     var g2 = nbi();
     z.sqrTo(g[1], g2);
+
     while (n <= km) {
       g[n] = nbi();
       z.mulTo(g2, g[n - 2], g[n]);
       n += 2;
     }
   }
+
   var j = e.t - 1,
-    w,
-    is1 = true,
-    r2 = nbi(),
-    t;
+      w,
+      is1 = true,
+      r2 = nbi(),
+      t;
   i = nbits(e[j]) - 1;
+
   while (j >= 0) {
     if (i >= k1) w = e[j] >> i - k1 & km;else {
       w = (e[j] & (1 << i + 1) - 1) << k1 - i;
       if (j > 0) w |= e[j - 1] >> this.DB + i - k1;
     }
     n = k;
+
     while ((w & 1) == 0) {
       w >>= 1;
       --n;
     }
+
     if ((i -= n) < 0) {
       i += this.DB;
       --j;
     }
+
     if (is1) {
       // ret == 1, don't bother squaring or multiplying it
       g[w].copyTo(r);
@@ -3506,6 +4235,7 @@ function bnModPow(e, m, callback) {
         z.sqrTo(r2, r);
         n -= 2;
       }
+
       if (n > 0) z.sqrTo(r, r2);else {
         t = r;
         r = r2;
@@ -3513,23 +4243,26 @@ function bnModPow(e, m, callback) {
       }
       z.mulTo(r2, g[w], r);
     }
+
     while (j >= 0 && (e[j] & 1 << i) == 0) {
       z.sqrTo(r, r2);
       t = r;
       r = r2;
       r2 = t;
+
       if (--i < 0) {
         i = this.DB - 1;
         --j;
       }
     }
   }
+
   var result = z.revert(r);
   callback(null, result);
   return result;
-}
+} // protected
 
-// protected
+
 BigInteger.prototype.copyTo = bnpCopyTo;
 BigInteger.prototype.fromInt = bnpFromInt;
 BigInteger.prototype.fromString = bnpFromString;
@@ -3543,9 +4276,8 @@ BigInteger.prototype.multiplyTo = bnpMultiplyTo;
 BigInteger.prototype.squareTo = bnpSquareTo;
 BigInteger.prototype.divRemTo = bnpDivRemTo;
 BigInteger.prototype.invDigit = bnpInvDigit;
-BigInteger.prototype.addTo = bnpAddTo;
+BigInteger.prototype.addTo = bnpAddTo; // public
 
-// public
 BigInteger.prototype.toString = bnToString;
 BigInteger.prototype.negate = bnNegate;
 BigInteger.prototype.abs = bnAbs;
@@ -3557,17 +4289,27 @@ BigInteger.prototype.add = bnAdd;
 BigInteger.prototype.subtract = bnSubtract;
 BigInteger.prototype.multiply = bnMultiply;
 BigInteger.prototype.divide = bnDivide;
-BigInteger.prototype.modPow = bnModPow;
+BigInteger.prototype.modPow = bnModPow; // "constants"
 
-// "constants"
 BigInteger.ZERO = nbv(0);
 BigInteger.ONE = nbv(1);
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**
  * Returns a Buffer with a sequence of random nBytes
  *
@@ -3578,15 +4320,15 @@ BigInteger.ONE = nbv(1);
 function randomBytes(nBytes) {
   return Buffer.from(new WordArray().random(nBytes).toString(), 'hex');
 }
-
 /**
  * Tests if a hex string has it most significant bit set (case-insensitive regex)
  */
+
 var HEX_MSB_REGEX = /^[89a-f]/i;
 var initN = 'FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1' + '29024E088A67CC74020BBEA63B139B22514A08798E3404DD' + 'EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245' + 'E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7ED' + 'EE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3D' + 'C2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F' + '83655D23DCA3AD961C62F356208552BB9ED529077096966D' + '670C354E4ABC9804F1746C08CA18217C32905E462E36CE3B' + 'E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9' + 'DE2BCBF6955817183995497CEA956AE515D2261898FA0510' + '15728E5A8AAAC42DAD33170D04507A33A85521ABDF1CBA64' + 'ECFB850458DBEF0A8AEA71575D060C7DB3970F85A6E1E4C7' + 'ABF5AE8CDB0933D71E8C94E04A25619DCEE3D2261AD2EE6B' + 'F12FFA06D98A0864D87602733EC86A64521F2B18177B200C' + 'BBE117577A615D6C770988C0BAD946E208E24FA074E5AB31' + '43DB5BFCE0FD108E4B82D120A93AD2CAFFFFFFFFFFFFFFFF';
 var newPasswordRequiredChallengeUserAttributePrefix = 'userAttributes.';
-
 /** @class */
+
 var AuthenticationHelper = /*#__PURE__*/function () {
   /**
    * Constructs a new AuthenticationHelper object
@@ -3601,21 +4343,25 @@ var AuthenticationHelper = /*#__PURE__*/function () {
     this.infoBits = Buffer.from('Caldera Derived Key', 'utf8');
     this.poolName = PoolName;
   }
-
   /**
    * @returns {BigInteger} small A, a random number
    */
+
+
   var _proto = AuthenticationHelper.prototype;
+
   _proto.getSmallAValue = function getSmallAValue() {
     return this.smallAValue;
   }
-
   /**
    * @param {nodeCallback<BigInteger>} callback Called with (err, largeAValue)
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getLargeAValue = function getLargeAValue(callback) {
     var _this = this;
+
     if (this.largeAValue) {
       callback(null, this.largeAValue);
     } else {
@@ -3623,82 +4369,87 @@ var AuthenticationHelper = /*#__PURE__*/function () {
         if (err) {
           callback(err, null);
         }
+
         _this.largeAValue = largeAValue;
         callback(null, _this.largeAValue);
       });
     }
   }
-
   /**
    * helper function to generate a random big integer
    * @returns {BigInteger} a random value.
    * @private
-   */;
+   */
+  ;
+
   _proto.generateRandomSmallA = function generateRandomSmallA() {
     // This will be interpreted as a postive 128-bit integer
     var hexRandom = randomBytes(128).toString('hex');
-    var randomBigInt = new BigInteger(hexRandom, 16);
-
-    // There is no need to do randomBigInt.mod(this.N - 1) as N (3072-bit) is > 128 bytes (1024-bit)
+    var randomBigInt = new BigInteger(hexRandom, 16); // There is no need to do randomBigInt.mod(this.N - 1) as N (3072-bit) is > 128 bytes (1024-bit)
 
     return randomBigInt;
   }
-
   /**
    * helper function to generate a random string
    * @returns {string} a random value.
    * @private
-   */;
+   */
+  ;
+
   _proto.generateRandomString = function generateRandomString() {
     return randomBytes(40).toString('base64');
   }
-
   /**
    * @returns {string} Generated random value included in password hash.
-   */;
+   */
+  ;
+
   _proto.getRandomPassword = function getRandomPassword() {
     return this.randomPassword;
   }
-
   /**
    * @returns {string} Generated random value included in devices hash.
-   */;
+   */
+  ;
+
   _proto.getSaltDevices = function getSaltDevices() {
     return this.SaltToHashDevices;
   }
-
   /**
    * @returns {string} Value used to verify devices.
-   */;
+   */
+  ;
+
   _proto.getVerifierDevices = function getVerifierDevices() {
     return this.verifierDevices;
   }
-
   /**
    * Generate salts and compute verifier.
    * @param {string} deviceGroupKey Devices to generate verifier for.
    * @param {string} username User to generate verifier for.
    * @param {nodeCallback<null>} callback Called with (err, null)
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.generateHashDevice = function generateHashDevice(deviceGroupKey, username, callback) {
     var _this2 = this;
+
     this.randomPassword = this.generateRandomString();
     var combinedString = "" + deviceGroupKey + username + ":" + this.randomPassword;
     var hashedString = this.hash(combinedString);
-    var hexRandom = randomBytes(16).toString('hex');
+    var hexRandom = randomBytes(16).toString('hex'); // The random hex will be unambiguously represented as a postive integer
 
-    // The random hex will be unambiguously represented as a postive integer
     this.SaltToHashDevices = this.padHex(new BigInteger(hexRandom, 16));
     this.g.modPow(new BigInteger(this.hexHash(this.SaltToHashDevices + hashedString), 16), this.N, function (err, verifierDevicesNotPadded) {
       if (err) {
         callback(err, null);
       }
+
       _this2.verifierDevices = _this2.padHex(verifierDevicesNotPadded);
       callback(null, null);
     });
   }
-
   /**
    * Calculate the client's public value A = g^a%N
    * with the generated random number a
@@ -3706,77 +4457,79 @@ var AuthenticationHelper = /*#__PURE__*/function () {
    * @param {nodeCallback<BigInteger>} callback Called with (err, largeAValue)
    * @returns {void}
    * @private
-   */;
+   */
+  ;
+
   _proto.calculateA = function calculateA(a, callback) {
     var _this3 = this;
+
     this.g.modPow(a, this.N, function (err, A) {
       if (err) {
         callback(err, null);
       }
+
       if (A.mod(_this3.N).equals(BigInteger.ZERO)) {
         callback(new Error('Illegal paramater. A mod N cannot be 0.'), null);
       }
+
       callback(null, A);
     });
   }
-
   /**
    * Calculate the client's value U which is the hash of A and B
    * @param {BigInteger} A Large A value.
    * @param {BigInteger} B Server B value.
    * @returns {BigInteger} Computed U value.
    * @private
-   */;
+   */
+  ;
+
   _proto.calculateU = function calculateU(A, B) {
     this.UHexHash = this.hexHash(this.padHex(A) + this.padHex(B));
     var finalU = new BigInteger(this.UHexHash, 16);
     return finalU;
   }
-
   /**
    * Calculate a hash from a bitArray
    * @param {Buffer} buf Value to hash.
    * @returns {String} Hex-encoded hash.
    * @private
-   */;
+   */
+  ;
+
   _proto.hash = function hash(buf) {
-    var awsCryptoHash = new build$1.Sha256();
-    awsCryptoHash.update(buf);
-    var resultFromAWSCrypto = awsCryptoHash.digestSync();
-    var hashHex = Buffer.from(resultFromAWSCrypto).toString('hex');
+    var str = buf instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(buf) : buf;
+    var hashHex = sha256(str).toString();
     return new Array(64 - hashHex.length).join('0') + hashHex;
   }
-
   /**
    * Calculate a hash from a hex string
    * @param {String} hexStr Value to hash.
    * @returns {String} Hex-encoded hash.
    * @private
-   */;
+   */
+  ;
+
   _proto.hexHash = function hexHash(hexStr) {
     return this.hash(Buffer.from(hexStr, 'hex'));
   }
-
   /**
    * Standard hkdf algorithm
    * @param {Buffer} ikm Input key material.
    * @param {Buffer} salt Salt value.
    * @returns {Buffer} Strong key material.
    * @private
-   */;
-  _proto.computehkdf = function computehkdf(ikm, salt) {
-    var infoBitsBuffer = Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]);
-    var awsCryptoHash = new build$1.Sha256(salt);
-    awsCryptoHash.update(ikm);
-    var resultFromAWSCryptoPrk = awsCryptoHash.digestSync();
-    var awsCryptoHashHmac = new build$1.Sha256(resultFromAWSCryptoPrk);
-    awsCryptoHashHmac.update(infoBitsBuffer);
-    var resultFromAWSCryptoHmac = awsCryptoHashHmac.digestSync();
-    var hashHexFromAWSCrypto = resultFromAWSCryptoHmac;
-    var currentHex = hashHexFromAWSCrypto.slice(0, 16);
-    return currentHex;
-  }
+   */
+  ;
 
+  _proto.computehkdf = function computehkdf(ikm, salt) {
+    var infoBitsWordArray = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]));
+    var ikmWordArray = ikm instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(ikm) : ikm;
+    var saltWordArray = salt instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(salt) : salt;
+    var prk = hmacSha256(ikmWordArray, saltWordArray);
+    var hmac = hmacSha256(infoBitsWordArray, prk);
+    return Buffer.from(hmac.toString(), 'hex').slice(0, 16);
+  }
   /**
    * Calculates the final hkdf based on computed S value, and computed U value and the key
    * @param {String} username Username.
@@ -3785,16 +4538,22 @@ var AuthenticationHelper = /*#__PURE__*/function () {
    * @param {BigInteger} salt Generated salt.
    * @param {nodeCallback<Buffer>} callback Called with (err, hkdfValue)
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getPasswordAuthenticationKey = function getPasswordAuthenticationKey(username, password, serverBValue, salt, callback) {
     var _this4 = this;
+
     if (serverBValue.mod(this.N).equals(BigInteger.ZERO)) {
       throw new Error('B cannot be zero.');
     }
+
     this.UValue = this.calculateU(this.largeAValue, serverBValue);
+
     if (this.UValue.equals(BigInteger.ZERO)) {
       throw new Error('U cannot be zero.');
     }
+
     var usernamePassword = "" + this.poolName + username + ":" + password;
     var usernamePasswordHash = this.hash(usernamePassword);
     var xValue = new BigInteger(this.hexHash(this.padHex(salt) + usernamePasswordHash), 16);
@@ -3802,42 +4561,48 @@ var AuthenticationHelper = /*#__PURE__*/function () {
       if (err) {
         callback(err, null);
       }
+
       var hkdf = _this4.computehkdf(Buffer.from(_this4.padHex(sValue), 'hex'), Buffer.from(_this4.padHex(_this4.UValue), 'hex'));
+
       callback(null, hkdf);
     });
   }
-
   /**
    * Calculates the S value used in getPasswordAuthenticationKey
    * @param {BigInteger} xValue Salted password hash value.
    * @param {BigInteger} serverBValue Server B value.
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.calculateS = function calculateS(xValue, serverBValue, callback) {
     var _this5 = this;
+
     this.g.modPow(xValue, this.N, function (err, gModPowXN) {
       if (err) {
         callback(err, null);
       }
+
       var intValue2 = serverBValue.subtract(_this5.k.multiply(gModPowXN));
       intValue2.modPow(_this5.smallAValue.add(_this5.UValue.multiply(xValue)), _this5.N, function (err2, result) {
         if (err2) {
           callback(err2, null);
         }
+
         callback(null, result.mod(_this5.N));
       });
     });
   }
-
   /**
    * Return constant newPasswordRequiredChallengeUserAttributePrefix
    * @return {newPasswordRequiredChallengeUserAttributePrefix} constant prefix value
-   */;
+   */
+  ;
+
   _proto.getNewPasswordRequiredChallengeUserAttributePrefix = function getNewPasswordRequiredChallengeUserAttributePrefix() {
     return newPasswordRequiredChallengeUserAttributePrefix;
   }
-
   /**
    * Returns an unambiguous, even-length hex string of the two's complement encoding of an integer.
    *
@@ -3863,53 +4628,71 @@ var AuthenticationHelper = /*#__PURE__*/function () {
    *
    * @param {BigInteger} bigInt Number to encode.
    * @returns {String} even-length hex string of the two's complement encoding.
-   */;
+   */
+  ;
+
   _proto.padHex = function padHex(bigInt) {
     if (!(bigInt instanceof BigInteger)) {
       throw new Error('Not a BigInteger');
     }
+
     var isNegative = bigInt.compareTo(BigInteger.ZERO) < 0;
-
     /* Get a hex string for abs(bigInt) */
+
     var hexStr = bigInt.abs().toString(16);
-
     /* Pad hex to even length if needed */
-    hexStr = hexStr.length % 2 !== 0 ? "0" + hexStr : hexStr;
 
+    hexStr = hexStr.length % 2 !== 0 ? "0" + hexStr : hexStr;
     /* Prepend "00" if the most significant bit is set */
+
     hexStr = HEX_MSB_REGEX.test(hexStr) ? "00" + hexStr : hexStr;
+
     if (isNegative) {
       /* Flip the bits of the representation */
       var invertedNibbles = hexStr.split('').map(function (x) {
         var invertedNibble = ~parseInt(x, 16) & 0xf;
         return '0123456789ABCDEF'.charAt(invertedNibble);
       }).join('');
-
       /* After flipping the bits, add one to get the 2's complement representation */
+
       var flippedBitsBI = new BigInteger(invertedNibbles, 16).add(BigInteger.ONE);
       hexStr = flippedBitsBI.toString(16);
-
       /*
       For hex strings starting with 'FF8', 'FF' can be dropped, e.g. 0xFFFF80=0xFF80=0x80=-128
       		Any sequence of '1' bits on the left can always be substituted with a single '1' bit
       without changing the represented value.
       		This only happens in the case when the input is 80...00
       */
+
       if (hexStr.toUpperCase().startsWith('FF8')) {
         hexStr = hexStr.substring(2);
       }
     }
+
     return hexStr;
   };
+
   return AuthenticationHelper;
 }();
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /** @class */
+
 var CognitoJwtToken = /*#__PURE__*/function () {
   /**
    * Constructs a new CognitoJwtToken object
@@ -3920,83 +4703,111 @@ var CognitoJwtToken = /*#__PURE__*/function () {
     this.jwtToken = token || '';
     this.payload = this.decodePayload();
   }
-
   /**
    * @returns {string} the record's token.
    */
+
+
   var _proto = CognitoJwtToken.prototype;
+
   _proto.getJwtToken = function getJwtToken() {
     return this.jwtToken;
   }
-
   /**
    * @returns {int} the token's expiration (exp member).
-   */;
+   */
+  ;
+
   _proto.getExpiration = function getExpiration() {
     return this.payload.exp;
   }
-
   /**
    * @returns {int} the token's "issued at" (iat member).
-   */;
+   */
+  ;
+
   _proto.getIssuedAt = function getIssuedAt() {
     return this.payload.iat;
   }
-
   /**
    * @returns {object} the token's payload.
-   */;
+   */
+  ;
+
   _proto.decodePayload = function decodePayload() {
     var payload = this.jwtToken.split('.')[1];
+
     try {
       return JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
     } catch (err) {
       return {};
     }
   };
+
   return CognitoJwtToken;
 }();
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _inheritsLoose$2(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf$2(subClass, superClass); }
 
+function _setPrototypeOf$2(o, p) { _setPrototypeOf$2 = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$2(o, p); }
 /** @class */
+
 var CognitoAccessToken = /*#__PURE__*/function (_CognitoJwtToken) {
-  _inheritsLoose(CognitoAccessToken, _CognitoJwtToken);
+  _inheritsLoose$2(CognitoAccessToken, _CognitoJwtToken);
+
   /**
    * Constructs a new CognitoAccessToken object
    * @param {string=} AccessToken The JWT access token.
    */
   function CognitoAccessToken(_temp) {
     var _ref = _temp === void 0 ? {} : _temp,
-      AccessToken = _ref.AccessToken;
+        AccessToken = _ref.AccessToken;
+
     return _CognitoJwtToken.call(this, AccessToken || '') || this;
   }
+
   return CognitoAccessToken;
 }(CognitoJwtToken);
 
 function _inheritsLoose$1(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf$1(subClass, superClass); }
-function _setPrototypeOf$1(o, p) { _setPrototypeOf$1 = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$1(o, p); }
 
+function _setPrototypeOf$1(o, p) { _setPrototypeOf$1 = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$1(o, p); }
 /** @class */
+
 var CognitoIdToken = /*#__PURE__*/function (_CognitoJwtToken) {
   _inheritsLoose$1(CognitoIdToken, _CognitoJwtToken);
+
   /**
    * Constructs a new CognitoIdToken object
    * @param {string=} IdToken The JWT Id token
    */
   function CognitoIdToken(_temp) {
     var _ref = _temp === void 0 ? {} : _temp,
-      IdToken = _ref.IdToken;
+        IdToken = _ref.IdToken;
+
     return _CognitoJwtToken.call(this, IdToken || '') || this;
   }
+
   return CognitoIdToken;
 }(CognitoJwtToken);
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
+
 /** @class */
 var CognitoRefreshToken = /*#__PURE__*/function () {
   /**
@@ -4005,57 +4816,173 @@ var CognitoRefreshToken = /*#__PURE__*/function () {
    */
   function CognitoRefreshToken(_temp) {
     var _ref = _temp === void 0 ? {} : _temp,
-      RefreshToken = _ref.RefreshToken;
+        RefreshToken = _ref.RefreshToken;
+
     // Assign object
     this.token = RefreshToken || '';
   }
-
   /**
    * @returns {string} the record's token.
    */
+
+
   var _proto = CognitoRefreshToken.prototype;
+
   _proto.getToken = function getToken() {
     return this.token;
   };
+
   return CognitoRefreshToken;
 }();
 
-// generated by genversion
-var version = '5.0.4';
+var encBase64 = createCommonjsModule(function (module, exports) {
+(function (root, factory) {
+	{
+		// CommonJS
+		module.exports = factory(require$$0$1);
+	}
+}(commonjsGlobal, function (CryptoJS) {
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var C_enc = C.enc;
+
+	    /**
+	     * Base64 encoding strategy.
+	     */
+	    C_enc.Base64 = {
+	        /**
+	         * Converts a word array to a Base64 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The Base64 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var base64String = CryptoJS.enc.Base64.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+	            var map = this._map;
+
+	            // Clamp excess bits
+	            wordArray.clamp();
+
+	            // Convert
+	            var base64Chars = [];
+	            for (var i = 0; i < sigBytes; i += 3) {
+	                var byte1 = (words[i >>> 2]       >>> (24 - (i % 4) * 8))       & 0xff;
+	                var byte2 = (words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
+	                var byte3 = (words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
+
+	                var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
+
+	                for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+	                    base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
+	                }
+	            }
+
+	            // Add padding
+	            var paddingChar = map.charAt(64);
+	            if (paddingChar) {
+	                while (base64Chars.length % 4) {
+	                    base64Chars.push(paddingChar);
+	                }
+	            }
+
+	            return base64Chars.join('');
+	        },
+
+	        /**
+	         * Converts a Base64 string to a word array.
+	         *
+	         * @param {string} base64Str The Base64 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Base64.parse(base64String);
+	         */
+	        parse: function (base64Str) {
+	            // Shortcuts
+	            var base64StrLength = base64Str.length;
+	            var map = this._map;
+	            var reverseMap = this._reverseMap;
+
+	            if (!reverseMap) {
+	                    reverseMap = this._reverseMap = [];
+	                    for (var j = 0; j < map.length; j++) {
+	                        reverseMap[map.charCodeAt(j)] = j;
+	                    }
+	            }
+
+	            // Ignore padding
+	            var paddingChar = map.charAt(64);
+	            if (paddingChar) {
+	                var paddingIndex = base64Str.indexOf(paddingChar);
+	                if (paddingIndex !== -1) {
+	                    base64StrLength = paddingIndex;
+	                }
+	            }
+
+	            // Convert
+	            return parseLoop(base64Str, base64StrLength, reverseMap);
+
+	        },
+
+	        _map: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+	    };
+
+	    function parseLoop(base64Str, base64StrLength, reverseMap) {
+	      var words = [];
+	      var nBytes = 0;
+	      for (var i = 0; i < base64StrLength; i++) {
+	          if (i % 4) {
+	              var bits1 = reverseMap[base64Str.charCodeAt(i - 1)] << ((i % 4) * 2);
+	              var bits2 = reverseMap[base64Str.charCodeAt(i)] >>> (6 - (i % 4) * 2);
+	              var bitsCombined = bits1 | bits2;
+	              words[nBytes >>> 2] |= bitsCombined << (24 - (nBytes % 4) * 8);
+	              nBytes++;
+	          }
+	      }
+	      return WordArray.create(words, nBytes);
+	    }
+	}());
+
+
+	return CryptoJS.enc.Base64;
+
+}));
+});
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-var BASE_USER_AGENT = "aws-amplify/" + version;
-var Platform = {
-  userAgent: BASE_USER_AGENT + " js",
-  product: '',
-  navigator: null,
-  isReactNative: false
-};
-if (typeof navigator !== 'undefined' && navigator.product) {
-  Platform.product = navigator.product || '';
-  Platform.navigator = navigator || null;
-  switch (navigator.product) {
-    case 'ReactNative':
-      Platform.userAgent = BASE_USER_AGENT + " react-native";
-      Platform.isReactNative = true;
-      break;
-    default:
-      Platform.userAgent = BASE_USER_AGENT + " js";
-      Platform.isReactNative = false;
-      break;
-  }
-}
-var getUserAgent = function getUserAgent() {
-  return Platform.userAgent;
-};
 
-/*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
 /** @class */
 var CognitoUserSession = /*#__PURE__*/function () {
   /**
@@ -4067,82 +4994,105 @@ var CognitoUserSession = /*#__PURE__*/function () {
    */
   function CognitoUserSession(_temp) {
     var _ref = _temp === void 0 ? {} : _temp,
-      IdToken = _ref.IdToken,
-      RefreshToken = _ref.RefreshToken,
-      AccessToken = _ref.AccessToken,
-      ClockDrift = _ref.ClockDrift;
+        IdToken = _ref.IdToken,
+        RefreshToken = _ref.RefreshToken,
+        AccessToken = _ref.AccessToken,
+        ClockDrift = _ref.ClockDrift;
+
     if (AccessToken == null || IdToken == null) {
       throw new Error('Id token and Access Token must be present.');
     }
+
     this.idToken = IdToken;
     this.refreshToken = RefreshToken;
     this.accessToken = AccessToken;
     this.clockDrift = ClockDrift === undefined ? this.calculateClockDrift() : ClockDrift;
   }
-
   /**
    * @returns {CognitoIdToken} the session's Id token
    */
+
+
   var _proto = CognitoUserSession.prototype;
+
   _proto.getIdToken = function getIdToken() {
     return this.idToken;
   }
-
   /**
    * @returns {CognitoRefreshToken} the session's refresh token
-   */;
+   */
+  ;
+
   _proto.getRefreshToken = function getRefreshToken() {
     return this.refreshToken;
   }
-
   /**
    * @returns {CognitoAccessToken} the session's access token
-   */;
+   */
+  ;
+
   _proto.getAccessToken = function getAccessToken() {
     return this.accessToken;
   }
-
   /**
    * @returns {int} the session's clock drift
-   */;
+   */
+  ;
+
   _proto.getClockDrift = function getClockDrift() {
     return this.clockDrift;
   }
-
   /**
    * @returns {int} the computer's clock drift
-   */;
+   */
+  ;
+
   _proto.calculateClockDrift = function calculateClockDrift() {
     var now = Math.floor(new Date() / 1000);
     var iat = Math.min(this.accessToken.getIssuedAt(), this.idToken.getIssuedAt());
     return now - iat;
   }
-
   /**
    * Checks to see if the session is still valid based on session expiry information found
    * in tokens and the current time (adjusted with clock drift)
    * @returns {boolean} if the session is still valid
-   */;
+   */
+  ;
+
   _proto.isValid = function isValid() {
     var now = Math.floor(new Date() / 1000);
     var adjusted = now - this.clockDrift;
     return adjusted < this.accessToken.getExpiration() && adjusted < this.idToken.getExpiration();
   };
+
   return CognitoUserSession;
 }();
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 /** @class */
+
 var DateHelper = /*#__PURE__*/function () {
   function DateHelper() {}
+
   var _proto = DateHelper.prototype;
+
   /**
    * @returns {string} The current time in "ddd MMM D HH:mm:ss UTC YYYY" format.
    */
@@ -4152,30 +5102,49 @@ var DateHelper = /*#__PURE__*/function () {
     var month = monthNames[now.getUTCMonth()];
     var day = now.getUTCDate();
     var hours = now.getUTCHours();
+
     if (hours < 10) {
       hours = "0" + hours;
     }
+
     var minutes = now.getUTCMinutes();
+
     if (minutes < 10) {
       minutes = "0" + minutes;
     }
+
     var seconds = now.getUTCSeconds();
+
     if (seconds < 10) {
       seconds = "0" + seconds;
     }
-    var year = now.getUTCFullYear();
 
-    // ddd MMM D HH:mm:ss UTC YYYY
+    var year = now.getUTCFullYear(); // ddd MMM D HH:mm:ss UTC YYYY
+
     var dateNow = weekDay + " " + month + " " + day + " " + hours + ":" + minutes + ":" + seconds + " UTC " + year;
     return dateNow;
   };
+
   return DateHelper;
 }();
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
+
 /** @class */
 var CognitoUserAttribute = /*#__PURE__*/function () {
   /**
@@ -4185,76 +5154,97 @@ var CognitoUserAttribute = /*#__PURE__*/function () {
    */
   function CognitoUserAttribute(_temp) {
     var _ref = _temp === void 0 ? {} : _temp,
-      Name = _ref.Name,
-      Value = _ref.Value;
+        Name = _ref.Name,
+        Value = _ref.Value;
+
     this.Name = Name || '';
     this.Value = Value || '';
   }
-
   /**
    * @returns {string} the record's value.
    */
+
+
   var _proto = CognitoUserAttribute.prototype;
+
   _proto.getValue = function getValue() {
     return this.Value;
   }
-
   /**
    * Sets the record's value.
    * @param {string} value The new value.
    * @returns {CognitoUserAttribute} The record for method chaining.
-   */;
+   */
+  ;
+
   _proto.setValue = function setValue(value) {
     this.Value = value;
     return this;
   }
-
   /**
    * @returns {string} the record's name.
-   */;
+   */
+  ;
+
   _proto.getName = function getName() {
     return this.Name;
   }
-
   /**
    * Sets the record's name
    * @param {string} name The new name.
    * @returns {CognitoUserAttribute} The record for method chaining.
-   */;
+   */
+  ;
+
   _proto.setName = function setName(name) {
     this.Name = name;
     return this;
   }
-
   /**
    * @returns {string} a string representation of the record.
-   */;
+   */
+  ;
+
   _proto.toString = function toString() {
     return JSON.stringify(this);
   }
-
   /**
    * @returns {object} a flat object representing the record.
-   */;
+   */
+  ;
+
   _proto.toJSON = function toJSON() {
     return {
       Name: this.Name,
       Value: this.Value
     };
   };
+
   return CognitoUserAttribute;
 }();
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-
 var dataMemory = {};
-
 /** @class */
+
 var MemoryStorage = /*#__PURE__*/function () {
   function MemoryStorage() {}
+
   /**
    * This is used to set a specific item in storage
    * @param {string} key - the key for the item
@@ -4265,38 +5255,42 @@ var MemoryStorage = /*#__PURE__*/function () {
     dataMemory[key] = value;
     return dataMemory[key];
   }
-
   /**
    * This is used to get a specific key from storage
    * @param {string} key - the key for the item
    * This is used to clear the storage
    * @returns {string} the data item
-   */;
+   */
+  ;
+
   MemoryStorage.getItem = function getItem(key) {
     return Object.prototype.hasOwnProperty.call(dataMemory, key) ? dataMemory[key] : undefined;
   }
-
   /**
    * This is used to remove an item from storage
    * @param {string} key - the key being set
    * @returns {boolean} return true
-   */;
+   */
+  ;
+
   MemoryStorage.removeItem = function removeItem(key) {
     return delete dataMemory[key];
   }
-
   /**
    * This is used to clear the storage
    * @returns {string} nothing
-   */;
+   */
+  ;
+
   MemoryStorage.clear = function clear() {
     dataMemory = {};
     return dataMemory;
   };
+
   return MemoryStorage;
 }();
-
 /** @class */
+
 var StorageHelper = /*#__PURE__*/function () {
   /**
    * This is used to get a storage object
@@ -4311,23 +5305,37 @@ var StorageHelper = /*#__PURE__*/function () {
       this.storageWindow = MemoryStorage;
     }
   }
-
   /**
    * This is used to return the storage
    * @returns {object} the storage
    */
+
+
   var _proto = StorageHelper.prototype;
+
   _proto.getStorage = function getStorage() {
     return this.storageWindow;
   };
+
   return StorageHelper;
 }();
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-
 /**
  * @callback nodeCallback
  * @template T result
@@ -4367,10 +5375,10 @@ var StorageHelper = /*#__PURE__*/function () {
  * @param {bool=} userConfirmationNecessary User must be confirmed.
  */
 
-var isNavigatorAvailable = typeof navigator !== 'undefined';
-var userAgent = isNavigatorAvailable ? Platform.isReactNative ? 'react-native' : navigator.userAgent : 'nodejs';
-
+var isBrowser = typeof navigator !== 'undefined';
+var userAgent = isBrowser ? navigator.userAgent : 'nodejs';
 /** @class */
+
 var CognitoUser = /*#__PURE__*/function () {
   /**
    * Constructs a new CognitoUser object
@@ -4383,6 +5391,7 @@ var CognitoUser = /*#__PURE__*/function () {
     if (data == null || data.Username == null || data.Pool == null) {
       throw new Error('Username and Pool information are required.');
     }
+
     this.username = data.Username || '';
     this.pool = data.Pool;
     this.Session = null;
@@ -4393,49 +5402,54 @@ var CognitoUser = /*#__PURE__*/function () {
     this.keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId();
     this.userDataKey = this.keyPrefix + "." + this.username + ".userData";
   }
-
   /**
    * Sets the session for this user
    * @param {CognitoUserSession} signInUserSession the session
    * @returns {void}
    */
+
+
   var _proto = CognitoUser.prototype;
+
   _proto.setSignInUserSession = function setSignInUserSession(signInUserSession) {
     this.clearCachedUserData();
     this.signInUserSession = signInUserSession;
     this.cacheTokens();
   }
-
   /**
    * @returns {CognitoUserSession} the current session for this user
-   */;
+   */
+  ;
+
   _proto.getSignInUserSession = function getSignInUserSession() {
     return this.signInUserSession;
   }
-
   /**
    * @returns {string} the user's username
-   */;
+   */
+  ;
+
   _proto.getUsername = function getUsername() {
     return this.username;
   }
-
   /**
    * @returns {String} the authentication flow type
-   */;
+   */
+  ;
+
   _proto.getAuthenticationFlowType = function getAuthenticationFlowType() {
     return this.authenticationFlowType;
   }
-
   /**
    * sets authentication flow type
    * @param {string} authenticationFlowType New value.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.setAuthenticationFlowType = function setAuthenticationFlowType(authenticationFlowType) {
     this.authenticationFlowType = authenticationFlowType;
   }
-
   /**
    * This is used for authenticating the user through the custom authentication flow.
    * @param {AuthenticationDetails} authDetails Contains the authentication data
@@ -4445,9 +5459,12 @@ var CognitoUser = /*#__PURE__*/function () {
    *        response required to continue.
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.initiateAuth = function initiateAuth(authDetails, callback) {
     var _this = this;
+
     var authParameters = authDetails.getAuthParameters();
     authParameters.USERNAME = this.username;
     var clientMetaData = Object.keys(authDetails.getValidationData()).length !== 0 ? authDetails.getValidationData() : authDetails.getClientMetadata();
@@ -4457,25 +5474,31 @@ var CognitoUser = /*#__PURE__*/function () {
       AuthParameters: authParameters,
       ClientMetadata: clientMetaData
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('InitiateAuth', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
+
       var challengeName = data.ChallengeName;
       var challengeParameters = data.ChallengeParameters;
+
       if (challengeName === 'CUSTOM_CHALLENGE') {
         _this.Session = data.Session;
         return callback.customChallenge(challengeParameters);
       }
+
       _this.signInUserSession = _this.getCognitoUserSession(data.AuthenticationResult);
+
       _this.cacheTokens();
+
       return callback.onSuccess(_this.signInUserSession);
     });
   }
-
   /**
    * This is used for authenticating the user.
    * stuff
@@ -4490,16 +5513,18 @@ var CognitoUser = /*#__PURE__*/function () {
    *        response required to continue.
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.authenticateUser = function authenticateUser(authDetails, callback) {
     if (this.authenticationFlowType === 'USER_PASSWORD_AUTH') {
       return this.authenticateUserPlainUsernamePassword(authDetails, callback);
     } else if (this.authenticationFlowType === 'USER_SRP_AUTH' || this.authenticationFlowType === 'CUSTOM_AUTH') {
       return this.authenticateUserDefaultAuth(authDetails, callback);
     }
+
     return callback.onFailure(new Error('Authentication flow type is invalid.'));
   }
-
   /**
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
@@ -4516,27 +5541,35 @@ var CognitoUser = /*#__PURE__*/function () {
    *        response required to continue.
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.authenticateUserDefaultAuth = function authenticateUserDefaultAuth(authDetails, callback) {
     var _this2 = this;
-    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolName());
+
+    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolId().split('_')[1]);
     var dateHelper = new DateHelper();
     var serverBValue;
     var salt;
     var authParameters = {};
+
     if (this.deviceKey != null) {
       authParameters.DEVICE_KEY = this.deviceKey;
     }
+
     authParameters.USERNAME = this.username;
     authenticationHelper.getLargeAValue(function (errOnAValue, aValue) {
       // getLargeAValue callback start
       if (errOnAValue) {
         callback.onFailure(errOnAValue);
       }
+
       authParameters.SRP_A = aValue.toString(16);
+
       if (_this2.authenticationFlowType === 'CUSTOM_AUTH') {
         authParameters.CHALLENGE_NAME = 'SRP_A';
       }
+
       var clientMetaData = Object.keys(authDetails.getValidationData()).length !== 0 ? authDetails.getValidationData() : authDetails.getClientMetadata();
       var jsonReq = {
         AuthFlow: _this2.authenticationFlowType,
@@ -4544,38 +5577,44 @@ var CognitoUser = /*#__PURE__*/function () {
         AuthParameters: authParameters,
         ClientMetadata: clientMetaData
       };
+
       if (_this2.getUserContextData(_this2.username)) {
         jsonReq.UserContextData = _this2.getUserContextData(_this2.username);
       }
+
       _this2.client.request('InitiateAuth', jsonReq, function (err, data) {
         if (err) {
           return callback.onFailure(err);
         }
+
         var challengeParameters = data.ChallengeParameters;
         _this2.username = challengeParameters.USER_ID_FOR_SRP;
         _this2.userDataKey = _this2.keyPrefix + "." + _this2.username + ".userData";
         serverBValue = new BigInteger(challengeParameters.SRP_B, 16);
         salt = new BigInteger(challengeParameters.SALT, 16);
+
         _this2.getCachedDeviceKeyAndPassword();
+
         authenticationHelper.getPasswordAuthenticationKey(_this2.username, authDetails.getPassword(), serverBValue, salt, function (errOnHkdf, hkdf) {
           // getPasswordAuthenticationKey callback start
           if (errOnHkdf) {
             callback.onFailure(errOnHkdf);
           }
+
           var dateNow = dateHelper.getNowString();
-          var concatBuffer = Buffer.concat([Buffer.from(_this2.pool.getUserPoolName(), 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]);
-          var awsCryptoHash = new build$1.Sha256(hkdf);
-          awsCryptoHash.update(concatBuffer);
-          var resultFromAWSCrypto = awsCryptoHash.digestSync();
-          var signatureString = Buffer.from(resultFromAWSCrypto).toString('base64');
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
+          var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this2.username;
           challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
           challengeResponses.TIMESTAMP = dateNow;
           challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
+
           if (_this2.deviceKey != null) {
             challengeResponses.DEVICE_KEY = _this2.deviceKey;
           }
+
           var respondToAuthChallenge = function respondToAuthChallenge(challenge, challengeCallback) {
             return _this2.client.request('RespondToAuthChallenge', challenge, function (errChallenge, dataChallenge) {
               if (errChallenge && errChallenge.code === 'ResourceNotFoundException' && errChallenge.message.toLowerCase().indexOf('device') !== -1) {
@@ -4583,12 +5622,16 @@ var CognitoUser = /*#__PURE__*/function () {
                 _this2.deviceKey = null;
                 _this2.randomPassword = null;
                 _this2.deviceGroupKey = null;
+
                 _this2.clearCachedDeviceKeyAndPassword();
+
                 return respondToAuthChallenge(challenge, challengeCallback);
               }
+
               return challengeCallback(errChallenge, dataChallenge);
             });
           };
+
           var jsonReqResp = {
             ChallengeName: 'PASSWORD_VERIFIER',
             ClientId: _this2.pool.getClientId(),
@@ -4596,25 +5639,25 @@ var CognitoUser = /*#__PURE__*/function () {
             Session: data.Session,
             ClientMetadata: clientMetaData
           };
+
           if (_this2.getUserContextData()) {
             jsonReqResp.UserContextData = _this2.getUserContextData();
           }
+
           respondToAuthChallenge(jsonReqResp, function (errAuthenticate, dataAuthenticate) {
             if (errAuthenticate) {
               return callback.onFailure(errAuthenticate);
             }
+
             return _this2.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
           });
-          return undefined;
-          // getPasswordAuthenticationKey callback end
+          return undefined; // getPasswordAuthenticationKey callback end
         });
-
         return undefined;
-      });
-      // getLargeAValue callback end
+      }); // getLargeAValue callback end
+
     });
   }
-
   /**
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
@@ -4625,21 +5668,28 @@ var CognitoUser = /*#__PURE__*/function () {
    *        required to continue.
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.authenticateUserPlainUsernamePassword = function authenticateUserPlainUsernamePassword(authDetails, callback) {
     var _this3 = this;
+
     var authParameters = {};
     authParameters.USERNAME = this.username;
     authParameters.PASSWORD = authDetails.getPassword();
+
     if (!authParameters.PASSWORD) {
       callback.onFailure(new Error('PASSWORD parameter is required'));
       return;
     }
-    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolName());
+
+    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolId().split('_')[1]);
     this.getCachedDeviceKeyAndPassword();
+
     if (this.deviceKey != null) {
       authParameters.DEVICE_KEY = this.deviceKey;
     }
+
     var clientMetaData = Object.keys(authDetails.getValidationData()).length !== 0 ? authDetails.getValidationData() : authDetails.getClientMetadata();
     var jsonReq = {
       AuthFlow: 'USER_PASSWORD_AUTH',
@@ -4647,19 +5697,21 @@ var CognitoUser = /*#__PURE__*/function () {
       AuthParameters: authParameters,
       ClientMetadata: clientMetaData
     };
+
     if (this.getUserContextData(this.username)) {
       jsonReq.UserContextData = this.getUserContextData(this.username);
-    }
-    // USER_PASSWORD_AUTH happens in a single round-trip: client sends userName and password,
+    } // USER_PASSWORD_AUTH happens in a single round-trip: client sends userName and password,
     // Cognito UserPools verifies password and returns tokens.
+
+
     this.client.request('InitiateAuth', jsonReq, function (err, authResult) {
       if (err) {
         return callback.onFailure(err);
       }
+
       return _this3.authenticateUserInternal(authResult, authenticationHelper, callback);
     });
   }
-
   /**
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
@@ -4667,64 +5719,80 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {object} authenticationHelper helper created
    * @param {callback} callback passed on from caller
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.authenticateUserInternal = function authenticateUserInternal(dataAuthenticate, authenticationHelper, callback) {
     var _this4 = this;
+
     var challengeName = dataAuthenticate.ChallengeName;
     var challengeParameters = dataAuthenticate.ChallengeParameters;
+
     if (challengeName === 'SMS_MFA') {
       this.Session = dataAuthenticate.Session;
       return callback.mfaRequired(challengeName, challengeParameters);
     }
+
     if (challengeName === 'SELECT_MFA_TYPE') {
       this.Session = dataAuthenticate.Session;
       return callback.selectMFAType(challengeName, challengeParameters);
     }
+
     if (challengeName === 'MFA_SETUP') {
       this.Session = dataAuthenticate.Session;
       return callback.mfaSetup(challengeName, challengeParameters);
     }
+
     if (challengeName === 'SOFTWARE_TOKEN_MFA') {
       this.Session = dataAuthenticate.Session;
       return callback.totpRequired(challengeName, challengeParameters);
     }
+
     if (challengeName === 'CUSTOM_CHALLENGE') {
       this.Session = dataAuthenticate.Session;
       return callback.customChallenge(challengeParameters);
     }
+
     if (challengeName === 'NEW_PASSWORD_REQUIRED') {
       this.Session = dataAuthenticate.Session;
       var userAttributes = null;
       var rawRequiredAttributes = null;
       var requiredAttributes = [];
       var userAttributesPrefix = authenticationHelper.getNewPasswordRequiredChallengeUserAttributePrefix();
+
       if (challengeParameters) {
         userAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.userAttributes);
         rawRequiredAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.requiredAttributes);
       }
+
       if (rawRequiredAttributes) {
         for (var i = 0; i < rawRequiredAttributes.length; i++) {
           requiredAttributes[i] = rawRequiredAttributes[i].substr(userAttributesPrefix.length);
         }
       }
+
       return callback.newPasswordRequired(userAttributes, requiredAttributes);
     }
+
     if (challengeName === 'DEVICE_SRP_AUTH') {
-      this.Session = dataAuthenticate.Session;
       this.getDeviceResponse(callback);
       return undefined;
     }
+
     this.signInUserSession = this.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
     this.challengeName = challengeName;
     this.cacheTokens();
     var newDeviceMetadata = dataAuthenticate.AuthenticationResult.NewDeviceMetadata;
+
     if (newDeviceMetadata == null) {
       return callback.onSuccess(this.signInUserSession);
     }
+
     authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey, function (errGenHash) {
       if (errGenHash) {
         return callback.onFailure(errGenHash);
       }
+
       var deviceSecretVerifierConfig = {
         Salt: Buffer.from(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
         PasswordVerifier: Buffer.from(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
@@ -4732,6 +5800,7 @@ var CognitoUser = /*#__PURE__*/function () {
       _this4.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
       _this4.deviceGroupKey = newDeviceMetadata.DeviceGroupKey;
       _this4.randomPassword = authenticationHelper.getRandomPassword();
+
       _this4.client.request('ConfirmDevice', {
         DeviceKey: newDeviceMetadata.DeviceKey,
         AccessToken: _this4.signInUserSession.getAccessToken().getJwtToken(),
@@ -4741,18 +5810,22 @@ var CognitoUser = /*#__PURE__*/function () {
         if (errConfirm) {
           return callback.onFailure(errConfirm);
         }
+
         _this4.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+
         _this4.cacheDeviceKeyAndPassword();
+
         if (dataConfirm.UserConfirmationNecessary === true) {
           return callback.onSuccess(_this4.signInUserSession, dataConfirm.UserConfirmationNecessary);
         }
+
         return callback.onSuccess(_this4.signInUserSession);
       });
+
       return undefined;
     });
     return undefined;
   }
-
   /**
    * This method is user to complete the NEW_PASSWORD_REQUIRED challenge.
    * Pass the new password with any new user attributes to be updated.
@@ -4767,20 +5840,26 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.completeNewPasswordChallenge = function completeNewPasswordChallenge(newPassword, requiredAttributeData, callback, clientMetadata) {
     var _this5 = this;
+
     if (!newPassword) {
       return callback.onFailure(new Error('New password is required.'));
     }
-    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolName());
+
+    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolId().split('_')[1]);
     var userAttributesPrefix = authenticationHelper.getNewPasswordRequiredChallengeUserAttributePrefix();
     var finalUserAttributes = {};
+
     if (requiredAttributeData) {
       Object.keys(requiredAttributeData).forEach(function (key) {
         finalUserAttributes[userAttributesPrefix + key] = requiredAttributeData[key];
       });
     }
+
     finalUserAttributes.NEW_PASSWORD = newPassword;
     finalUserAttributes.USERNAME = this.username;
     var jsonReq = {
@@ -4790,18 +5869,20 @@ var CognitoUser = /*#__PURE__*/function () {
       Session: this.Session,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('RespondToAuthChallenge', jsonReq, function (errAuthenticate, dataAuthenticate) {
       if (errAuthenticate) {
         return callback.onFailure(errAuthenticate);
       }
+
       return _this5.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
     });
     return undefined;
   }
-
   /**
    * This is used to get a session using device authentication. It is called at the end of user
    * authentication
@@ -4812,9 +5893,12 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
    * @private
-   */;
+   */
+  ;
+
   _proto.getDeviceResponse = function getDeviceResponse(callback, clientMetadata) {
     var _this6 = this;
+
     var authenticationHelper = new AuthenticationHelper(this.deviceGroupKey);
     var dateHelper = new DateHelper();
     var authParameters = {};
@@ -4825,21 +5909,24 @@ var CognitoUser = /*#__PURE__*/function () {
       if (errAValue) {
         callback.onFailure(errAValue);
       }
+
       authParameters.SRP_A = aValue.toString(16);
       var jsonReq = {
         ChallengeName: 'DEVICE_SRP_AUTH',
         ClientId: _this6.pool.getClientId(),
         ChallengeResponses: authParameters,
-        ClientMetadata: clientMetadata,
-        Session: _this6.Session
+        ClientMetadata: clientMetadata
       };
+
       if (_this6.getUserContextData()) {
         jsonReq.UserContextData = _this6.getUserContextData();
       }
+
       _this6.client.request('RespondToAuthChallenge', jsonReq, function (err, data) {
         if (err) {
           return callback.onFailure(err);
         }
+
         var challengeParameters = data.ChallengeParameters;
         var serverBValue = new BigInteger(challengeParameters.SRP_B, 16);
         var salt = new BigInteger(challengeParameters.SALT, 16);
@@ -4848,12 +5935,11 @@ var CognitoUser = /*#__PURE__*/function () {
           if (errHkdf) {
             return callback.onFailure(errHkdf);
           }
+
           var dateNow = dateHelper.getNowString();
-          var concatBuffer = Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]);
-          var awsCryptoHash = new build$1.Sha256(hkdf);
-          awsCryptoHash.update(concatBuffer);
-          var resultFromAWSCrypto = awsCryptoHash.digestSync();
-          var signatureString = Buffer.from(resultFromAWSCrypto).toString('base64');
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
+          var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this6.username;
           challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
@@ -4866,27 +5952,30 @@ var CognitoUser = /*#__PURE__*/function () {
             ChallengeResponses: challengeResponses,
             Session: data.Session
           };
+
           if (_this6.getUserContextData()) {
             jsonReqResp.UserContextData = _this6.getUserContextData();
           }
+
           _this6.client.request('RespondToAuthChallenge', jsonReqResp, function (errAuthenticate, dataAuthenticate) {
             if (errAuthenticate) {
               return callback.onFailure(errAuthenticate);
             }
+
             _this6.signInUserSession = _this6.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
+
             _this6.cacheTokens();
+
             return callback.onSuccess(_this6.signInUserSession);
           });
-          return undefined;
-          // getPasswordAuthenticationKey callback end
-        });
 
+          return undefined; // getPasswordAuthenticationKey callback end
+        });
         return undefined;
-      });
-      // getLargeAValue callback end
+      }); // getLargeAValue callback end
+
     });
   }
-
   /**
    * This is used for a certain user to confirm the registration by using a confirmation code
    * @param {string} confirmationCode Code entered by user.
@@ -4894,7 +5983,9 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.confirmRegistration = function confirmRegistration(confirmationCode, forceAliasCreation, callback, clientMetadata) {
     var jsonReq = {
       ClientId: this.pool.getClientId(),
@@ -4903,17 +5994,19 @@ var CognitoUser = /*#__PURE__*/function () {
       ForceAliasCreation: forceAliasCreation,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('ConfirmSignUp', jsonReq, function (err) {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, 'SUCCESS');
     });
   }
-
   /**
    * This is used by the user once he has the responses to a custom challenge
    * @param {string} answerChallenge The custom challenge answer.
@@ -4924,17 +6017,22 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.sendCustomChallengeAnswer = function sendCustomChallengeAnswer(answerChallenge, callback, clientMetadata) {
     var _this7 = this;
+
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
     challengeResponses.ANSWER = answerChallenge;
-    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolName());
+    var authenticationHelper = new AuthenticationHelper(this.pool.getUserPoolId().split('_')[1]);
     this.getCachedDeviceKeyAndPassword();
+
     if (this.deviceKey != null) {
       challengeResponses.DEVICE_KEY = this.deviceKey;
     }
+
     var jsonReq = {
       ChallengeName: 'CUSTOM_CHALLENGE',
       ChallengeResponses: challengeResponses,
@@ -4942,17 +6040,19 @@ var CognitoUser = /*#__PURE__*/function () {
       Session: this.Session,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('RespondToAuthChallenge', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
+
       return _this7.authenticateUserInternal(data, authenticationHelper, callback);
     });
   }
-
   /**
    * This is used by the user once he has an MFA code
    * @param {string} confirmationCode The MFA code entered by the user.
@@ -4962,19 +6062,25 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.sendMFACode = function sendMFACode(confirmationCode, callback, mfaType, clientMetadata) {
     var _this8 = this;
+
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
     challengeResponses.SMS_MFA_CODE = confirmationCode;
     var mfaTypeSelection = mfaType || 'SMS_MFA';
+
     if (mfaTypeSelection === 'SOFTWARE_TOKEN_MFA') {
       challengeResponses.SOFTWARE_TOKEN_MFA_CODE = confirmationCode;
     }
+
     if (this.deviceKey != null) {
       challengeResponses.DEVICE_KEY = this.deviceKey;
     }
+
     var jsonReq = {
       ChallengeName: mfaTypeSelection,
       ChallengeResponses: challengeResponses,
@@ -4982,28 +6088,38 @@ var CognitoUser = /*#__PURE__*/function () {
       Session: this.Session,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('RespondToAuthChallenge', jsonReq, function (err, dataAuthenticate) {
       if (err) {
         return callback.onFailure(err);
       }
+
       var challengeName = dataAuthenticate.ChallengeName;
+
       if (challengeName === 'DEVICE_SRP_AUTH') {
         _this8.getDeviceResponse(callback);
+
         return undefined;
       }
+
       _this8.signInUserSession = _this8.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
+
       _this8.cacheTokens();
+
       if (dataAuthenticate.AuthenticationResult.NewDeviceMetadata == null) {
         return callback.onSuccess(_this8.signInUserSession);
       }
-      var authenticationHelper = new AuthenticationHelper(_this8.pool.getUserPoolName());
+
+      var authenticationHelper = new AuthenticationHelper(_this8.pool.getUserPoolId().split('_')[1]);
       authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey, function (errGenHash) {
         if (errGenHash) {
           return callback.onFailure(errGenHash);
         }
+
         var deviceSecretVerifierConfig = {
           Salt: Buffer.from(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
           PasswordVerifier: Buffer.from(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
@@ -5011,6 +6127,7 @@ var CognitoUser = /*#__PURE__*/function () {
         _this8.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
         _this8.deviceGroupKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey;
         _this8.randomPassword = authenticationHelper.getRandomPassword();
+
         _this8.client.request('ConfirmDevice', {
           DeviceKey: dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey,
           AccessToken: _this8.signInUserSession.getAccessToken().getJwtToken(),
@@ -5020,19 +6137,23 @@ var CognitoUser = /*#__PURE__*/function () {
           if (errConfirm) {
             return callback.onFailure(errConfirm);
           }
+
           _this8.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+
           _this8.cacheDeviceKeyAndPassword();
+
           if (dataConfirm.UserConfirmationNecessary === true) {
             return callback.onSuccess(_this8.signInUserSession, dataConfirm.UserConfirmationNecessary);
           }
+
           return callback.onSuccess(_this8.signInUserSession);
         });
+
         return undefined;
       });
       return undefined;
     });
   }
-
   /**
    * This is used by an authenticated user to change the current password
    * @param {string} oldUserPassword The current password.
@@ -5040,11 +6161,14 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.changePassword = function changePassword(oldUserPassword, newUserPassword, callback, clientMetadata) {
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('ChangePassword', {
       PreviousPassword: oldUserPassword,
       ProposedPassword: newUserPassword,
@@ -5054,21 +6178,24 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used by an authenticated user to enable MFA for itself
    * @deprecated
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.enableMFA = function enableMFA(callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     var mfaOptions = [];
     var mfaEnabled = {
       DeliveryMedium: 'SMS',
@@ -5082,22 +6209,25 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used by an authenticated user to enable MFA for itself
    * @param {IMfaSettings} smsMfaSettings the sms mfa settings
    * @param {IMFASettings} softwareTokenMfaSettings the software token mfa settings
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.setUserMfaPreference = function setUserMfaPreference(smsMfaSettings, softwareTokenMfaSettings, callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('SetUserMFAPreference', {
       SMSMfaSettings: smsMfaSettings,
       SoftwareTokenMfaSettings: softwareTokenMfaSettings,
@@ -5106,21 +6236,24 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used by an authenticated user to disable MFA for itself
    * @deprecated
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.disableMFA = function disableMFA(callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     var mfaOptions = [];
     this.client.request('SetUserSettings', {
       MFAOptions: mfaOptions,
@@ -5129,22 +6262,26 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used by an authenticated user to delete itself
    * @param {nodeCallback<string>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.deleteUser = function deleteUser(callback, clientMetadata) {
     var _this9 = this;
+
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('DeleteUser', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       ClientMetadata: clientMetadata
@@ -5152,62 +6289,72 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       _this9.clearCachedUser();
+
       return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * @typedef {CognitoUserAttribute | { Name:string, Value:string }} AttributeArg
    */
+
   /**
    * This is used by an authenticated user to change a list of attributes
    * @param {AttributeArg[]} attributes A list of the new user attributes.
    * @param {nodeCallback<string>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.updateAttributes = function updateAttributes(attributes, callback, clientMetadata) {
     var _this10 = this;
+
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('UpdateUserAttributes', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       UserAttributes: attributes,
       ClientMetadata: clientMetadata
-    }, function (err, result) {
+    }, function (err) {
       if (err) {
         return callback(err, null);
-      }
+      } // update cached user
 
-      // update cached user
+
       return _this10.getUserData(function () {
-        return callback(null, 'SUCCESS', result);
+        return callback(null, 'SUCCESS');
       }, {
         bypassCache: true
       });
     });
     return undefined;
   }
-
   /**
    * This is used by an authenticated user to get a list of attributes
    * @param {nodeCallback<CognitoUserAttribute[]>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getUserAttributes = function getUserAttributes(callback) {
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('GetUser', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
     }, function (err, userData) {
       if (err) {
         return callback(err, null);
       }
+
       var attributeList = [];
+
       for (var i = 0; i < userData.UserAttributes.length; i++) {
         var attribute = {
           Name: userData.UserAttributes[i].Name,
@@ -5216,11 +6363,11 @@ var CognitoUser = /*#__PURE__*/function () {
         var userAttribute = new CognitoUserAttribute(attribute);
         attributeList.push(userAttribute);
       }
+
       return callback(null, attributeList);
     });
     return undefined;
   }
-
   /**
    * This was previously used by an authenticated user to get MFAOptions,
    * but no longer returns a meaningful response. Refer to the documentation for
@@ -5228,44 +6375,53 @@ var CognitoUser = /*#__PURE__*/function () {
    * @deprecated
    * @param {nodeCallback<MFAOptions>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getMFAOptions = function getMFAOptions(callback) {
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('GetUser', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
     }, function (err, userData) {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, userData.MFAOptions);
     });
     return undefined;
   }
-
   /**
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
-   */;
+   */
+  ;
+
   _proto.createGetUserRequest = function createGetUserRequest() {
     return this.client.promisifyRequest('GetUser', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
     });
   }
-
   /**
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
-   */;
+   */
+  ;
+
   _proto.refreshSessionIfPossible = function refreshSessionIfPossible(options) {
     var _this11 = this;
+
     if (options === void 0) {
       options = {};
     }
+
     // best effort, if not possible
     return new Promise(function (resolve) {
       var refresh = _this11.signInUserSession.getRefreshToken();
+
       if (refresh && refresh.getToken()) {
         _this11.refreshSession(refresh, resolve, options.clientMetadata);
       } else {
@@ -5273,7 +6429,6 @@ var CognitoUser = /*#__PURE__*/function () {
       }
     });
   }
-
   /**
    * @typedef {Object} GetUserDataOptions
    * @property {boolean} bypassCache - force getting data from Cognito service
@@ -5285,20 +6440,26 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {nodeCallback<UserData>} callback Called on success or error.
    * @param {GetUserDataOptions} params
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getUserData = function getUserData(callback, params) {
     var _this12 = this;
+
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       this.clearCachedUserData();
       return callback(new Error('User is not authenticated'), null);
     }
+
     var userData = this.getUserDataFromCache();
+
     if (!userData) {
       this.fetchUserData().then(function (data) {
         callback(null, data);
       })["catch"](callback);
       return;
     }
+
     if (this.isFetchUserDataAndTokenRequired(params)) {
       this.fetchUserData().then(function (data) {
         return _this12.refreshSessionIfPossible(params).then(function () {
@@ -5309,6 +6470,7 @@ var CognitoUser = /*#__PURE__*/function () {
       })["catch"](callback);
       return;
     }
+
     try {
       callback(null, JSON.parse(userData));
       return;
@@ -5318,52 +6480,60 @@ var CognitoUser = /*#__PURE__*/function () {
       return;
     }
   }
-
   /**
    *
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
-   */;
+   */
+  ;
+
   _proto.getUserDataFromCache = function getUserDataFromCache() {
     var userData = this.storage.getItem(this.userDataKey);
     return userData;
   }
-
   /**
    *
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
-   */;
+   */
+  ;
+
   _proto.isFetchUserDataAndTokenRequired = function isFetchUserDataAndTokenRequired(params) {
     var _ref = params || {},
-      _ref$bypassCache = _ref.bypassCache,
-      bypassCache = _ref$bypassCache === void 0 ? false : _ref$bypassCache;
+        _ref$bypassCache = _ref.bypassCache,
+        bypassCache = _ref$bypassCache === void 0 ? false : _ref$bypassCache;
+
     return bypassCache;
   }
   /**
    *
    * PRIVATE ONLY: This is an internal only method and should not
    * be directly called by the consumers.
-   */;
+   */
+  ;
+
   _proto.fetchUserData = function fetchUserData() {
     var _this13 = this;
+
     return this.createGetUserRequest().then(function (data) {
       _this13.cacheUserData(data);
+
       return data;
     });
   }
-
   /**
    * This is used by an authenticated user to delete a list of attributes
    * @param {string[]} attributeList Names of the attributes to delete.
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.deleteAttributes = function deleteAttributes(attributeList, callback) {
-    var _this14 = this;
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       return callback(new Error('User is not authenticated'), null);
     }
+
     this.client.request('DeleteUserAttributes', {
       UserAttributeNames: attributeList,
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
@@ -5372,22 +6542,18 @@ var CognitoUser = /*#__PURE__*/function () {
         return callback(err, null);
       }
 
-      // update cached user
-      return _this14.getUserData(function () {
-        return callback(null, 'SUCCESS');
-      }, {
-        bypassCache: true
-      });
+      return callback(null, 'SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used by a user to resend a confirmation code
    * @param {nodeCallback<string>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.resendConfirmationCode = function resendConfirmationCode(callback, clientMetadata) {
     var jsonReq = {
       ClientId: this.pool.getClientId(),
@@ -5398,10 +6564,10 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback(err, null);
       }
+
       return callback(null, result);
     });
   }
-
   /**
    * @typedef {Object} GetSessionOptions
    * @property {Record<string, string>} clientMetadata - clientMetadata for getSession
@@ -5414,22 +6580,28 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {nodeCallback<CognitoUserSession>} callback Called on success or error.
    * @param {GetSessionOptions} options
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getSession = function getSession(callback, options) {
     if (options === void 0) {
       options = {};
     }
+
     if (this.username == null) {
       return callback(new Error('Username is null. Cannot retrieve a new session'), null);
     }
+
     if (this.signInUserSession != null && this.signInUserSession.isValid()) {
       return callback(null, this.signInUserSession);
     }
+
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId() + "." + this.username;
     var idTokenKey = keyPrefix + ".idToken";
     var accessTokenKey = keyPrefix + ".accessToken";
     var refreshTokenKey = keyPrefix + ".refreshToken";
     var clockDriftKey = keyPrefix + ".clockDrift";
+
     if (this.storage.getItem(idTokenKey)) {
       var idToken = new CognitoIdToken({
         IdToken: this.storage.getItem(idTokenKey)
@@ -5448,73 +6620,91 @@ var CognitoUser = /*#__PURE__*/function () {
         ClockDrift: clockDrift
       };
       var cachedSession = new CognitoUserSession(sessionData);
+
       if (cachedSession.isValid()) {
         this.signInUserSession = cachedSession;
         return callback(null, this.signInUserSession);
       }
+
       if (!refreshToken.getToken()) {
         return callback(new Error('Cannot retrieve a new session. Please authenticate.'), null);
       }
+
       this.refreshSession(refreshToken, callback, options.clientMetadata);
     } else {
       callback(new Error('Local storage is missing an ID Token, Please authenticate'), null);
     }
+
     return undefined;
   }
-
   /**
    * This uses the refreshToken to retrieve a new session
    * @param {CognitoRefreshToken} refreshToken A previous session's refresh token.
    * @param {nodeCallback<CognitoUserSession>} callback Called on success or error.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.refreshSession = function refreshSession(refreshToken, callback, clientMetadata) {
-    var _this15 = this;
+    var _this14 = this;
+
     var wrappedCallback = this.pool.wrapRefreshSessionCallback ? this.pool.wrapRefreshSessionCallback(callback) : callback;
     var authParameters = {};
     authParameters.REFRESH_TOKEN = refreshToken.getToken();
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId();
     var lastUserKey = keyPrefix + ".LastAuthUser";
+
     if (this.storage.getItem(lastUserKey)) {
       this.username = this.storage.getItem(lastUserKey);
       var deviceKeyKey = keyPrefix + "." + this.username + ".deviceKey";
       this.deviceKey = this.storage.getItem(deviceKeyKey);
       authParameters.DEVICE_KEY = this.deviceKey;
     }
+
     var jsonReq = {
       ClientId: this.pool.getClientId(),
       AuthFlow: 'REFRESH_TOKEN_AUTH',
       AuthParameters: authParameters,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('InitiateAuth', jsonReq, function (err, authResult) {
       if (err) {
         if (err.code === 'NotAuthorizedException') {
-          _this15.clearCachedUser();
+          _this14.clearCachedUser();
         }
+
         return wrappedCallback(err, null);
       }
+
       if (authResult) {
         var authenticationResult = authResult.AuthenticationResult;
+
         if (!Object.prototype.hasOwnProperty.call(authenticationResult, 'RefreshToken')) {
           authenticationResult.RefreshToken = refreshToken.getToken();
         }
-        _this15.signInUserSession = _this15.getCognitoUserSession(authenticationResult);
-        _this15.cacheTokens();
-        return wrappedCallback(null, _this15.signInUserSession);
+
+        _this14.signInUserSession = _this14.getCognitoUserSession(authenticationResult);
+
+        _this14.cacheTokens();
+
+        return wrappedCallback(null, _this14.signInUserSession);
       }
+
       return undefined;
     });
   }
-
   /**
    * This is used to save the session tokens to local storage
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.cacheTokens = function cacheTokens() {
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId();
     var idTokenKey = keyPrefix + "." + this.username + ".idToken";
@@ -5528,29 +6718,33 @@ var CognitoUser = /*#__PURE__*/function () {
     this.storage.setItem(clockDriftKey, "" + this.signInUserSession.getClockDrift());
     this.storage.setItem(lastUserKey, this.username);
   }
-
   /**
    * This is to cache user data
-   */;
+   */
+  ;
+
   _proto.cacheUserData = function cacheUserData(userData) {
     this.storage.setItem(this.userDataKey, JSON.stringify(userData));
   }
-
   /**
    * This is to remove cached user data
-   */;
+   */
+  ;
+
   _proto.clearCachedUserData = function clearCachedUserData() {
     this.storage.removeItem(this.userDataKey);
   };
+
   _proto.clearCachedUser = function clearCachedUser() {
     this.clearCachedTokens();
     this.clearCachedUserData();
   }
-
   /**
    * This is used to cache the device key and device group and device password
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.cacheDeviceKeyAndPassword = function cacheDeviceKeyAndPassword() {
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId() + "." + this.username;
     var deviceKeyKey = keyPrefix + ".deviceKey";
@@ -5560,27 +6754,30 @@ var CognitoUser = /*#__PURE__*/function () {
     this.storage.setItem(randomPasswordKey, this.randomPassword);
     this.storage.setItem(deviceGroupKeyKey, this.deviceGroupKey);
   }
-
   /**
    * This is used to get current device key and device group and device password
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getCachedDeviceKeyAndPassword = function getCachedDeviceKeyAndPassword() {
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId() + "." + this.username;
     var deviceKeyKey = keyPrefix + ".deviceKey";
     var randomPasswordKey = keyPrefix + ".randomPasswordKey";
     var deviceGroupKeyKey = keyPrefix + ".deviceGroupKey";
+
     if (this.storage.getItem(deviceKeyKey)) {
       this.deviceKey = this.storage.getItem(deviceKeyKey);
       this.randomPassword = this.storage.getItem(randomPasswordKey);
       this.deviceGroupKey = this.storage.getItem(deviceGroupKeyKey);
     }
   }
-
   /**
    * This is used to clear the device key info from local storage
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.clearCachedDeviceKeyAndPassword = function clearCachedDeviceKeyAndPassword() {
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId() + "." + this.username;
     var deviceKeyKey = keyPrefix + ".deviceKey";
@@ -5590,11 +6787,12 @@ var CognitoUser = /*#__PURE__*/function () {
     this.storage.removeItem(randomPasswordKey);
     this.storage.removeItem(deviceGroupKeyKey);
   }
-
   /**
    * This is used to clear the session tokens from local storage
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.clearCachedTokens = function clearCachedTokens() {
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId();
     var idTokenKey = keyPrefix + "." + this.username + ".idToken";
@@ -5608,13 +6806,14 @@ var CognitoUser = /*#__PURE__*/function () {
     this.storage.removeItem(lastUserKey);
     this.storage.removeItem(clockDriftKey);
   }
-
   /**
    * This is used to build a user session from tokens retrieved in the authentication result
    * @param {object} authResult Successful auth response from server.
    * @returns {CognitoUserSession} The new user session.
    * @private
-   */;
+   */
+  ;
+
   _proto.getCognitoUserSession = function getCognitoUserSession(authResult) {
     var idToken = new CognitoIdToken(authResult);
     var accessToken = new CognitoAccessToken(authResult);
@@ -5626,7 +6825,6 @@ var CognitoUser = /*#__PURE__*/function () {
     };
     return new CognitoUserSession(sessionData);
   }
-
   /**
    * This is used to initiate a forgot password request
    * @param {object} callback Result callback map.
@@ -5636,27 +6834,32 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {onSuccess} callback.onSuccess Called on success.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.forgotPassword = function forgotPassword(callback, clientMetadata) {
     var jsonReq = {
       ClientId: this.pool.getClientId(),
       Username: this.username,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('ForgotPassword', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
+
       if (typeof callback.inputVerificationCode === 'function') {
         return callback.inputVerificationCode(data);
       }
+
       return callback.onSuccess(data);
     });
   }
-
   /**
    * This is used to confirm a new password using a confirmationCode
    * @param {string} confirmationCode Code entered by user.
@@ -5666,7 +6869,9 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {onSuccess<void>} callback.onSuccess Called on success.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.confirmPassword = function confirmPassword(confirmationCode, newPassword, callback, clientMetadata) {
     var jsonReq = {
       ClientId: this.pool.getClientId(),
@@ -5675,17 +6880,19 @@ var CognitoUser = /*#__PURE__*/function () {
       Password: newPassword,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('ConfirmForgotPassword', jsonReq, function (err) {
       if (err) {
         return callback.onFailure(err);
       }
-      return callback.onSuccess('SUCCESS');
+
+      return callback.onSuccess();
     });
   }
-
   /**
    * This is used to initiate an attribute confirmation request
    * @param {string} attributeName User attribute that needs confirmation.
@@ -5694,11 +6901,14 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {inputVerificationCode} callback.inputVerificationCode Called on success.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getAttributeVerificationCode = function getAttributeVerificationCode(attributeName, callback, clientMetadata) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('GetUserAttributeVerificationCode', {
       AttributeName: attributeName,
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
@@ -5707,14 +6917,15 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       if (typeof callback.inputVerificationCode === 'function') {
         return callback.inputVerificationCode(data);
       }
-      return callback.onSuccess('SUCCESS');
+
+      return callback.onSuccess();
     });
     return undefined;
   }
-
   /**
    * This is used to confirm an attribute using a confirmation code
    * @param {string} attributeName Attribute being confirmed.
@@ -5723,11 +6934,14 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.verifyAttribute = function verifyAttribute(attributeName, confirmationCode, callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('VerifyUserAttribute', {
       AttributeName: attributeName,
       Code: confirmationCode,
@@ -5736,22 +6950,25 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used to get the device information using the current device key
    * @param {object} callback Result callback map.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<*>} callback.onSuccess Called on success with device data.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.getDevice = function getDevice(callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('GetDevice', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       DeviceKey: this.deviceKey
@@ -5759,11 +6976,11 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess(data);
     });
     return undefined;
   }
-
   /**
    * This is used to forget a specific device
    * @param {string} deviceKey Device key.
@@ -5771,11 +6988,14 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.forgetSpecificDevice = function forgetSpecificDevice(deviceKey, callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('ForgetDevice', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       DeviceKey: deviceKey
@@ -5783,43 +7003,50 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used to forget the current device
    * @param {object} callback Result callback map.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.forgetDevice = function forgetDevice(callback) {
-    var _this16 = this;
+    var _this15 = this;
+
     this.forgetSpecificDevice(this.deviceKey, {
       onFailure: callback.onFailure,
       onSuccess: function onSuccess(result) {
-        _this16.deviceKey = null;
-        _this16.deviceGroupKey = null;
-        _this16.randomPassword = null;
-        _this16.clearCachedDeviceKeyAndPassword();
+        _this15.deviceKey = null;
+        _this15.deviceGroupKey = null;
+        _this15.randomPassword = null;
+
+        _this15.clearCachedDeviceKeyAndPassword();
+
         return callback.onSuccess(result);
       }
     });
   }
-
   /**
    * This is used to set the device status as remembered
    * @param {object} callback Result callback map.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.setDeviceStatusRemembered = function setDeviceStatusRemembered(callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('UpdateDeviceStatus', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       DeviceKey: this.deviceKey,
@@ -5828,22 +7055,25 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used to set the device status as not remembered
    * @param {object} callback Result callback map.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.setDeviceStatusNotRemembered = function setDeviceStatusNotRemembered(callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('UpdateDeviceStatus', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       DeviceKey: this.deviceKey,
@@ -5852,11 +7082,11 @@ var CognitoUser = /*#__PURE__*/function () {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used to list all devices for a user
    *
@@ -5866,137 +7096,82 @@ var CognitoUser = /*#__PURE__*/function () {
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<*>} callback.onSuccess Called on success with device list.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.listDevices = function listDevices(limit, paginationToken, callback) {
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     var requestParams = {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
       Limit: limit
     };
+
     if (paginationToken) {
       requestParams.PaginationToken = paginationToken;
     }
+
     this.client.request('ListDevices', requestParams, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
+
       return callback.onSuccess(data);
     });
     return undefined;
   }
-
   /**
    * This is used to globally revoke all tokens issued to a user
    * @param {object} callback Result callback map.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.globalSignOut = function globalSignOut(callback) {
-    var _this17 = this;
+    var _this16 = this;
+
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
     }
+
     this.client.request('GlobalSignOut', {
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
     }, function (err) {
       if (err) {
         return callback.onFailure(err);
       }
-      _this17.clearCachedUser();
+
+      _this16.clearCachedUser();
+
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
   }
-
   /**
    * This is used for the user to signOut of the application and clear the cached tokens.
    * @returns {void}
-   */;
-  _proto.signOut = function signOut(revokeTokenCallback) {
-    var _this18 = this;
-    // If tokens won't be revoked, we just clean the client data.
-    if (!revokeTokenCallback || typeof revokeTokenCallback !== 'function') {
-      this.cleanClientData();
-      return;
-    }
-    this.getSession(function (error, _session) {
-      if (error) {
-        return revokeTokenCallback(error);
-      }
-      _this18.revokeTokens(function (err) {
-        _this18.cleanClientData();
-        revokeTokenCallback(err);
-      });
-    });
-  };
-  _proto.revokeTokens = function revokeTokens(revokeTokenCallback) {
-    if (revokeTokenCallback === void 0) {
-      revokeTokenCallback = function revokeTokenCallback() {};
-    }
-    if (typeof revokeTokenCallback !== 'function') {
-      throw new Error('Invalid revokeTokenCallback. It should be a function.');
-    }
-    if (!this.signInUserSession) {
-      var error = new Error('User is not authenticated');
-      return revokeTokenCallback(error);
-    }
-    if (!this.signInUserSession.getAccessToken()) {
-      var _error = new Error('No Access token available');
-      return revokeTokenCallback(_error);
-    }
-    var refreshToken = this.signInUserSession.getRefreshToken().getToken();
-    var accessToken = this.signInUserSession.getAccessToken();
-    if (this.isSessionRevocable(accessToken)) {
-      if (refreshToken) {
-        return this.revokeToken({
-          token: refreshToken,
-          callback: revokeTokenCallback
-        });
-      }
-    }
-    revokeTokenCallback();
-  };
-  _proto.isSessionRevocable = function isSessionRevocable(token) {
-    if (token && typeof token.decodePayload === 'function') {
-      try {
-        var _token$decodePayload = token.decodePayload(),
-          origin_jti = _token$decodePayload.origin_jti;
-        return !!origin_jti;
-      } catch (err) {
-        // Nothing to do, token doesnt have origin_jti claim
-      }
-    }
-    return false;
-  };
-  _proto.cleanClientData = function cleanClientData() {
+   */
+  ;
+
+  _proto.signOut = function signOut() {
     this.signInUserSession = null;
     this.clearCachedUser();
-  };
-  _proto.revokeToken = function revokeToken(_ref2) {
-    var token = _ref2.token,
-      callback = _ref2.callback;
-    this.client.requestWithRetry('RevokeToken', {
-      Token: token,
-      ClientId: this.pool.getClientId()
-    }, function (err) {
-      if (err) {
-        return callback(err);
-      }
-      callback();
-    });
   }
-
   /**
    * This is used by a user trying to select a given MFA
    * @param {string} answerChallenge the mfa the user wants
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.sendMFASelectionAnswer = function sendMFASelectionAnswer(answerChallenge, callback) {
-    var _this19 = this;
+    var _this17 = this;
+
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
     challengeResponses.ANSWER = answerChallenge;
@@ -6006,40 +7181,49 @@ var CognitoUser = /*#__PURE__*/function () {
       ClientId: this.pool.getClientId(),
       Session: this.Session
     };
+
     if (this.getUserContextData()) {
       jsonReq.UserContextData = this.getUserContextData();
     }
+
     this.client.request('RespondToAuthChallenge', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
-      _this19.Session = data.Session;
+
+      _this17.Session = data.Session;
+
       if (answerChallenge === 'SMS_MFA') {
         return callback.mfaRequired(data.ChallengeName, data.ChallengeParameters);
       }
+
       if (answerChallenge === 'SOFTWARE_TOKEN_MFA') {
         return callback.totpRequired(data.ChallengeName, data.ChallengeParameters);
       }
+
       return undefined;
     });
   }
-
   /**
    * This returns the user context data for advanced security feature.
    * @returns {string} the user context data from CognitoUserPool
-   */;
+   */
+  ;
+
   _proto.getUserContextData = function getUserContextData() {
     var pool = this.pool;
     return pool.getUserContextData(this.username);
   }
-
   /**
    * This is used by an authenticated or a user trying to authenticate to associate a TOTP MFA
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.associateSoftwareToken = function associateSoftwareToken(callback) {
-    var _this20 = this;
+    var _this18 = this;
+
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       this.client.request('AssociateSoftwareToken', {
         Session: this.Session
@@ -6047,7 +7231,8 @@ var CognitoUser = /*#__PURE__*/function () {
         if (err) {
           return callback.onFailure(err);
         }
-        _this20.Session = data.Session;
+
+        _this18.Session = data.Session;
         return callback.associateSecretCode(data.SecretCode);
       });
     } else {
@@ -6057,20 +7242,23 @@ var CognitoUser = /*#__PURE__*/function () {
         if (err) {
           return callback.onFailure(err);
         }
+
         return callback.associateSecretCode(data.SecretCode);
       });
     }
   }
-
   /**
    * This is used by an authenticated or a user trying to authenticate to verify a TOTP MFA
    * @param {string} totpCode The MFA code entered by the user.
    * @param {string} friendlyDeviceName The device name we are assigning to the device.
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.verifySoftwareToken = function verifySoftwareToken(totpCode, friendlyDeviceName, callback) {
-    var _this21 = this;
+    var _this19 = this;
+
     if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
       this.client.request('VerifySoftwareToken', {
         Session: this.Session,
@@ -6080,26 +7268,33 @@ var CognitoUser = /*#__PURE__*/function () {
         if (err) {
           return callback.onFailure(err);
         }
-        _this21.Session = data.Session;
+
+        _this19.Session = data.Session;
         var challengeResponses = {};
-        challengeResponses.USERNAME = _this21.username;
+        challengeResponses.USERNAME = _this19.username;
         var jsonReq = {
           ChallengeName: 'MFA_SETUP',
-          ClientId: _this21.pool.getClientId(),
+          ClientId: _this19.pool.getClientId(),
           ChallengeResponses: challengeResponses,
-          Session: _this21.Session
+          Session: _this19.Session
         };
-        if (_this21.getUserContextData()) {
-          jsonReq.UserContextData = _this21.getUserContextData();
+
+        if (_this19.getUserContextData()) {
+          jsonReq.UserContextData = _this19.getUserContextData();
         }
-        _this21.client.request('RespondToAuthChallenge', jsonReq, function (errRespond, dataRespond) {
+
+        _this19.client.request('RespondToAuthChallenge', jsonReq, function (errRespond, dataRespond) {
           if (errRespond) {
             return callback.onFailure(errRespond);
           }
-          _this21.signInUserSession = _this21.getCognitoUserSession(dataRespond.AuthenticationResult);
-          _this21.cacheTokens();
-          return callback.onSuccess(_this21.signInUserSession);
+
+          _this19.signInUserSession = _this19.getCognitoUserSession(dataRespond.AuthenticationResult);
+
+          _this19.cacheTokens();
+
+          return callback.onSuccess(_this19.signInUserSession);
         });
+
         return undefined;
       });
     } else {
@@ -6111,10 +7306,12 @@ var CognitoUser = /*#__PURE__*/function () {
         if (err) {
           return callback.onFailure(err);
         }
+
         return callback.onSuccess(data);
       });
     }
   };
+
   return CognitoUser;
 }();
 
@@ -6127,33 +7324,46 @@ var unfetch$1 = /*#__PURE__*/Object.freeze({
 
 var require$$0 = /*@__PURE__*/getAugmentedNamespace(unfetch$1);
 
-var browser = window.fetch || (window.fetch = require$$0.default || require$$0);
+window.fetch || (window.fetch = require$$0.default || require$$0);
 
 // constructor
-function UserAgent() {}
-// public
-UserAgent.prototype.userAgent = getUserAgent();
+function UserAgent() {} // public
 
-function _inheritsLoose$2(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf$2(subClass, superClass); }
-function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf$2(Wrapper, Class); }; return _wrapNativeSuper(Class); }
-function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct.bind(); } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf$2(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+UserAgent.prototype.userAgent = 'aws-amplify/0.1.x js';
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
-function _setPrototypeOf$2(o, p) { _setPrototypeOf$2 = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$2(o, p); }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 var CognitoError = /*#__PURE__*/function (_Error) {
-  _inheritsLoose$2(CognitoError, _Error);
+  _inheritsLoose(CognitoError, _Error);
+
   function CognitoError(message, code, name, statusCode) {
     var _this;
+
     _this = _Error.call(this, message) || this;
     _this.code = code;
     _this.name = name;
     _this.statusCode = statusCode;
     return _this;
   }
+
   return CognitoError;
 }( /*#__PURE__*/_wrapNativeSuper(Error));
 /** @class */
+
+
 var Client = /*#__PURE__*/function () {
   /**
    * Constructs a new AWS Cognito Identity Provider client object
@@ -6163,13 +7373,14 @@ var Client = /*#__PURE__*/function () {
    */
   function Client(region, endpoint, fetchOptions) {
     this.endpoint = endpoint || "https://cognito-idp." + region + ".amazonaws.com/";
+
     var _ref = fetchOptions || {},
-      credentials = _ref.credentials;
+        credentials = _ref.credentials;
+
     this.fetchOptions = credentials ? {
       credentials: credentials
     } : {};
   }
-
   /**
    * Makes an unauthenticated request on AWS Cognito Identity Provider API
    * using fetch
@@ -6177,9 +7388,13 @@ var Client = /*#__PURE__*/function () {
    * @param {object} params Input parameters
    * @returns Promise<object>
    */
+
+
   var _proto = Client.prototype;
+
   _proto.promisifyRequest = function promisifyRequest(operation, params) {
     var _this2 = this;
+
     return new Promise(function (resolve, reject) {
       _this2.request(operation, params, function (err, data) {
         if (err) {
@@ -6189,27 +7404,7 @@ var Client = /*#__PURE__*/function () {
         }
       });
     });
-  };
-  _proto.requestWithRetry = function requestWithRetry(operation, params, callback) {
-    var _this3 = this;
-    var MAX_DELAY_IN_MILLIS = 5 * 1000;
-    jitteredExponentialRetry(function (p) {
-      return new Promise(function (res, rej) {
-        _this3.request(operation, p, function (error, result) {
-          if (error) {
-            rej(error);
-          } else {
-            res(result);
-          }
-        });
-      });
-    }, [params], MAX_DELAY_IN_MILLIS).then(function (result) {
-      return callback(null, result);
-    })["catch"](function (error) {
-      return callback(error);
-    });
   }
-
   /**
    * Makes an unauthenticated request on AWS Cognito Identity Provider API
    * using fetch
@@ -6217,18 +7412,20 @@ var Client = /*#__PURE__*/function () {
    * @param {object} params Input parameters
    * @param {function} callback Callback called when a response is returned
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.request = function request(operation, params, callback) {
     var headers = {
       'Content-Type': 'application/x-amz-json-1.1',
       'X-Amz-Target': "AWSCognitoIdentityProviderService." + operation,
-      'X-Amz-User-Agent': UserAgent.prototype.userAgent,
-      'Cache-Control': 'no-store'
+      'X-Amz-User-Agent': UserAgent.prototype.userAgent
     };
     var options = Object.assign({}, this.fetchOptions, {
       headers: headers,
       method: 'POST',
       mode: 'cors',
+      cache: 'no-cache',
       body: JSON.stringify(params)
     });
     var response;
@@ -6241,6 +7438,7 @@ var Client = /*#__PURE__*/function () {
       if (err instanceof TypeError) {
         throw new Error('Network error');
       }
+
       throw err;
     }).then(function (resp) {
       return resp.json()["catch"](function () {
@@ -6249,95 +7447,65 @@ var Client = /*#__PURE__*/function () {
     }).then(function (data) {
       // return parsed body stream
       if (response.ok) return callback(null, data);
-
-      // Taken from aws-sdk-js/lib/protocol/json.js
       // eslint-disable-next-line no-underscore-dangle
+
       var code = (data.__type || data.code).split('#').pop();
-      var error = new Error(data.message || data.Message || null);
-      error.name = code;
-      error.code = code;
+      var error = {
+        code: code,
+        name: code,
+        message: data.message || data.Message || null
+      };
       return callback(error);
     })["catch"](function (err) {
       // first check if we have a service error
       if (response && response.headers && response.headers.get('x-amzn-errortype')) {
         try {
           var code = response.headers.get('x-amzn-errortype').split(':')[0];
-          var error = new Error(response.status ? response.status.toString() : null);
-          error.code = code;
-          error.name = code;
-          error.statusCode = response.status;
+          var error = {
+            code: code,
+            name: code,
+            statusCode: response.status,
+            message: response.status ? response.status.toString() : null
+          };
           return callback(error);
         } catch (ex) {
           return callback(err);
-        }
-        // otherwise check if error is Network error
+        } // otherwise check if error is Network error
+
       } else if (err instanceof Error && err.message === 'Network error') {
-        err.code = 'NetworkError';
+        var _error = {
+          code: 'NetworkError',
+          name: err.name,
+          message: err.message
+        };
+        return callback(_error);
+      } else {
+        return callback(err);
       }
-      return callback(err);
     });
   };
+
   return Client;
 }();
-var logger = {
-  debug: function debug() {
-    // Intentionally blank. This package doesn't have logging
-  }
-};
-var isNonRetryableError = function isNonRetryableError(obj) {
-  var key = 'nonRetryable';
-  return obj && obj[key];
-};
-function retry(functionToRetry, args, delayFn, attempt) {
-  if (attempt === void 0) {
-    attempt = 1;
-  }
-  if (typeof functionToRetry !== 'function') {
-    throw Error('functionToRetry must be a function');
-  }
-  logger.debug(functionToRetry.name + " attempt #" + attempt + " with args: " + JSON.stringify(args));
-  return functionToRetry.apply(void 0, args)["catch"](function (err) {
-    logger.debug("error on " + functionToRetry.name, err);
-    if (isNonRetryableError(err)) {
-      logger.debug(functionToRetry.name + " non retryable error", err);
-      throw err;
-    }
-    var retryIn = delayFn(attempt, args, err);
-    logger.debug(functionToRetry.name + " retrying in " + retryIn + " ms");
-    if (retryIn !== false) {
-      return new Promise(function (res) {
-        return setTimeout(res, retryIn);
-      }).then(function () {
-        return retry(functionToRetry, args, delayFn, attempt + 1);
-      });
-    } else {
-      throw err;
-    }
-  });
-}
-function jitteredBackoff(maxDelayMs) {
-  var BASE_TIME_MS = 100;
-  var JITTER_FACTOR = 100;
-  return function (attempt) {
-    var delay = Math.pow(2, attempt) * BASE_TIME_MS + JITTER_FACTOR * Math.random();
-    return delay > maxDelayMs ? false : delay;
-  };
-}
-var MAX_DELAY_MS = 5 * 60 * 1000;
-function jitteredExponentialRetry(functionToRetry, args, maxDelayMs) {
-  if (maxDelayMs === void 0) {
-    maxDelayMs = MAX_DELAY_MS;
-  }
-  return retry(functionToRetry, args, jitteredBackoff(maxDelayMs));
-}
 
 /*!
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
  */
-var USER_POOL_ID_MAX_LENGTH = 55;
-
 /** @class */
+
 var CognitoUserPool = /*#__PURE__*/function () {
   /**
    * Constructs a new CognitoUserPool object
@@ -6355,60 +7523,60 @@ var CognitoUserPool = /*#__PURE__*/function () {
    */
   function CognitoUserPool(data, wrapRefreshSessionCallback) {
     var _ref = data || {},
-      UserPoolId = _ref.UserPoolId,
-      ClientId = _ref.ClientId,
-      endpoint = _ref.endpoint,
-      fetchOptions = _ref.fetchOptions,
-      AdvancedSecurityDataCollectionFlag = _ref.AdvancedSecurityDataCollectionFlag;
+        UserPoolId = _ref.UserPoolId,
+        ClientId = _ref.ClientId,
+        endpoint = _ref.endpoint,
+        fetchOptions = _ref.fetchOptions,
+        AdvancedSecurityDataCollectionFlag = _ref.AdvancedSecurityDataCollectionFlag;
+
     if (!UserPoolId || !ClientId) {
       throw new Error('Both UserPoolId and ClientId are required.');
     }
-    if (UserPoolId.length > USER_POOL_ID_MAX_LENGTH || !/^[\w-]+_[0-9a-zA-Z]+$/.test(UserPoolId)) {
+
+    if (!/^[\w-]+_.+$/.test(UserPoolId)) {
       throw new Error('Invalid UserPoolId format.');
     }
+
     var region = UserPoolId.split('_')[0];
     this.userPoolId = UserPoolId;
     this.clientId = ClientId;
     this.client = new Client(region, endpoint, fetchOptions);
-
     /**
      * By default, AdvancedSecurityDataCollectionFlag is set to true,
      * if no input value is provided.
      */
+
     this.advancedSecurityDataCollectionFlag = AdvancedSecurityDataCollectionFlag !== false;
     this.storage = data.Storage || new StorageHelper().getStorage();
+
     if (wrapRefreshSessionCallback) {
       this.wrapRefreshSessionCallback = wrapRefreshSessionCallback;
     }
   }
-
   /**
    * @returns {string} the user pool id
    */
+
+
   var _proto = CognitoUserPool.prototype;
+
   _proto.getUserPoolId = function getUserPoolId() {
     return this.userPoolId;
   }
-
-  /**
-   * @returns {string} the user pool name
-   */;
-  _proto.getUserPoolName = function getUserPoolName() {
-    return this.getUserPoolId().split('_')[1];
-  }
-
   /**
    * @returns {string} the client id
-   */;
+   */
+  ;
+
   _proto.getClientId = function getClientId() {
     return this.clientId;
   }
-
   /**
    * @typedef {object} SignUpResult
    * @property {CognitoUser} user New user.
    * @property {bool} userConfirmed If the user is already confirmed.
    */
+
   /**
    * method for signing up a user
    * @param {string} username User's username.
@@ -6419,9 +7587,12 @@ var CognitoUserPool = /*#__PURE__*/function () {
    * @param {nodeCallback<SignUpResult>} callback Called on error or with the new user.
    * @param {ClientMetadata} clientMetadata object which is passed from client to Cognito Lambda trigger
    * @returns {void}
-   */;
+   */
+  ;
+
   _proto.signUp = function signUp(username, password, userAttributes, validationData, callback, clientMetadata) {
     var _this = this;
+
     var jsonReq = {
       ClientId: this.clientId,
       Username: username,
@@ -6430,13 +7601,16 @@ var CognitoUserPool = /*#__PURE__*/function () {
       ValidationData: validationData,
       ClientMetadata: clientMetadata
     };
+
     if (this.getUserContextData(username)) {
       jsonReq.UserContextData = this.getUserContextData(username);
     }
+
     this.client.request('SignUp', jsonReq, function (err, data) {
       if (err) {
         return callback(err, null);
       }
+
       var cognitoUser = {
         Username: username,
         Pool: _this,
@@ -6451,15 +7625,17 @@ var CognitoUserPool = /*#__PURE__*/function () {
       return callback(null, returnData);
     });
   }
-
   /**
    * method for getting the current user of the application from the local storage
    *
    * @returns {CognitoUser} the user retrieved from storage
-   */;
+   */
+  ;
+
   _proto.getCurrentUser = function getCurrentUser() {
     var lastUserKey = "CognitoIdentityServiceProvider." + this.clientId + ".LastAuthUser";
     var lastAuthUser = this.storage.getItem(lastUserKey);
+
     if (lastAuthUser) {
       var cognitoUser = {
         Username: lastAuthUser,
@@ -6468,9 +7644,9 @@ var CognitoUserPool = /*#__PURE__*/function () {
       };
       return new CognitoUser(cognitoUser);
     }
+
     return null;
   }
-
   /**
    * This method returns the encoded data string used for cognito advanced security feature.
    * This would be generated only when developer has included the JS used for collecting the
@@ -6478,17 +7654,22 @@ var CognitoUserPool = /*#__PURE__*/function () {
    * features
    * @param {string} username the username for the context data
    * @returns {string} the user context data
-   **/;
+   **/
+  ;
+
   _proto.getUserContextData = function getUserContextData(username) {
     if (typeof AmazonCognitoAdvancedSecurityData === 'undefined') {
       return undefined;
     }
     /* eslint-disable */
+
+
     var amazonCognitoAdvancedSecurityDataConst = AmazonCognitoAdvancedSecurityData;
     /* eslint-enable */
 
     if (this.advancedSecurityDataCollectionFlag) {
       var advancedSecurityData = amazonCognitoAdvancedSecurityDataConst.getData(username, this.userPoolId, this.clientId);
+
       if (advancedSecurityData) {
         var userContextData = {
           EncodedData: advancedSecurityData
@@ -6496,12 +7677,14 @@ var CognitoUserPool = /*#__PURE__*/function () {
         return userContextData;
       }
     }
+
     return {};
   };
+
   return CognitoUserPool;
 }();
 
-var js_cookie = createCommonjsModule(function (module, exports) {
+createCommonjsModule(function (module, exports) {
 (function (factory) {
 	var registeredInModuleLoader;
 	{
@@ -6701,7 +7884,7 @@ class CognitoClient {
         message: 'No Cognito User available for session refresh'
       };
     }
-    let refreshToken = new CognitoRefreshToken(
+    new CognitoRefreshToken(
       {
         RefreshToken: this.refreshTokenValue
       }
@@ -7000,7 +8183,7 @@ class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      this.host = host;
+      this.host = host?.replace(/\/+$/, ""); // Remove extra trailing slash
     }
     if (userPoolId && clientId) {
       this.userPoolId = userPoolId;
@@ -7037,8 +8220,8 @@ class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
-      headers['Authorization'] = this.cognitoClient.idToken;
+    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.accessToken) {
+      headers['Authorization'] = this.cognitoClient.accessToken;
     }
     if (body) {
       if (typeof body === 'string') {
@@ -7055,15 +8238,27 @@ class ApiClient {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       fetch(url, options)
-        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(r => r.json().then(data => ({httpStatus: r.status, body: data})))
         .then(obj => {
           response = obj.body;
           if (!response.status) {
             response.status = obj.httpStatus;
           }
           resolve();
+        })
+        .catch(error => {
+          // Handle "failed to fetch" errors here
+          if (error.message === "Failed to fetch") {
+            console.error('Fetch failed, but execution continues:', error);
+            // You can set a default response or perform other actions
+            response = { status: 'fetch_failed', error: error };
+          } else {
+            // Handle other errors or rethrow them
+            console.error('Unhandled error:', error);
+          }
+          resolve(); // Resolve the promise even in case of error
         });
-    }));
+    }));    
     return response;
   }
 
@@ -7099,24 +8294,28 @@ class DocumentsApi {
 
   constructor(apiClient) {
     this.apiClient = apiClient || ApiClient.instance;
-    if (!DocumentsApi.instance) { 
+    if (!DocumentsApi.instance) {
       DocumentsApi.instance = this;
-		}
+    }
   }
 
   get instance() {
-		return DocumentsApi.instance;
+    return DocumentsApi.instance;
   }
-  
+
   set instance(value) {
-		DocumentsApi.instance = value;
-	}
-    
-  async getDocuments(siteId = null, date = null, tz = null, previous = null, next = null, limit = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    DocumentsApi.instance = value;
+  }
+
+  async getDocuments({siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (deleted) {
+      params.deleted = deleted;
     }
     if (date && date.match(this.apiClient.validDateRegExp)) {
       params.date = date;
@@ -7124,14 +8323,14 @@ class DocumentsApi {
         params.tz = tz;
       }
     }
-    if (previous && previous.length) {
-      params.previous = previous;
+    if (limit) {
+      params.limit = limit;
     }
     if (next && next.length) {
       params.next = next;
     }
-    if (limit) {
-      params.limit = limit;
+    if (previous && previous.length) {
+      params.previous = previous;
     }
     const url = `${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
@@ -7139,11 +8338,15 @@ class DocumentsApi {
   }
 
   // docs about documentSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentSearchBody
-  async searchDocuments(documentSearchBody, siteId = null, limit = null, next = null, previous = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async searchDocuments({siteId, documentSearchBody, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
     }
     if (previous && previous.length) {
       params.previous = previous;
@@ -7151,110 +8354,145 @@ class DocumentsApi {
     if (next && next.length) {
       params.next = next;
     }
-    if (limit) {
-      params.limit = limit;
-    }
     const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', documentSearchBody);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocument(documentId, siteId = null) {
-    if (!documentId) {
+  async getDocument({siteId, documentId}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocument(addOrUpdateDocumentParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addDocument({siteId, addOrUpdateDocumentParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
   /**
-	 * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
+   * Add a document without requiring authentication (uses a /public endpoint, which can be enabled or disabled using CloudFormation)
    * Expected use is for submitting web forms
-	 */
-  async addDocumentUsingPublicPath(addOrUpdateDocumentParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+   */
+  async addDocumentUsingPublicPath({siteId, addOrUpdateDocumentParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/public/documents${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocument(documentId, addOrUpdateDocumentParameters, siteId = null) {
-    if (!documentId) {
+  async updateDocument({siteId, documentId, addOrUpdateDocumentParameters}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addOrUpdateDocumentParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocument(documentId, siteId = null) {
-    if (!documentId) {
+  async deleteDocument({siteId, documentId, softDelete = null}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (softDelete && softDelete.length) {
+      params.softDelete = softDelete;
     }
     const url = `${this.apiClient.host}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTags(documentId, siteId = null, limit = null) {
-    if (!documentId) {
+  async restoreDocument({siteId, documentId}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentTags({siteId, documentId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
     if (limit) {
       params.limit = limit;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentTag(documentId, tagKey, siteId = null) {
+  async getDocumentTag({siteId, documentId, tagKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!documentId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No documentId specified'
       });
     }
     if (!tagKey) {
@@ -7262,49 +8500,55 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addDocumentTag(documentId, addDocumentTagParameters, siteId = null) {
-    if (!documentId) {
+  async addDocumentTag({siteId, documentId, addDocumentTagParameters}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/tags${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addDocumentTagParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async updateDocumentTag(documentId, tagKey, tagValues = null, siteId = null) {
-    if (!documentId) {
+  async updateDocumentTag({siteId, documentId, tagKey, tagValues = null}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PUT', tagValues);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteDocumentTag(documentId, tagKey, siteId = null) {
+  async deleteDocumentTag({siteId, documentId, tagKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!documentId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No documentId specified'
       });
     }
     if (!tagKey) {
@@ -7312,27 +8556,26 @@ class DocumentsApi {
         'message': 'No tag key specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/documents/${documentId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentContent(documentId, versionKey = null, inline = false, siteId = null) {
-    if (!documentId) {
+  async getDocumentContent({siteId, documentId, versionKey = null, inline = false}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
     if (versionKey) {
       params.versionKey = versionKey;
-    }
-    if (siteId) {
-      params.siteId = siteId;
     }
     params.inline = inline;
     const url = `${this.apiClient.host}/documents/${documentId}/content${this.apiClient.buildQueryString(params)}`;
@@ -7340,64 +8583,80 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentUrl(documentId, versionKey = null, inline = false, siteId = null) {
-    if (!documentId) {
+  async getDocumentUrl({siteId, documentId, versionKey = null, inline = false}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
     if (versionKey) {
       params.versionKey = versionKey;
-    }
-    if (siteId) {
-      params.siteId = siteId;
     }
     params.inline = inline;
     const url = `${this.apiClient.host}/documents/${documentId}/url${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  
-  /*
-  async convertDocumentToFormat(documentId, mime, versionKey) {
-    if (!documentId) {
+
+  async getDocumentOcr({siteId, documentId, outputType = 'TEXT'}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const body = {
-      mime
-    };
-    if (versionKey) {
-      body.versionKey = versionKey;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
-    const url = `${this.apiClient.host}/documents/${documentId}/formats`;
-    const options = this.apiClient.buildOptions('POST', body);
+    const params = {siteId};
+    if (outputType) {
+      params.outputType = outputType;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/ocr${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
-  */
 
-  async getDocumentVersions(documentId, siteId = null) {
-    if (!documentId) {
+  async getDocumentVersions({siteId, documentId, limit = null, next = null}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/documents/${documentId}/versions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async putDocumentVersion(documentId, versionKey, siteId = null) {
+  // TODO: add the replacement POST endpoint, once this is ready to deprecate pre version 2.*+
+  async putDocumentVersion({siteId, documentId, versionKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!documentId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No documentId specified'
       });
     }
     if (!versionKey) {
@@ -7405,11 +8664,7 @@ class DocumentsApi {
         'message': 'No version key specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const body = {
       versionKey
     };
@@ -7418,26 +8673,124 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getDocumentActions(documentId, siteId = null) {
+  async deleteDocumentVersion({siteId, documentId, versionKey}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!versionKey) {
+      return JSON.stringify({
+        'message': 'No version key specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/versions/${versionKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAccessAttributes({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
     if (!documentId) {
       return JSON.stringify({
         'message': 'No document ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAccessAttributes({siteId, documentId, addDocumentAccessAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentAccessAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAccessAttributes({siteId, documentId, addDocumentAccessAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addDocumentAccessAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAccessAttributes({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No site ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+
+    const url = `${this.apiClient.host}/documents/${documentId}/accessAttributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentActions({siteId, documentId, limit = null, next = null}) {
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/documents/${documentId}/actions${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async postDocumentActions(documentId, actions, siteId = null) {
+  async postDocumentActions({siteId, documentId, actions}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!documentId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No documentId specified'
       });
     }
     if (!actions) {
@@ -7445,11 +8798,7 @@ class DocumentsApi {
         'message': 'No actions specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const body = {
       actions
     };
@@ -7458,12 +8807,71 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUpload(path, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async retryDocumentActions({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/actions/retry${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getWorkflowsInDocument({siteId, documentId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDecisionToDocumentWorkflow({siteId, documentId, workflowId, addDecisionParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflowId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/workflow/${workflowId}/decisions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDecisionParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async getSignedUrlForNewDocumentUpload({siteId, path}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
     if (path) {
       params.path = path;
     }
@@ -7472,12 +8880,13 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForNewDocumentUploadWithBody(uploadBody, siteId = null, contentLength = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getSignedUrlForNewDocumentUploadWithBody({siteId, uploadBody, contentLength = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     if (contentLength) {
       params.contentLength = contentLength;
     }
@@ -7486,17 +8895,18 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getSignedUrlForDocumentReplacementUpload(documentId, path = null, siteId = null, contentLength = null) {
-    if (!documentId) {
+  async getSignedUrlForDocumentReplacementUpload({siteId, documentId, path = null, contentLength = null}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     if (path) {
       params.path = path;
     }
@@ -7508,17 +8918,18 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async postDocumentCompress(documentIds, siteId = null) {
+  async postDocumentCompress({siteId, documentIds}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!documentIds) {
       return JSON.stringify({
         'message': 'No document IDs specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const body = {
       documentIds
     };
@@ -7527,33 +8938,99 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async editDocumentWithOnlyoffice(documentId, siteId = null) {
-    if (!documentId) {
+  async getUserActivities({siteId, userId = null, limit = null, next = null}) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+    const params = {siteId};
+    if (userId) {
+      params.userId = siteId;
     }
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities({siteId, documentId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentSyncs({siteId, documentId, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/syncs${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async editDocumentWithOnlyoffice({siteId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createDocumentWithOnlyoffice(extension, path = null, siteId = null) {
+  async createDocumentWithOnlyoffice({siteId, extension, path = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!extension) {
       return JSON.stringify({
         'message': 'No extension specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     if (path) {
       params.path = path;
     }
@@ -7565,12 +9042,13 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async moveDocument(source, target, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async moveDocument({siteId, source, target}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const body = {
       source,
       target
@@ -7580,12 +9058,35 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async createFolder(path, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getFolders({siteId, indexKey, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
+    if (indexKey) {
+      params.indexKey = indexKey;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/folders${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async createFolder({siteId, path}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
     const body = {
       path
     };
@@ -7594,32 +9095,37 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteFolder(indexKey, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async deleteFolder({siteId, indexKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/indices/folder/${indexKey}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getESignatureConfig(siteId = null) {
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+  async getESignatureConfig({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/esignature/docusign/config${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async setESignatureConfig(siteId = null, privateKey, userId, clientId) {
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+  async setESignatureConfig({siteId, privateKey, userId, clientId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const body = {
       privateKey,
       userId,
@@ -7630,16 +9136,26 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async sendForDocusignESignature(documentId, siteId = null, emailSubject = '', status = 'created', developmentMode = true, signers = [], carbonCopies = []) {
-    if (!documentId) {
+  async sendForDocusignESignature({
+                                    siteId,
+                                    documentId,
+                                    emailSubject = '',
+                                    status = 'created',
+                                    developmentMode = true,
+                                    signers = [],
+                                    carbonCopies = []
+                                  }) {
+    if (!siteId) {
       return JSON.stringify({
-        'message': 'No document ID specified'
+        'message': 'No siteId specified'
       });
     }
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
     }
+    const params = {siteId};
     const body = {
       status,
       developmentMode,
@@ -7654,11 +9170,461 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  buildDocumentParametersForAddOrUpdate(content, contentType, path, tags) {
+  async getExaminePdfUploadUrl({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getExaminePdfDetails({siteId, objectId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!objectId) {
+      return JSON.stringify({
+        'message': 'No objectId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/objects/examine/${objectId}/pdf${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getAttributes({siteId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addAttribute({siteId, addAttributeParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addAttributeParameters) {
+      return JSON.stringify({
+        'message': 'No addAttributeParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addAttributeParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteAttribute({siteId, key}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId, key};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributes({siteId, limit = null, next = null, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentAttributes({siteId, ws, documentId, addDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+
+    if (!ws) {
+      return JSON.stringify({
+        'message': 'No ws specified'
+      });
+    }
+
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+
+    if (!addDocumentAttributesParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentAttributesParameters specified'
+      });
+    }
+
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributes({siteId, documentId, setDocumentAttributesParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId, documentId};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentAttributesParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setDocumentAttributeValue({siteId, documentId, attributeKey, setDocumentsAttributeValueParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setDocumentsAttributeValueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttribute({siteId, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentAttributeValue({siteId, documentId, attributeKey, attributeValue}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    if (!attributeValue) {
+      return JSON.stringify({
+        'message': 'No attributeValue specified'
+      });
+    }
+    const params = {siteId, documentId, attributeKey, attributeValue};
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/${attributeValue}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentAttributeVersions({siteId, limit = null, next = null, documentId, attributeKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    if (!attributeKey) {
+      return JSON.stringify({
+        'message': 'No attributeKey specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/attributes/${attributeKey}/versions${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addDocumentGenerate({siteId, documentId, addDocumentGenerateParameters}) {
+    if (!addDocumentGenerateParameters) {
+      return JSON.stringify({
+        'message': 'No addDocumentGenerateParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/generate${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addDocumentGenerateParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserActivities({siteId, limit = null, next = null, userId = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (userId) {
+      params.userId = userId;
+    }
+    const url = `${this.apiClient.host}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentUserActivities({siteId, limit = null, next = null, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/documents/${documentId}/userActivities${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async restoreDocument({siteId, documentId}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No documentId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/restore${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMappings({siteId, limit = null, next = null, }) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addMapping({siteId, addMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!addMappingParameters) {
+      return JSON.stringify({
+        'message': 'No addMappingParameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setMapping({siteId, mappingId, setMappingParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', setMappingParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteMapping({siteId, mappingId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!mappingId) {
+      return JSON.stringify({
+        'message': 'No mappingId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/mappings/${mappingId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  buildDocumentParametersForAddOrUpdate({content, contentType, path, tags}) {
     return new AddOrUpdateDocumentParameters(content, contentType, path, tags);
   }
 
-  buildDocumentTagParametersForAdd(key, value) {
+  buildDocumentTagParametersForAdd({key, value}) {
     return new AddDocumentTagParameters(key, value);
   }
 
@@ -7686,12 +9652,12 @@ class AddOrUpdateDocumentParameters {
     }
   }
 
-  addChildDocument(content, contentType, path, tags, actions) {
+  addChildDocument({content, contentType, path, tags, actions}) {
     const document = new AddOrUpdateDocumentParameters(content, contentType, path, tags, actions);
     this.documents.push(document);
   }
 
-  addAttachment(path, tags) {
+  addAttachment({path, tags}) {
     const document = new AddOrUpdateDocumentParameters(null, null, path, tags);
     this.documents.push(document);
   }
@@ -7913,238 +9879,6 @@ class WebFormsHandler {
 
 }
 
-class ConfigurationApi {
-
-  constructor(apiClient) {
-    this.apiClient = apiClient || ApiClient.instance;
-    if (!ConfigurationApi.instance) { 
-      ConfigurationApi.instance = this;
-		}
-  }
-
-  get instance() {
-		return ConfigurationApi.instance;
-  }
-  
-  set instance(value) {
-		ConfigurationApi.instance = value;
-	}
-    
-  async getConfiguration(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async updateConfiguration(updateConfigurationParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/configuration${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getApiKeys(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async addApiKey(addApiKeyParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/configuration/apiKeys${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async deleteApiKey(apiKey, siteId = null) {
-    if (!apiKey) {
-      return JSON.stringify({
-        'message': 'No API Key specified'
-      });
-    }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/configuration/apiKeys/${apiKey}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-}
-
-class PresetsApi {
-
-  constructor(apiClient) {
-    this.apiClient = apiClient || ApiClient.instance;
-    if (!PresetsApi.instance) { 
-      PresetsApi.instance = this;
-		}
-  }
-
-  get instance() {
-		return PresetsApi.instance;
-  }
-  
-  set instance(value) {
-		PresetsApi.instance = value;
-	}
-    
-  async getPresets(siteId, previous, next, limit) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    if (previous && previous.length) {
-      params.previous = previous;
-    }
-    if (next && next.length) {
-      params.next = next;
-    }
-    if (limit) {
-      params.limit = limit;
-    }
-    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async addPreset(addPresetParameters, siteId) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/presets${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addPresetParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async deletePreset(presetId, siteId) {
-    if (!presetId) {
-      return JSON.stringify({
-        'message': 'No preset ID specified'
-      });
-    }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/presets/${presetId}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async getPresetTags(presetId) {
-    if (!presetId) {
-      return JSON.stringify({
-        'message': 'No preset ID specified'
-      });
-    }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('GET');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async addPresetTag(presetId, addPresetTagParameters) {
-    if (!presetId) {
-      return JSON.stringify({
-        'message': 'No preset ID specified'
-      });
-    }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/presets/${presetId}/tags${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addPresetTagParameters);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async deletePresetTag(presetId, tagKey) {
-    if (!presetId) {
-      return JSON.stringify({
-        'message': 'No preset ID specified'
-      });
-    }
-    if (!tagKey) {
-      return JSON.stringify({
-        'message': 'No tag key specified'
-      });
-    }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/presets/${presetId}/tags/${tagKey}${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('DELETE');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  buildPresetParametersForAdd(name, tags) {
-    return new AddPresetParameters(name, tags);
-  }
-
-  buildPresetTagParametersForAdd(key, value) {
-    return new AddPresetTagParameters(key, value);
-  }
-
-}
-
-class AddPresetParameters {
-
-  constructor(name, tags) {
-    if (name) {
-      this.name = name;
-    }
-    if (tags) {
-      this.tags = tags;
-    }
-  }
-
-}
-
-class AddPresetTagParameters {
-
-  constructor(key, value) {
-    if (key) {
-      this.key = key;
-    }
-    if (value) {
-      this.value = value;
-    }
-  }
-
-}
-
 class SearchApi {
 
   constructor(apiClient) {
@@ -8162,32 +9896,35 @@ class SearchApi {
 		SearchApi.instance = value;
 	}
     
-  async search(searchParameters, siteId, previous, next, limit) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async search({searchParameters, siteId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     if (previous && previous.length) {
-        params.previous = previous;
-      }
-      if (next && next.length) {
-        params.next = next;
-      }
-      if (limit) {
-        params.limit = limit;
-      }
+      params.previous = previous;
+    }
     const url = `${this.apiClient.host}/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', searchParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
   // docs about documentFulltextSearchBody: https://docs.formkiq.com/docs/1.8.0/reference/README.html#DocumentFulltextSearchBody
-  async searchFulltext(documentFulltextSearchBody, siteId = null, limit = null) {
-    const params = {};
-    if (siteId) {
-      params.siteId = siteId;
+  async searchFulltext({siteId, documentFulltextSearchBody, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     if (limit) {
       params.limit = limit;
     }
@@ -8196,27 +9933,25 @@ class SearchApi {
     return await this.apiClient.fetchAndRespond(url, options)
   }
 
-  async searchIndices(indexType, siteId, previous, next, limit) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async searchIndices({siteId, indexType, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
-    if (previous && previous.length) {
-        params.previous = previous;
-      }
-      if (next && next.length) {
-        params.next = next;
-      }
-      if (limit) {
-        params.limit = limit;
-      }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
     const url = `${this.apiClient.host}/indices/search${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', {indexType});
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  buildTagSearchParameters(key, beginsWith, eq) {
+  buildTagSearchParameters({key, beginsWith, eq}) {
     return new TagSearchParameters(key, beginsWith, eq);
   }
 
@@ -8258,14 +9993,218 @@ class SitesApi {
 		SitesApi.instance = value;
 	}
     
-  async getSites(siteId) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
-    const url = `${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
+  async getSites() {
+    const url = `${this.apiClient.host}/sites`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getConfiguration({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/configuration`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateConfiguration({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/configuration`;
+    const options = this.apiClient.buildOptions('PATCH', updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getApiKeys({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addApiKey({siteId, addApiKeyParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
+    const options = this.apiClient.buildOptions('POST', addApiKeyParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  // NOTE: apiKey is the OBFUSCATED key, i.e., the one with the '****' within it
+  async deleteApiKey({siteId, apiKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!apiKey) {
+      return JSON.stringify({
+        'message': 'No API Key specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys/${apiKey}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getOpenPolicyAgentPolicies() {
+    const url = `${this.apiClient.host}/sites/opa/accessPolicies`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getOpenPolicyAgentPolicy({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getOpenPolicyAgentPolicyItems({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setOpenPolicyAgentPolicyItems({siteId, updateConfigurationParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('PUT',updateConfigurationParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteOpenPolicyAgentPolicyItems({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/opa/accessPolicy/policyItems`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addSite({addSiteParameters}) {
+    if (!addSiteParameters) {
+      return JSON.stringify({
+        'message': 'No addSiteParameters specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites`;
+    const options = this.apiClient.buildOptions('POST', addSiteParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateSite({siteId, updateSiteParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!updateSiteParameters) {
+      return JSON.stringify({
+        'message': 'No updateSiteParameters specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}`;
+    const options = this.apiClient.buildOptions('PATCH', updateSiteParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getSiteGroups({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/groups`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getSiteGroupPermissions({siteId, groupName}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setSiteGroupPermissions({siteId, groupName, updateSiteGroupPermissions}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    if (!updateSiteGroupPermissions) {
+      return JSON.stringify({
+        'message': 'No updateSiteGroupPermissions specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/groups/${groupName}/permissions`;
+    const options = this.apiClient.buildOptions('PUT', updateSiteGroupPermissions);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteSiteGroupPermissions({siteId, groupName}){
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -8313,41 +10252,1226 @@ class WebhooksApi {
 		WebhooksApi.instance = value;
 	}
     
-  async getWebhooks(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getWebhooks({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWebhook(addWebhookParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addWebhook({siteId, addWebhookParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addWebhookParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteWebhook(webhookId, siteId = null) {
+  async deleteWebhook({siteId, webhookId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!webhookId) {
       return JSON.stringify({
         'message': 'No webhook ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
+class WorkflowsApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!WorkflowsApi.instance) { 
+      WorkflowsApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return WorkflowsApi.instance;
+  }
+  
+  set instance(value) {
+		WorkflowsApi.instance = value;
+	}
+    
+  async getWorkflows({siteId, status = null, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (status) {
+      params.status = status;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getWorkflow({siteId, workflowId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWorkflow({siteId, addWorkflowParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addWorkflowParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putWorkflow({siteId, workflowId, addWorkflowParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addWorkflowParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteWorkflow({siteId, workflowId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!workflowId) {
+      return JSON.stringify({
+        'message': 'No workflow ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/workflows/${workflowId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getQueues({siteId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addQueue({siteId, addQueueParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/queues${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addQueueParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getQueue({siteId, queueId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!queueId) {
+      return JSON.stringify({
+        'message': 'No queue ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteQueue({siteId, queueId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!queueId) {
+      return JSON.stringify({
+        'message': 'No queue ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/queues/${queueId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentsInQueue({siteId, queueId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/queues/${queueId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getDocumentsInWorkflow({siteId, workflowId, limit = null, next = null, previous = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (previous && previous.length) {
+      params.previous = previous;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/workflows/${workflowId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addWorkflowToDocument({siteId, documentId, workflowId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/documents/${documentId}/workflows${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', {"documentId": documentId, "workflowId": workflowId});
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
+class RulesetsApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!RulesetsApi.instance) {
+      RulesetsApi.instance = this;
+		}
+  }
+
+  get instance() {
+		return RulesetsApi.instance;
+  }
+  
+  set instance(value) {
+		RulesetsApi.instance = value;
+	}
+    
+  async getRulesets({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRuleset({siteId, rulesetId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addRuleset({siteId, addRulesetParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addRulesetParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async patchRuleset({siteId, rulesetId, addRulesetParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addRulesetParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteRuleset({siteId, rulesetId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
+    }
+    const params = {siteId};
+
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRules({siteId, rulesetId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addRule({siteId, rulesetId, addRuleParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addRuleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getRule({siteId, rulesetId, ruleId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async patchRule({siteId, rulesetId, ruleId, addRuleParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addRuleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteRule({siteId, rulesetId, ruleId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!rulesetId) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/rulesets/${rulesetId}/rules/${ruleId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+}
+
+class CasesApi {
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!CasesApi.instance) {
+      CasesApi.instance = this;
+    }
+  }
+
+  get instance() {
+    return CasesApi.instance;
+  }
+
+  set instance(value) {
+    CasesApi.instance = value;
+  }
+
+  async getCases({siteId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }   
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addCase({siteId, addCaseParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }   
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addCaseParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getCase({siteId, caseId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }   
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteCase({siteId, caseId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }   
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getTasks({siteId, caseId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    } 
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getNigos({siteId, caseId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    } 
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateCase({siteId, caseId, addCaseParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addCaseParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  };
+
+  async getCaseDocuments({siteId, caseId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentFromCase({siteId, caseId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getTask({siteId, caseId, taskId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getNigo({siteId, caseId, nigoId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addTask({siteId, addTaskParameters, caseId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!addTaskParameters) {
+      return JSON.stringify({
+        'message': 'No task parameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addTaskParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addNigo({siteId, addNigoParameters, caseId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!addNigoParameters) {
+      return JSON.stringify({
+        'message': 'No NIGO parameters specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addNigoParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async deleteDocumentFromTask({siteId, caseId, taskId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteDocumentFromNigo({siteId, caseId, nigoId, documentId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    if (!documentId) {
+      return JSON.stringify({
+        'message': 'No document ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}/documents/${documentId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+
+  async updateTask({siteId, caseId, taskId, addTaskParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addTaskParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  };
+
+  async getTaskDocuments({siteId, caseId, taskId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  };
+
+  async deleteTask({siteId, caseId, taskId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!taskId) {
+      return JSON.stringify({
+        'message': 'No task ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/tasks/${taskId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateNigo({siteId, caseId, nigoId, addNigoParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addNigoParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  };
+
+  async getNigoDocuments({siteId, caseId, nigoId, next = null, limit = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {siteId};
+    if (next && next.length) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}/documents${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  };
+
+  async deleteNigo({siteId, caseId, nigoId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!caseId) {
+      return JSON.stringify({
+        'message': 'No case ID specified'
+      });
+    }
+    if (!nigoId) {
+      return JSON.stringify({
+        'message': 'No NIGO ID specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/cases/${caseId}/nigos/${nigoId}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+}
+
+class SchemasApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!SchemasApi.instance) {
+      SchemasApi.instance = this;
+    }
+  }
+
+  get instance() {
+    return SchemasApi.instance;
+  }
+
+  set instance(value) {
+    SchemasApi.instance = value;
+  }
+
+  async getSiteSchema({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/schema/document`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setSiteSchema({siteId, schema}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!schema) {
+      return JSON.stringify({
+        'message': 'No schema specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/schema/document`;
+    const options = this.apiClient.buildOptions('PUT', schema);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getSiteClassifications({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addSiteClassification({siteId, classification}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!classification) {
+      return JSON.stringify({
+        'message': 'No classification specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications`;
+    const options = this.apiClient.buildOptions('POST', classification);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getClassification({siteId, classificationId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!classificationId) {
+      return JSON.stringify({
+        'message': 'No classificationId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteClassification({siteId, classificationId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!classificationId) {
+      return JSON.stringify({
+        'message': 'No classificationId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setClassification({siteId, classificationId, classification}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!classificationId) {
+      return JSON.stringify({
+        'message': 'No classificationId specified'
+      });
+    }
+    if (!classification) {
+      return JSON.stringify({
+        'message': 'No classification specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/classifications/${classificationId}`;
+    const options = this.apiClient.buildOptions('PUT', classification);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+}
+
+class UserManagementApi {
+
+  constructor(apiClient) {
+    this.apiClient = apiClient || ApiClient.instance;
+    if (!UserManagementApi.instance) {
+      UserManagementApi.instance = this;
+    }
+  }
+
+  get instance() {
+    return UserManagementApi.instance;
+  }
+
+  set instance(value) {
+    UserManagementApi.instance = value;
+  }
+
+  async getGroups({limit = null, next = null}) {
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/groups${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addGroup({groupBody}) {
+    if (!groupBody) {
+      return JSON.stringify({
+        'message': 'No groupBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups`;
+    const options = this.apiClient.buildOptions('POST', groupBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getGroup({groupName}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteGroup({groupName}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getGroupUsers({groupName, limit = null, next = null}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addUserToGroup({groupName, userBody}) {
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    if (!userBody) {
+      return JSON.stringify({
+        'message': 'No userBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users`;
+    const options = this.apiClient.buildOptions('POST', userBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteUserFromGroup({groupName, username}){
+    if (!groupName) {
+      return JSON.stringify({
+        'message': 'No groupName specified'
+      });
+    }
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/groups/${groupName}/users/${username}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUsers({limit = null, next = null}) {
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/users${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addUser({userBody}) {
+    if (!userBody) {
+      return JSON.stringify({
+        'message': 'No userBody specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users`;
+    const options = this.apiClient.buildOptions('POST', userBody);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUser({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteUser({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getUserGroups({username}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}/groups`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async setUserOperation({username, userOperation}) {
+    if (!username) {
+      return JSON.stringify({
+        'message': 'No username specified'
+      });
+    }
+    if (!userOperation) {
+      return JSON.stringify({
+        'message': 'No userOperation specified'
+      });
+    }
+    const url = `${this.apiClient.host}/users/${username}/${userOperation}`;
+    const options = this.apiClient.buildOptions('PUT',);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -8357,13 +11481,16 @@ class FormkiqClient {
     
   constructor(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi = new ConfigurationApi();
     this.documentsApi = new DocumentsApi();
-    this.presetsApi = new PresetsApi();
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
+    this.workflowsApi = new WorkflowsApi();
+    this.rulesetsApi = new RulesetsApi();
+    this.casesApi = new CasesApi();
+    this.schemasApi = new SchemasApi();
+    this.userManagementApi = new UserManagementApi();
     this.webFormsHandler = new WebFormsHandler();
     this.webFormsHandler.checkWebFormsInDocument();
   }
@@ -8373,13 +11500,16 @@ class FormkiqClient {
       const response = await this.apiClient.cognitoClient.login(email, password);
 
       // TODO: determine better way of ensuring cognito client is updated across API instances
-      this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-      this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
       return response;
     } else {
@@ -8393,26 +11523,32 @@ class FormkiqClient {
     const response = await this.apiClient.logout();
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
 
     return response;
   }
 
   resetClient(host, userPoolId, clientId) {
     this.apiClient = new ApiClient(host, userPoolId, clientId);
-    this.configurationApi.apiClient = this.apiClient;
     this.documentsApi.apiClient = this.apiClient;
-    this.presetsApi.apiClient = this.apiClient;
     this.searchApi.apiClient = this.apiClient;
     this.sitesApi.apiClient = this.apiClient;
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
+    this.workflowsApi.apiClient = this.apiClient;
+    this.rulesetsApi.apiClient = this.apiClient;
+    this.casesApi.apiClient = this.apiClient;
+    this.schemasApi.apiClient = this.apiClient;
+    this.userManagementApi.apiClient = this.apiClient;
   }
 
   rebuildCognitoClient(username, idToken, accessToken, refreshToken) {
@@ -8422,13 +11558,16 @@ class FormkiqClient {
     this.apiClient.cognitoClient.refreshToken = refreshToken;
     
     // TODO: determine better way of ensuring cognito client is updated across API instances
-    this.configurationApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
-    this.presetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.rulesetsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.casesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.schemasApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.userManagementApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
   }
 
 }

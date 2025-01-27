@@ -33,6 +33,8 @@ export default {
 		'http',
 		'https',
 		'url',
-		'zlib'
+		'zlib',
+		'crypto-js',
+		'crypto-js/core'
 	]
 };

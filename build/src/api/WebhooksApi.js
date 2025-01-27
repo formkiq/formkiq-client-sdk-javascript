@@ -17,39 +17,48 @@ export class WebhooksApi {
 		WebhooksApi.instance = value;
 	}
     
-  async getWebhooks(siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async getWebhooks({siteId, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
     }
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addWebhook(addWebhookParameters, siteId = null) {
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
+  async addWebhook({siteId, addWebhookParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
     }
+    const params = {siteId};
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addWebhookParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteWebhook(webhookId, siteId = null) {
+  async deleteWebhook({siteId, webhookId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
     if (!webhookId) {
       return JSON.stringify({
         'message': 'No webhook ID specified'
       });
     }
-    const params = {
-    };
-    if (siteId) {
-      params.siteId = siteId;
-    }
+    const params = {siteId};
     const url = `${this.apiClient.host}/webhooks/${webhookId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);

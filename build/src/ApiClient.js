@@ -18,7 +18,7 @@ export class ApiClient {
 
   constructor(host, userPoolId, clientId) {
     if (host) {
-      this.host = host;
+      this.host = host?.replace(/\/+$/, ""); // Remove extra trailing slash
     }
     if (userPoolId && clientId) {
       this.userPoolId = userPoolId;
@@ -55,8 +55,8 @@ export class ApiClient {
     if (!headers) {
       headers = {};
     }
-    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.idToken) {
-      headers['Authorization'] = this.cognitoClient.idToken;
+    if (!stripAuthentication && this.cognitoClient && this.cognitoClient.accessToken) {
+      headers['Authorization'] = this.cognitoClient.accessToken;
     }
     if (body) {
       if (typeof body === 'string') {
@@ -73,15 +73,27 @@ export class ApiClient {
     let response;
     await Promise.resolve(new Promise((resolve) => {
       fetch(url, options)
-        .then(r =>  r.json().then(data => ({httpStatus: r.status, body: data})))
+        .then(r => r.json().then(data => ({httpStatus: r.status, body: data})))
         .then(obj => {
           response = obj.body;
           if (!response.status) {
             response.status = obj.httpStatus;
           }
           resolve();
+        })
+        .catch(error => {
+          // Handle "failed to fetch" errors here
+          if (error.message === "Failed to fetch") {
+            console.error('Fetch failed, but execution continues:', error);
+            // You can set a default response or perform other actions
+            response = { status: 'fetch_failed', error: error };
+          } else {
+            // Handle other errors or rethrow them
+            console.error('Unhandled error:', error);
+          }
+          resolve(); // Resolve the promise even in case of error
         });
-    }));
+    }));    
     return response;
   }
 

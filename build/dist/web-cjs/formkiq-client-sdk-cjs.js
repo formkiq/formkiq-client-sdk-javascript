@@ -6,6 +6,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var CryptoJS = require('crypto-js/core');
 
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var CryptoJS__default = /*#__PURE__*/_interopDefault(CryptoJS);
+
 /*!
  * Copyright 2016 Amazon.com,
  * Inc. or its affiliates. All Rights Reserved.
@@ -2101,19 +2105,18 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-var empty = {};
-
-var empty$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  'default': empty
-});
-
-var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(empty$1);
-
 (function (root, factory) {
-	{
+	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory();
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define([], factory);
+	}
+	else {
+		// Global (browser)
+		root.CryptoJS = factory();
 	}
 }(undefined, function () {
 
@@ -2152,9 +2155,9 @@ var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(empty$1);
 	    }
 
 	    // Native crypto import via require (NodeJS)
-	    if (!crypto && typeof commonjsRequire === 'function') {
+	    if (!crypto && typeof require === 'function') {
 	        try {
-	            crypto = require$$0$2;
+	            crypto = require('crypto');
 	        } catch (err) {}
 	    }
 
@@ -3349,9 +3352,9 @@ if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
 } // Native crypto import via require (NodeJS)
 
 
-if (!crypto && typeof commonjsRequire === 'function') {
+if (!crypto && typeof require === 'function') {
   try {
-    crypto = require$$0$2;
+    crypto = require('crypto');
   } catch (err) {}
 }
 /*
@@ -4495,7 +4498,7 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   ;
 
   _proto.hash = function hash(buf) {
-    var str = buf instanceof Buffer ? CryptoJS.lib.WordArray.create(buf) : buf;
+    var str = buf instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(buf) : buf;
     var hashHex = sha256(str).toString();
     return new Array(64 - hashHex.length).join('0') + hashHex;
   }
@@ -4520,9 +4523,9 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   ;
 
   _proto.computehkdf = function computehkdf(ikm, salt) {
-    var infoBitsWordArray = CryptoJS.lib.WordArray.create(Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]));
-    var ikmWordArray = ikm instanceof Buffer ? CryptoJS.lib.WordArray.create(ikm) : ikm;
-    var saltWordArray = salt instanceof Buffer ? CryptoJS.lib.WordArray.create(salt) : salt;
+    var infoBitsWordArray = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]));
+    var ikmWordArray = ikm instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(ikm) : ikm;
+    var saltWordArray = salt instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(salt) : salt;
     var prk = hmacSha256(ikmWordArray, saltWordArray);
     var hmac = hmacSha256(infoBitsWordArray, prk);
     return Buffer.from(hmac.toString(), 'hex').slice(0, 16);
@@ -5599,8 +5602,8 @@ var CognitoUser = /*#__PURE__*/function () {
           }
 
           var dateNow = dateHelper.getNowString();
-          var message = CryptoJS.lib.WordArray.create(Buffer.concat([Buffer.from(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
-          var key = CryptoJS.lib.WordArray.create(hkdf);
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
           var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this2.username;
@@ -5934,8 +5937,8 @@ var CognitoUser = /*#__PURE__*/function () {
           }
 
           var dateNow = dateHelper.getNowString();
-          var message = CryptoJS.lib.WordArray.create(Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
-          var key = CryptoJS.lib.WordArray.create(hkdf);
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
           var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this6.username;
@@ -10018,13 +10021,20 @@ class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getApiKeys({siteId}) {
+  async getApiKeys({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys`;
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/apiKeys${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }
@@ -10242,13 +10252,19 @@ class WebhooksApi {
 		WebhooksApi.instance = value;
 	}
     
-  async getWebhooks({siteId}) {
+  async getWebhooks({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
     const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
     const url = `${this.apiClient.host}/webhooks${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);

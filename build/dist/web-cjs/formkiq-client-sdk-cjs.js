@@ -4,6 +4,12 @@ var exports = {"__esModule": true};
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var CryptoJS = require('crypto-js/core');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var CryptoJS__default = /*#__PURE__*/_interopDefault(CryptoJS);
+
 /*!
  * Copyright 2016 Amazon.com,
  * Inc. or its affiliates. All Rights Reserved.
@@ -332,6 +338,11 @@ var INSPECT_MAX_BYTES = 50;
 Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
   ? global$1.TYPED_ARRAY_SUPPORT
   : true;
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+kMaxLength();
 
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
@@ -2094,23 +2105,94 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-var core = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
-	{
+	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory();
 	}
-}(commonjsGlobal, function () {
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define([], factory);
+	}
+	else {
+		// Global (browser)
+		root.CryptoJS = factory();
+	}
+}(undefined, function () {
+
+	/*globals window, global, require*/
 
 	/**
 	 * CryptoJS core components.
 	 */
 	var CryptoJS = CryptoJS || (function (Math, undefined$1) {
+
+	    var crypto;
+
+	    // Native crypto from window (Browser)
+	    if (typeof window !== 'undefined' && window.crypto) {
+	        crypto = window.crypto;
+	    }
+
+	    // Native crypto in web worker (Browser)
+	    if (typeof self !== 'undefined' && self.crypto) {
+	        crypto = self.crypto;
+	    }
+
+	    // Native crypto from worker
+	    if (typeof globalThis !== 'undefined' && globalThis.crypto) {
+	        crypto = globalThis.crypto;
+	    }
+
+	    // Native (experimental IE 11) crypto from window (Browser)
+	    if (!crypto && typeof window !== 'undefined' && window.msCrypto) {
+	        crypto = window.msCrypto;
+	    }
+
+	    // Native crypto from global (NodeJS)
+	    if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
+	        crypto = global$1.crypto;
+	    }
+
+	    // Native crypto import via require (NodeJS)
+	    if (!crypto && typeof require === 'function') {
+	        try {
+	            crypto = require('crypto');
+	        } catch (err) {}
+	    }
+
 	    /*
-	     * Local polyfil of Object.create
+	     * Cryptographically secure pseudorandom number generator
+	     *
+	     * As Math.random() is cryptographically not safe to use
+	     */
+	    var cryptoSecureRandomInt = function () {
+	        if (crypto) {
+	            // Use getRandomValues method (Browser)
+	            if (typeof crypto.getRandomValues === 'function') {
+	                try {
+	                    return crypto.getRandomValues(new Uint32Array(1))[0];
+	                } catch (err) {}
+	            }
+
+	            // Use randomBytes method (NodeJS)
+	            if (typeof crypto.randomBytes === 'function') {
+	                try {
+	                    return crypto.randomBytes(4).readInt32LE();
+	                } catch (err) {}
+	            }
+	        }
+
+	        throw new Error('Native crypto module could not be used to get secure random number.');
+	    };
+
+	    /*
+	     * Local polyfill of Object.create
+
 	     */
 	    var create = Object.create || (function () {
 	        function F() {}
+
 	        return function (obj) {
 	            var subtype;
 
@@ -2333,8 +2415,8 @@ var core = createCommonjsModule(function (module, exports) {
 	                }
 	            } else {
 	                // Copy one word at a time
-	                for (var i = 0; i < thatSigBytes; i += 4) {
-	                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
+	                for (var j = 0; j < thatSigBytes; j += 4) {
+	                    thisWords[(thisSigBytes + j) >>> 2] = thatWords[j >>> 2];
 	                }
 	            }
 	            this.sigBytes += thatSigBytes;
@@ -2392,26 +2474,8 @@ var core = createCommonjsModule(function (module, exports) {
 	        random: function (nBytes) {
 	            var words = [];
 
-	            var r = (function (m_w) {
-	                var m_w = m_w;
-	                var m_z = 0x3ade68b1;
-	                var mask = 0xffffffff;
-
-	                return function () {
-	                    m_z = (0x9069 * (m_z & 0xFFFF) + (m_z >> 0x10)) & mask;
-	                    m_w = (0x4650 * (m_w & 0xFFFF) + (m_w >> 0x10)) & mask;
-	                    var result = ((m_z << 0x10) + m_w) & mask;
-	                    result /= 0x100000000;
-	                    result += 0.5;
-	                    return result * (Math.random() > .5 ? 1 : -1);
-	                }
-	            });
-
-	            for (var i = 0, rcache; i < nBytes; i += 4) {
-	                var _r = r((rcache || Math.random()) * 0x100000000);
-
-	                rcache = _r() * 0x3ade67b7;
-	                words.push((_r() * 0x100000000) | 0);
+	            for (var i = 0; i < nBytes; i += 4) {
+	                words.push(cryptoSecureRandomInt());
 	            }
 
 	            return new WordArray.init(words, nBytes);
@@ -2642,6 +2706,8 @@ var core = createCommonjsModule(function (module, exports) {
 	         *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
 	         */
 	        _process: function (doFlush) {
+	            var processedWords;
+
 	            // Shortcuts
 	            var data = this._data;
 	            var dataWords = data.words;
@@ -2674,7 +2740,7 @@ var core = createCommonjsModule(function (module, exports) {
 	                }
 
 	                // Remove processed words
-	                var processedWords = dataWords.splice(0, nWordsReady);
+	                processedWords = dataWords.splice(0, nWordsReady);
 	                data.sigBytes -= nBytesReady;
 	            }
 
@@ -2706,7 +2772,7 @@ var core = createCommonjsModule(function (module, exports) {
 	     *
 	     * @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
 	     */
-	    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({
+	    C_lib.Hasher = BufferedBlockAlgorithm.extend({
 	        /**
 	         * Configuration options.
 	         */
@@ -2846,13 +2912,18 @@ var core = createCommonjsModule(function (module, exports) {
 	return CryptoJS;
 
 }));
+
+var core = /*#__PURE__*/Object.freeze({
+  __proto__: null
 });
 
-var libTypedarrays = createCommonjsModule(function (module, exports) {
+var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(core);
+
+createCommonjsModule(function (module, exports) {
 (function (root, factory) {
 	{
 		// CommonJS
-		module.exports = exports = factory(core);
+		module.exports = factory(require$$0$1);
 	}
 }(commonjsGlobal, function (CryptoJS) {
 
@@ -2923,7 +2994,7 @@ var sha256 = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
 	{
 		// CommonJS
-		module.exports = exports = factory(core);
+		module.exports = factory(require$$0$1);
 	}
 }(commonjsGlobal, function (CryptoJS) {
 
@@ -3117,7 +3188,7 @@ var hmac = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
 	{
 		// CommonJS
-		module.exports = exports = factory(core);
+		module.exports = factory(require$$0$1);
 	}
 }(commonjsGlobal, function (CryptoJS) {
 
@@ -3133,7 +3204,7 @@ var hmac = createCommonjsModule(function (module, exports) {
 	    /**
 	     * HMAC algorithm.
 	     */
-	    var HMAC = C_algo.HMAC = Base.extend({
+	    C_algo.HMAC = Base.extend({
 	        /**
 	         * Initializes a newly created HMAC.
 	         *
@@ -3255,7 +3326,7 @@ var hmacSha256 = createCommonjsModule(function (module, exports) {
 (function (root, factory, undef) {
 	{
 		// CommonJS
-		module.exports = exports = factory(core, sha256, hmac);
+		module.exports = factory(require$$0$1, sha256, hmac);
 	}
 }(commonjsGlobal, function (CryptoJS) {
 
@@ -3263,6 +3334,108 @@ var hmacSha256 = createCommonjsModule(function (module, exports) {
 
 }));
 });
+
+var crypto; // Native crypto from window (Browser)
+
+if (typeof window !== 'undefined' && window.crypto) {
+  crypto = window.crypto;
+} // Native (experimental IE 11) crypto from window (Browser)
+
+
+if (!crypto && typeof window !== 'undefined' && window.msCrypto) {
+  crypto = window.msCrypto;
+} // Native crypto from global (NodeJS)
+
+
+if (!crypto && typeof global$1 !== 'undefined' && global$1.crypto) {
+  crypto = global$1.crypto;
+} // Native crypto import via require (NodeJS)
+
+
+if (!crypto && typeof require === 'function') {
+  try {
+    crypto = require('crypto');
+  } catch (err) {}
+}
+/*
+ * Cryptographically secure pseudorandom number generator
+ * As Math.random() is cryptographically not safe to use
+ */
+
+
+function cryptoSecureRandomInt() {
+  if (crypto) {
+    // Use getRandomValues method (Browser)
+    if (typeof crypto.getRandomValues === 'function') {
+      try {
+        return crypto.getRandomValues(new Uint32Array(1))[0];
+      } catch (err) {}
+    } // Use randomBytes method (NodeJS)
+
+
+    if (typeof crypto.randomBytes === 'function') {
+      try {
+        return crypto.randomBytes(4).readInt32LE();
+      } catch (err) {}
+    }
+  }
+
+  throw new Error('Native crypto module could not be used to get secure random number.');
+}
+
+/**
+ * Hex encoding strategy.
+ * Converts a word array to a hex string.
+ * @param {WordArray} wordArray The word array.
+ * @return {string} The hex string.
+ * @static
+ */
+
+function hexStringify(wordArray) {
+  // Shortcuts
+  var words = wordArray.words;
+  var sigBytes = wordArray.sigBytes; // Convert
+
+  var hexChars = [];
+
+  for (var i = 0; i < sigBytes; i++) {
+    var bite = words[i >>> 2] >>> 24 - i % 4 * 8 & 0xff;
+    hexChars.push((bite >>> 4).toString(16));
+    hexChars.push((bite & 0x0f).toString(16));
+  }
+
+  return hexChars.join('');
+}
+
+var WordArray = /*#__PURE__*/function () {
+  function WordArray(words, sigBytes) {
+    words = this.words = words || [];
+
+    if (sigBytes != undefined) {
+      this.sigBytes = sigBytes;
+    } else {
+      this.sigBytes = words.length * 4;
+    }
+  }
+
+  var _proto = WordArray.prototype;
+
+  _proto.random = function random(nBytes) {
+    var words = [];
+
+    for (var i = 0; i < nBytes; i += 4) {
+      words.push(cryptoSecureRandomInt());
+    }
+
+    return new WordArray(words, nBytes);
+  };
+
+  _proto.toString = function toString() {
+    return hexStringify(this);
+  };
+
+  return WordArray;
+}();
 
 // A small implementation of BigInteger based on http://www-cs-students.stanford.edu/~tjw/jsbn/
 /*
@@ -4137,10 +4310,21 @@ BigInteger.ONE = nbv(1);
  * for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Returns a Buffer with a sequence of random nBytes
+ *
+ * @param {number} nBytes
+ * @returns {Buffer} fixed-length sequence of random bytes
+ */
 
-var randomBytes = function randomBytes(nBytes) {
-  return Buffer.from(core.lib.WordArray.random(nBytes).toString(), 'hex');
-};
+function randomBytes(nBytes) {
+  return Buffer.from(new WordArray().random(nBytes).toString(), 'hex');
+}
+/**
+ * Tests if a hex string has it most significant bit set (case-insensitive regex)
+ */
+
+var HEX_MSB_REGEX = /^[89a-f]/i;
 var initN = 'FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1' + '29024E088A67CC74020BBEA63B139B22514A08798E3404DD' + 'EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245' + 'E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7ED' + 'EE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3D' + 'C2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F' + '83655D23DCA3AD961C62F356208552BB9ED529077096966D' + '670C354E4ABC9804F1746C08CA18217C32905E462E36CE3B' + 'E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9' + 'DE2BCBF6955817183995497CEA956AE515D2261898FA0510' + '15728E5A8AAAC42DAD33170D04507A33A85521ABDF1CBA64' + 'ECFB850458DBEF0A8AEA71575D060C7DB3970F85A6E1E4C7' + 'ABF5AE8CDB0933D71E8C94E04A25619DCEE3D2261AD2EE6B' + 'F12FFA06D98A0864D87602733EC86A64521F2B18177B200C' + 'BBE117577A615D6C770988C0BAD946E208E24FA074E5AB31' + '43DB5BFCE0FD108E4B82D120A93AD2CAFFFFFFFFFFFFFFFF';
 var newPasswordRequiredChallengeUserAttributePrefix = 'userAttributes.';
 /** @class */
@@ -4153,7 +4337,7 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   function AuthenticationHelper(PoolName) {
     this.N = new BigInteger(initN, 16);
     this.g = new BigInteger('2', 16);
-    this.k = new BigInteger(this.hexHash("00" + this.N.toString(16) + "0" + this.g.toString(16)), 16);
+    this.k = new BigInteger(this.hexHash("" + this.padHex(this.N) + this.padHex(this.g)), 16);
     this.smallAValue = this.generateRandomSmallA();
     this.getLargeAValue(function () {});
     this.infoBits = Buffer.from('Caldera Derived Key', 'utf8');
@@ -4199,10 +4383,11 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   ;
 
   _proto.generateRandomSmallA = function generateRandomSmallA() {
+    // This will be interpreted as a postive 128-bit integer
     var hexRandom = randomBytes(128).toString('hex');
-    var randomBigInt = new BigInteger(hexRandom, 16);
-    var smallABigInt = randomBigInt.mod(this.N);
-    return smallABigInt;
+    var randomBigInt = new BigInteger(hexRandom, 16); // There is no need to do randomBigInt.mod(this.N - 1) as N (3072-bit) is > 128 bytes (1024-bit)
+
+    return randomBigInt;
   }
   /**
    * helper function to generate a random string
@@ -4253,7 +4438,8 @@ var AuthenticationHelper = /*#__PURE__*/function () {
     this.randomPassword = this.generateRandomString();
     var combinedString = "" + deviceGroupKey + username + ":" + this.randomPassword;
     var hashedString = this.hash(combinedString);
-    var hexRandom = randomBytes(16).toString('hex');
+    var hexRandom = randomBytes(16).toString('hex'); // The random hex will be unambiguously represented as a postive integer
+
     this.SaltToHashDevices = this.padHex(new BigInteger(hexRandom, 16));
     this.g.modPow(new BigInteger(this.hexHash(this.SaltToHashDevices + hashedString), 16), this.N, function (err, verifierDevicesNotPadded) {
       if (err) {
@@ -4312,7 +4498,7 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   ;
 
   _proto.hash = function hash(buf) {
-    var str = buf instanceof Buffer ? core.lib.WordArray.create(buf) : buf;
+    var str = buf instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(buf) : buf;
     var hashHex = sha256(str).toString();
     return new Array(64 - hashHex.length).join('0') + hashHex;
   }
@@ -4337,9 +4523,9 @@ var AuthenticationHelper = /*#__PURE__*/function () {
   ;
 
   _proto.computehkdf = function computehkdf(ikm, salt) {
-    var infoBitsWordArray = core.lib.WordArray.create(Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]));
-    var ikmWordArray = ikm instanceof Buffer ? core.lib.WordArray.create(ikm) : ikm;
-    var saltWordArray = salt instanceof Buffer ? core.lib.WordArray.create(salt) : salt;
+    var infoBitsWordArray = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([this.infoBits, Buffer.from(String.fromCharCode(1), 'utf8')]));
+    var ikmWordArray = ikm instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(ikm) : ikm;
+    var saltWordArray = salt instanceof Buffer ? CryptoJS__default["default"].lib.WordArray.create(salt) : salt;
     var prk = hmacSha256(ikmWordArray, saltWordArray);
     var hmac = hmacSha256(infoBitsWordArray, prk);
     return Buffer.from(hmac.toString(), 'hex').slice(0, 16);
@@ -4376,7 +4562,7 @@ var AuthenticationHelper = /*#__PURE__*/function () {
         callback(err, null);
       }
 
-      var hkdf = _this4.computehkdf(Buffer.from(_this4.padHex(sValue), 'hex'), Buffer.from(_this4.padHex(_this4.UValue.toString(16)), 'hex'));
+      var hkdf = _this4.computehkdf(Buffer.from(_this4.padHex(sValue), 'hex'), Buffer.from(_this4.padHex(_this4.UValue), 'hex'));
 
       callback(null, hkdf);
     });
@@ -4418,22 +4604,72 @@ var AuthenticationHelper = /*#__PURE__*/function () {
     return newPasswordRequiredChallengeUserAttributePrefix;
   }
   /**
-   * Converts a BigInteger (or hex string) to hex format padded with zeroes for hashing
-   * @param {BigInteger|String} bigInt Number or string to pad.
-   * @returns {String} Padded hex string.
+   * Returns an unambiguous, even-length hex string of the two's complement encoding of an integer.
+   *
+   * It is compatible with the hex encoding of Java's BigInteger's toByteArray(), wich returns a
+   * byte array containing the two's-complement representation of a BigInteger. The array contains
+   * the minimum number of bytes required to represent the BigInteger, including at least one sign bit.
+   *
+   * Examples showing how ambiguity is avoided by left padding with:
+   * 	"00" (for positive values where the most-significant-bit is set)
+   *  "FF" (for negative values where the most-significant-bit is set)
+   *
+   * padHex(bigInteger.fromInt(-236))  === "FF14"
+   * padHex(bigInteger.fromInt(20))    === "14"
+   *
+   * padHex(bigInteger.fromInt(-200))  === "FF38"
+   * padHex(bigInteger.fromInt(56))    === "38"
+   *
+   * padHex(bigInteger.fromInt(-20))   === "EC"
+   * padHex(bigInteger.fromInt(236))   === "00EC"
+   *
+   * padHex(bigInteger.fromInt(-56))   === "C8"
+   * padHex(bigInteger.fromInt(200))   === "00C8"
+   *
+   * @param {BigInteger} bigInt Number to encode.
+   * @returns {String} even-length hex string of the two's complement encoding.
    */
   ;
 
   _proto.padHex = function padHex(bigInt) {
-    var hashStr = bigInt.toString(16);
-
-    if (hashStr.length % 2 === 1) {
-      hashStr = "0" + hashStr;
-    } else if ('89ABCDEFabcdef'.indexOf(hashStr[0]) !== -1) {
-      hashStr = "00" + hashStr;
+    if (!(bigInt instanceof BigInteger)) {
+      throw new Error('Not a BigInteger');
     }
 
-    return hashStr;
+    var isNegative = bigInt.compareTo(BigInteger.ZERO) < 0;
+    /* Get a hex string for abs(bigInt) */
+
+    var hexStr = bigInt.abs().toString(16);
+    /* Pad hex to even length if needed */
+
+    hexStr = hexStr.length % 2 !== 0 ? "0" + hexStr : hexStr;
+    /* Prepend "00" if the most significant bit is set */
+
+    hexStr = HEX_MSB_REGEX.test(hexStr) ? "00" + hexStr : hexStr;
+
+    if (isNegative) {
+      /* Flip the bits of the representation */
+      var invertedNibbles = hexStr.split('').map(function (x) {
+        var invertedNibble = ~parseInt(x, 16) & 0xf;
+        return '0123456789ABCDEF'.charAt(invertedNibble);
+      }).join('');
+      /* After flipping the bits, add one to get the 2's complement representation */
+
+      var flippedBitsBI = new BigInteger(invertedNibbles, 16).add(BigInteger.ONE);
+      hexStr = flippedBitsBI.toString(16);
+      /*
+      For hex strings starting with 'FF8', 'FF' can be dropped, e.g. 0xFFFF80=0xFF80=0x80=-128
+      		Any sequence of '1' bits on the left can always be substituted with a single '1' bit
+      without changing the represented value.
+      		This only happens in the case when the input is 80...00
+      */
+
+      if (hexStr.toUpperCase().startsWith('FF8')) {
+        hexStr = hexStr.substring(2);
+      }
+    }
+
+    return hexStr;
   };
 
   return AuthenticationHelper;
@@ -4511,11 +4747,13 @@ var CognitoJwtToken = /*#__PURE__*/function () {
   return CognitoJwtToken;
 }();
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+function _inheritsLoose$2(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf$2(subClass, superClass); }
+
+function _setPrototypeOf$2(o, p) { _setPrototypeOf$2 = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$2(o, p); }
 /** @class */
 
 var CognitoAccessToken = /*#__PURE__*/function (_CognitoJwtToken) {
-  _inheritsLoose(CognitoAccessToken, _CognitoJwtToken);
+  _inheritsLoose$2(CognitoAccessToken, _CognitoJwtToken);
 
   /**
    * Constructs a new CognitoAccessToken object
@@ -4531,7 +4769,9 @@ var CognitoAccessToken = /*#__PURE__*/function (_CognitoJwtToken) {
   return CognitoAccessToken;
 }(CognitoJwtToken);
 
-function _inheritsLoose$1(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+function _inheritsLoose$1(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf$1(subClass, superClass); }
+
+function _setPrototypeOf$1(o, p) { _setPrototypeOf$1 = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf$1(o, p); }
 /** @class */
 
 var CognitoIdToken = /*#__PURE__*/function (_CognitoJwtToken) {
@@ -4599,7 +4839,7 @@ var encBase64 = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
 	{
 		// CommonJS
-		module.exports = exports = factory(core);
+		module.exports = factory(require$$0$1);
 	}
 }(commonjsGlobal, function (CryptoJS) {
 
@@ -4613,7 +4853,7 @@ var encBase64 = createCommonjsModule(function (module, exports) {
 	    /**
 	     * Base64 encoding strategy.
 	     */
-	    var Base64 = C_enc.Base64 = {
+	    C_enc.Base64 = {
 	        /**
 	         * Converts a word array to a Base64 string.
 	         *
@@ -4711,7 +4951,8 @@ var encBase64 = createCommonjsModule(function (module, exports) {
 	          if (i % 4) {
 	              var bits1 = reverseMap[base64Str.charCodeAt(i - 1)] << ((i % 4) * 2);
 	              var bits2 = reverseMap[base64Str.charCodeAt(i)] >>> (6 - (i % 4) * 2);
-	              words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	              var bitsCombined = bits1 | bits2;
+	              words[nBytes >>> 2] |= bitsCombined << (24 - (nBytes % 4) * 8);
 	              nBytes++;
 	          }
 	      }
@@ -5028,7 +5269,7 @@ var MemoryStorage = /*#__PURE__*/function () {
   /**
    * This is used to remove an item from storage
    * @param {string} key - the key being set
-   * @returns {string} value - value that was deleted
+   * @returns {boolean} return true
    */
   ;
 
@@ -5049,7 +5290,6 @@ var MemoryStorage = /*#__PURE__*/function () {
   return MemoryStorage;
 }();
 /** @class */
-
 
 var StorageHelper = /*#__PURE__*/function () {
   /**
@@ -5149,7 +5389,7 @@ var CognitoUser = /*#__PURE__*/function () {
    */
   function CognitoUser(data) {
     if (data == null || data.Username == null || data.Pool == null) {
-      throw new Error('Username and pool information are required.');
+      throw new Error('Username and Pool information are required.');
     }
 
     this.username = data.Username || '';
@@ -5349,6 +5589,7 @@ var CognitoUser = /*#__PURE__*/function () {
 
         var challengeParameters = data.ChallengeParameters;
         _this2.username = challengeParameters.USER_ID_FOR_SRP;
+        _this2.userDataKey = _this2.keyPrefix + "." + _this2.username + ".userData";
         serverBValue = new BigInteger(challengeParameters.SRP_B, 16);
         salt = new BigInteger(challengeParameters.SALT, 16);
 
@@ -5361,8 +5602,8 @@ var CognitoUser = /*#__PURE__*/function () {
           }
 
           var dateNow = dateHelper.getNowString();
-          var message = core.lib.WordArray.create(Buffer.concat([Buffer.from(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
-          var key = core.lib.WordArray.create(hkdf);
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), Buffer.from(_this2.username, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
           var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this2.username;
@@ -5696,8 +5937,8 @@ var CognitoUser = /*#__PURE__*/function () {
           }
 
           var dateNow = dateHelper.getNowString();
-          var message = core.lib.WordArray.create(Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
-          var key = core.lib.WordArray.create(hkdf);
+          var message = CryptoJS__default["default"].lib.WordArray.create(Buffer.concat([Buffer.from(_this6.deviceGroupKey, 'utf8'), Buffer.from(_this6.deviceKey, 'utf8'), Buffer.from(challengeParameters.SECRET_BLOCK, 'base64'), Buffer.from(dateNow, 'utf8')]));
+          var key = CryptoJS__default["default"].lib.WordArray.create(hkdf);
           var signatureString = encBase64.stringify(hmacSha256(message, key));
           var challengeResponses = {};
           challengeResponses.USERNAME = _this6.username;
@@ -6128,7 +6369,10 @@ var CognitoUser = /*#__PURE__*/function () {
     return undefined;
   }
   /**
-   * This is used by an authenticated user to get the MFAOptions
+   * This was previously used by an authenticated user to get MFAOptions,
+   * but no longer returns a meaningful response. Refer to the documentation for
+   * how to setup and use MFA: https://docs.amplify.aws/lib/auth/mfa/q/platform/js
+   * @deprecated
    * @param {nodeCallback<MFAOptions>} callback Called on success or error.
    * @returns {void}
    */
@@ -6167,20 +6411,30 @@ var CognitoUser = /*#__PURE__*/function () {
    */
   ;
 
-  _proto.refreshSessionIfPossible = function refreshSessionIfPossible() {
+  _proto.refreshSessionIfPossible = function refreshSessionIfPossible(options) {
     var _this11 = this;
+
+    if (options === void 0) {
+      options = {};
+    }
 
     // best effort, if not possible
     return new Promise(function (resolve) {
       var refresh = _this11.signInUserSession.getRefreshToken();
 
       if (refresh && refresh.getToken()) {
-        _this11.refreshSession(refresh, resolve);
+        _this11.refreshSession(refresh, resolve, options.clientMetadata);
       } else {
         resolve();
       }
     });
   }
+  /**
+   * @typedef {Object} GetUserDataOptions
+   * @property {boolean} bypassCache - force getting data from Cognito service
+   * @property {Record<string, string>} clientMetadata - clientMetadata for getSession
+   */
+
   /**
    * This is used by an authenticated users to get the userData
    * @param {nodeCallback<UserData>} callback Called on success or error.
@@ -6208,7 +6462,7 @@ var CognitoUser = /*#__PURE__*/function () {
 
     if (this.isFetchUserDataAndTokenRequired(params)) {
       this.fetchUserData().then(function (data) {
-        return _this12.refreshSessionIfPossible().then(function () {
+        return _this12.refreshSessionIfPossible(params).then(function () {
           return data;
         });
       }).then(function (data) {
@@ -6315,15 +6569,25 @@ var CognitoUser = /*#__PURE__*/function () {
     });
   }
   /**
+   * @typedef {Object} GetSessionOptions
+   * @property {Record<string, string>} clientMetadata - clientMetadata for getSession
+   */
+
+  /**
    * This is used to get a session, either from the session object
    * or from  the local storage, or by using a refresh token
    *
    * @param {nodeCallback<CognitoUserSession>} callback Called on success or error.
+   * @param {GetSessionOptions} options
    * @returns {void}
    */
   ;
 
-  _proto.getSession = function getSession(callback) {
+  _proto.getSession = function getSession(callback, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
     if (this.username == null) {
       return callback(new Error('Username is null. Cannot retrieve a new session'), null);
     }
@@ -6366,7 +6630,7 @@ var CognitoUser = /*#__PURE__*/function () {
         return callback(new Error('Cannot retrieve a new session. Please authenticate.'), null);
       }
 
-      this.refreshSession(refreshToken, callback);
+      this.refreshSession(refreshToken, callback, options.clientMetadata);
     } else {
       callback(new Error('Local storage is missing an ID Token, Please authenticate'), null);
     }
@@ -6385,6 +6649,7 @@ var CognitoUser = /*#__PURE__*/function () {
   _proto.refreshSession = function refreshSession(refreshToken, callback, clientMetadata) {
     var _this14 = this;
 
+    var wrappedCallback = this.pool.wrapRefreshSessionCallback ? this.pool.wrapRefreshSessionCallback(callback) : callback;
     var authParameters = {};
     authParameters.REFRESH_TOKEN = refreshToken.getToken();
     var keyPrefix = "CognitoIdentityServiceProvider." + this.pool.getClientId();
@@ -6414,7 +6679,7 @@ var CognitoUser = /*#__PURE__*/function () {
           _this14.clearCachedUser();
         }
 
-        return callback(err, null);
+        return wrappedCallback(err, null);
       }
 
       if (authResult) {
@@ -6428,7 +6693,7 @@ var CognitoUser = /*#__PURE__*/function () {
 
         _this14.cacheTokens();
 
-        return callback(null, _this14.signInUserSession);
+        return wrappedCallback(null, _this14.signInUserSession);
       }
 
       return undefined;
@@ -6941,7 +7206,7 @@ var CognitoUser = /*#__PURE__*/function () {
   }
   /**
    * This returns the user context data for advanced security feature.
-   * @returns {void}
+   * @returns {string} the user context data from CognitoUserPool
    */
   ;
 
@@ -7059,7 +7324,7 @@ var unfetch$1 = /*#__PURE__*/Object.freeze({
 
 var require$$0 = /*@__PURE__*/getAugmentedNamespace(unfetch$1);
 
-var browser = window.fetch || (window.fetch = require$$0.default || require$$0);
+window.fetch || (window.fetch = require$$0.default || require$$0);
 
 // constructor
 function UserAgent() {} // public
@@ -7067,13 +7332,13 @@ function UserAgent() {} // public
 
 UserAgent.prototype.userAgent = 'aws-amplify/0.1.x js';
 
-function _inheritsLoose$2(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 
 function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
 
 function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
 
@@ -7082,7 +7347,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 var CognitoError = /*#__PURE__*/function (_Error) {
-  _inheritsLoose$2(CognitoError, _Error);
+  _inheritsLoose(CognitoError, _Error);
 
   function CognitoError(message, code, name, statusCode) {
     var _this;
@@ -7256,7 +7521,7 @@ var CognitoUserPool = /*#__PURE__*/function () {
    *        to support cognito advanced security features. By default, this
    *        flag is set to true.
    */
-  function CognitoUserPool(data) {
+  function CognitoUserPool(data, wrapRefreshSessionCallback) {
     var _ref = data || {},
         UserPoolId = _ref.UserPoolId,
         ClientId = _ref.ClientId,
@@ -7283,6 +7548,10 @@ var CognitoUserPool = /*#__PURE__*/function () {
 
     this.advancedSecurityDataCollectionFlag = AdvancedSecurityDataCollectionFlag !== false;
     this.storage = data.Storage || new StorageHelper().getStorage();
+
+    if (wrapRefreshSessionCallback) {
+      this.wrapRefreshSessionCallback = wrapRefreshSessionCallback;
+    }
   }
   /**
    * @returns {string} the user pool id
@@ -7415,7 +7684,7 @@ var CognitoUserPool = /*#__PURE__*/function () {
   return CognitoUserPool;
 }();
 
-var js_cookie = createCommonjsModule(function (module, exports) {
+createCommonjsModule(function (module, exports) {
 (function (factory) {
 	var registeredInModuleLoader;
 	{
@@ -7615,7 +7884,7 @@ class CognitoClient {
         message: 'No Cognito User available for session refresh'
       };
     }
-    let refreshToken = new CognitoRefreshToken(
+    new CognitoRefreshToken(
       {
         RefreshToken: this.refreshTokenValue
       }

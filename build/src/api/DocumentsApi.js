@@ -712,46 +712,6 @@ export class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async editDocumentWithOnlyoffice({siteId, documentId}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    if (!documentId) {
-      return JSON.stringify({
-        'message': 'No documentId specified'
-      });
-    }
-    const params = {siteId};
-    const url = `${this.apiClient.host}/onlyoffice/${documentId}/edit${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST');
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
-  async createDocumentWithOnlyoffice({siteId, extension, path = null}) {
-    if (!siteId) {
-      return JSON.stringify({
-        'message': 'No siteId specified'
-      });
-    }
-    if (!extension) {
-      return JSON.stringify({
-        'message': 'No extension specified'
-      });
-    }
-    const params = {siteId};
-    if (path) {
-      params.path = path
-    }
-    const body = {
-      extension
-    };
-    const url = `${this.apiClient.host}/onlyoffice/new${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', body);
-    return await this.apiClient.fetchAndRespond(url, options);
-  }
-
   async moveDocument({siteId, source, target}) {
     if (!siteId) {
       return JSON.stringify({

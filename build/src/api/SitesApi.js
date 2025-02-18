@@ -232,6 +232,44 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getLocales({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addLocale({siteId, addLocaleParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const options = this.apiClient.buildOptions('POST', addLocaleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteLocale({siteId, locale}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!locale) {
+      return JSON.stringify({
+        'message': 'No locale specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddApiKeyParameters {
@@ -242,6 +280,16 @@ export class AddApiKeyParameters {
     }
     if (permissions) {
       this.permissions = permissions;
+    }
+  }
+
+}
+
+export class AddLocaleParameters {
+
+  constructor(locale) {
+    if (locale) {
+      this.locale = locale;
     }
   }
 

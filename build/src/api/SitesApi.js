@@ -270,6 +270,77 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getLocaleResourceItems({siteId, locale, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addLocaleResourceItem({siteId, locale, addLocaleResourceItemParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addLocaleResourceItemParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getLocaleResourceItem({siteId, locale, itemKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${itemKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putLocaleResourceItem({siteId, locale, itemKey, addLocaleResourceItemParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${encodeURIComponent(itemKey)}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addLocaleResourceItemParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteLocaleResourceItem({siteId, locale, itemKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!itemKey) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${encodeURIComponent(itemKey)}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddApiKeyParameters {

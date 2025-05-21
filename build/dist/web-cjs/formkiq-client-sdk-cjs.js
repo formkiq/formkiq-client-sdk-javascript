@@ -9970,8 +9970,12 @@ class SitesApi {
 		SitesApi.instance = value;
 	}
     
-  async getSites() {
-    const url = `${this.apiClient.host}/sites`;
+  async getSites({status = null}) {
+    const params = {};
+    if (status) {
+      params.status = status;
+    }
+    const url = `${this.apiClient.host}/sites${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

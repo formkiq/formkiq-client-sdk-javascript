@@ -236,6 +236,115 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
+  async getLocales({siteId}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addLocale({siteId, addLocaleParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const options = this.apiClient.buildOptions('POST', addLocaleParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteLocale({siteId, locale}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!locale) {
+      return JSON.stringify({
+        'message': 'No locale specified'
+      });
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getLocaleResourceItems({siteId, locale, limit = null, next = null}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async addLocaleResourceItem({siteId, locale, addLocaleResourceItemParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('POST', addLocaleResourceItemParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async getLocaleResourceItem({siteId, locale, itemKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${itemKey}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async putLocaleResourceItem({siteId, locale, itemKey, addLocaleResourceItemParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${encodeURIComponent(itemKey)}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PUT', addLocaleResourceItemParameters);
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async deleteLocaleResourceItem({siteId, locale, itemKey}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!itemKey) {
+      return JSON.stringify({
+        'message': 'No rulesetId specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/sites/${siteId}/locales/${locale}/resourceItems/${encodeURIComponent(itemKey)}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('DELETE');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
 }
 
 export class AddApiKeyParameters {
@@ -246,6 +355,16 @@ export class AddApiKeyParameters {
     }
     if (permissions) {
       this.permissions = permissions;
+    }
+  }
+
+}
+
+export class AddLocaleParameters {
+
+  constructor(locale) {
+    if (locale) {
+      this.locale = locale;
     }
   }
 

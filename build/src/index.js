@@ -3,6 +3,7 @@ import { WebFormsHandler } from './WebFormsHandler.js';
 import { DocumentsApi } from './api/DocumentsApi.js';
 import { SearchApi } from './api/SearchApi.js';
 import { SitesApi } from './api/SitesApi.js';
+import { EntitiesApi } from './api/EntitiesApi.js';
 import { VersionApi } from './api/VersionApi.js';
 import { WebhooksApi } from './api/WebhooksApi.js';
 import { WorkflowsApi } from './api/WorkflowsApi.js';
@@ -20,6 +21,7 @@ export class FormkiqClient {
     this.documentsApi = new DocumentsApi();
     this.searchApi = new SearchApi();
     this.sitesApi = new SitesApi();
+    this.entitiesApi = new EntitiesApi();
     this.versionApi = new VersionApi();
     this.webhooksApi = new WebhooksApi();
     this.workflowsApi = new WorkflowsApi();
@@ -39,6 +41,7 @@ export class FormkiqClient {
       this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+      this.entitiesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
       this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -62,6 +65,7 @@ export class FormkiqClient {
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.entitiesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
@@ -78,6 +82,7 @@ export class FormkiqClient {
     this.documentsApi.apiClient = this.apiClient;
     this.searchApi.apiClient = this.apiClient;
     this.sitesApi.apiClient = this.apiClient;
+    this.entitiesApi.apiClient = this.apiClient;
     this.versionApi.apiClient = this.apiClient;
     this.webhooksApi.apiClient = this.apiClient;
     this.workflowsApi.apiClient = this.apiClient;
@@ -97,6 +102,7 @@ export class FormkiqClient {
     this.documentsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.searchApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.sitesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
+    this.entitiesApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.versionApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.webhooksApi.apiClient.cognitoClient = this.apiClient.cognitoClient;
     this.workflowsApi.apiClient.cognitoClient = this.apiClient.cognitoClient;

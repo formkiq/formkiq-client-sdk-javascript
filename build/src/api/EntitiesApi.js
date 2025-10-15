@@ -17,13 +17,19 @@ export class EntitiesApi {
 		EntitiesApi.instance = value;
 	}
 
-  async getEntityTypes({siteId, namespace = 'CUSTOM'}) {
+  async getEntityTypes({siteId, namespace = 'CUSTOM', next = null, limit = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
     const params = {siteId, namespace};
+    if (next) {
+      params.next = next;
+    }
+    if (limit) {
+      params.limit = limit;
+    }
     const url = `${this.apiClient.host}/entityTypes${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
@@ -90,10 +96,15 @@ export class EntitiesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addEntity({siteId, entityTypeId, addOrUpdateEntityParameters}) {
+  async addEntity({siteId, namespace, entityTypeId, addOrUpdateEntityParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
+      });
+    }
+    if (!namespace) {
+      return JSON.stringify({
+        'message': 'No namespace specified'
       });
     }
     if (!entityTypeId) {
@@ -101,7 +112,7 @@ export class EntitiesApi {
         'message': 'No entityTypeId specified'
       });
     }
-    const params = {siteId};
+    const params = {siteId, namespace};
     const url = `${this.apiClient.host}/entities/${entityTypeId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addOrUpdateEntityParameters);
     return await this.apiClient.fetchAndRespond(url, options);
@@ -129,10 +140,15 @@ export class EntitiesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async patchEntity({siteId, entityTypeId, entityId, addOrUpdateEntityParameters}) {
+  async patchEntity({siteId, namespace, entityTypeId, entityId, addOrUpdateEntityParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
+      });
+    }
+    if (!namespace) {
+      return JSON.stringify({
+        'message': 'No namespace specified'
       });
     }
     if (!entityTypeId) {
@@ -145,13 +161,13 @@ export class EntitiesApi {
         'message': 'No entityId specified'
       });
     }
-    const params = {siteId};
+    const params = {siteId, namespace};
     const url = `${this.apiClient.host}/entities/${entityTypeId}/${entityId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('PATCH', addOrUpdateEntityParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async deleteEntity({siteId, entityTypeId, entityId}) {
+  async deleteEntity({siteId, entityTypeId, entityId, namespace}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -167,7 +183,12 @@ export class EntitiesApi {
         'message': 'No entityId specified'
       });
     }
-    const params = {siteId};
+    if (!namespace) {
+      return JSON.stringify({
+        'message': 'No namespace specified'
+      });
+    }
+    const params = {siteId, namespace};
     const url = `${this.apiClient.host}/entities/${entityTypeId}/${entityId}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('DELETE');
     return await this.apiClient.fetchAndRespond(url, options);

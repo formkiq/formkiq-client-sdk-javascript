@@ -17,7 +17,7 @@ export class DocumentsApi {
     DocumentsApi.instance = value;
   }
 
-  async getDocuments({siteId, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
+  async getDocuments({siteId, actionStatus = null, deleted = null, date = null, tz = null, limit = null, next = null, previous = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
@@ -26,6 +26,9 @@ export class DocumentsApi {
     const params = {siteId};
     if (deleted) {
       params.deleted = deleted;
+    }
+    if (actionStatus) {
+      params.actionStatus = actionStatus;
     }
     if (date && date.match(this.apiClient.validDateRegExp)) {
       params.date = date;

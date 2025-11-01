@@ -9197,20 +9197,20 @@ class DocumentsApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addAttribute({siteId, addAttributeParameters}) {
+  async addAttribute({siteId, addOrUpdateAttributeParameters}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    if (!addAttributeParameters) {
+    if (!addOrUpdateAttributeParameters) {
       return JSON.stringify({
-        'message': 'No addAttributeParameters specified'
+        'message': 'No addOrUpdateAttributeParameters specified'
       });
     }
     const params = {siteId};
     const url = `${this.apiClient.host}/attributes${this.apiClient.buildQueryString(params)}`;
-    const options = this.apiClient.buildOptions('POST', addAttributeParameters);
+    const options = this.apiClient.buildOptions('POST', addOrUpdateAttributeParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -9228,6 +9228,23 @@ class DocumentsApi {
     const params = {siteId, key};
     const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
+    return await this.apiClient.fetchAndRespond(url, options);
+  }
+
+  async updateAttribute({siteId, key, addOrUpdateAttributeParameters}) {
+    if (!siteId) {
+      return JSON.stringify({
+        'message': 'No siteId specified'
+      });
+    }
+    if (!key) {
+      return JSON.stringify({
+        'message': 'No key specified'
+      });
+    }
+    const params = {siteId};
+    const url = `${this.apiClient.host}/attributes/${key}${this.apiClient.buildQueryString(params)}`;
+    const options = this.apiClient.buildOptions('PATCH', addOrUpdateAttributeParameters);
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
@@ -10192,13 +10209,20 @@ class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getLocales({siteId}) {
+  async getLocales({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

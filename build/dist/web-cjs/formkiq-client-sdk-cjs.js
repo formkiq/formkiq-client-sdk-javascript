@@ -10350,13 +10350,13 @@ class EntitiesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async addEntityType({siteId, addEntityTypeParameters}) {
+  async addEntityType({siteId, addEntityTypeParameters, namespace = 'CUSTOM'}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const params = {siteId};
+    const params = {siteId, namespace};
     const url = `${this.apiClient.host}/entityTypes${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('POST', addEntityTypeParameters);
     return await this.apiClient.fetchAndRespond(url, options);

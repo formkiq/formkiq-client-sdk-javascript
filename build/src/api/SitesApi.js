@@ -236,13 +236,20 @@ export class SitesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getLocales({siteId}) {
+  async getLocales({siteId, limit = null, next = null}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
       });
     }
-    const url = `${this.apiClient.host}/sites/${siteId}/locales`;
+    const params = {};
+    if (limit) {
+      params.limit = limit;
+    }
+    if (next && next.length) {
+      params.next = next;
+    }
+    const url = `${this.apiClient.host}/sites/${siteId}/locales${this.apiClient.buildQueryString(params)}`;
     const options = this.apiClient.buildOptions('GET');
     return await this.apiClient.fetchAndRespond(url, options);
   }

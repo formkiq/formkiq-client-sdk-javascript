@@ -10445,7 +10445,7 @@ class EntitiesApi {
     return await this.apiClient.fetchAndRespond(url, options);
   }
 
-  async getEntity({siteId, entityTypeId, entityId}) {
+  async getEntity({siteId, entityTypeId, entityId, namespace = 'CUSTOM'}) {
     if (!siteId) {
       return JSON.stringify({
         'message': 'No siteId specified'
